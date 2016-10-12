@@ -55,11 +55,11 @@ class JsonIO {
 
     }
 
-    static void writeAll(Set<OpenPosition> tmpStoriesUnique) {
+    static void writeAll(Collection<OpenPosition> tmpStoriesUnique) {
         writeLastNDays("all.json", tmpStoriesUnique.stream(), 300);
     }
 
-    static void writeAllSegments(Set<OpenPosition> tmpStoriesUnique) {
+    static void writeAllSegments(Collection<OpenPosition> tmpStoriesUnique) {
         Map<Integer, List<OpenPosition>> storyGroup =
                 tmpStoriesUnique.stream().collect(Collectors.groupingBy(OpenPosition::getIdByGroup));
 
@@ -83,7 +83,7 @@ class JsonIO {
     }
 
 
-    static void downloadLogos(Set<OpenPosition> tmpStoriesUnique) {
+    static void downloadLogos(Collection<OpenPosition> tmpStoriesUnique) {
 
         tmpStoriesUnique.stream()
                 .filter(distinctByKey(p -> p.instituteId))
@@ -92,7 +92,7 @@ class JsonIO {
                 .parallel()
                 .forEach(p -> {
                     try {
-                        File thumbFile = new File(String.format("institute-logos/%d.png", p.instituteId));
+                        File thumbFile = new File(String.format("database/logo/%d.png", p.instituteId));
                         if (!thumbFile.exists()) {
                             URL url = new URL(p.logoURL);
                             ImageIcon icon = new ImageIcon(url);

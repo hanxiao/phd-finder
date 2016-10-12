@@ -1,14 +1,16 @@
-import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.ForkJoinPool;
 
 /**
  * Created by han on 11/17/15.
  */
-class GlobalConfiguration {
+class GlobalVars {
     static ForkJoinPool forkJoinPool = new ForkJoinPool(20);
-    static File visitedFile = new File("visited-stories.json");
+    static Set<OpenPosition> allPositions = new HashSet<>();
+    static boolean isUpdated = false;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
     static long convertStr2Long(String timestamp) throws ParseException {

@@ -1,3 +1,6 @@
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
@@ -6,13 +9,15 @@ import org.kohsuke.args4j.CmdLineParser;
 import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.CollectionAdapter;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.Collection;
+import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by han on 8/16/15.
@@ -20,6 +25,8 @@ import java.util.Set;
 public class Main {
 
     private static transient final Logger LOG = LoggerFactory.getLogger(Main.class);
+    private static Gson gson = new GsonBuilder()
+            .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();
 
     @Option(name = "--help", usage = "Print this help message")
     private boolean help = false;
@@ -53,29 +60,36 @@ public class Main {
             return;
         }
 
-        runner.run();
+        try {
+            runner.update("https://www.academics.de/wissenschaft/promotionsstellen_37163.html?format=rss_2.0");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
 
-    private void run() {
+    private void update(String rssUrl) throws Exception {
         SyndFeedInput input = new SyndFeedInput();
-        Set<OpenPosition> allPositions = new HashSet<>();
+
         try {
-            String urlPattern = "https://www.academics.de/wissenschaft/promotionsstellen_37163.html?format=rss_2.0";
-            URL feedUrl = new URL(urlPattern);
-            SyndFeed feed = input.build(new XmlReader(feedUrl));
-            feed.getEntries().parallelStream().map(p ->
-                    new OpenPosition(urlPattern, p))
-                    .filter(p-> p!=null)
-                    .forEach(p -> {
-                        allPositions.add(p);
-                        LOG.info("new position {}: {} !", p.institute, p.title);
-                    });
-            JsonIO.downloadLogos(allPositions);
-            JsonIO.writeAll(allPositions);
-            JsonIO.writeAllSegments(allPositions);
-        } catch (Exception ex) {
-            ex.printStackTrace();
+            String content = new Scanner(new File("database/uncompressed/all.json")).useDelimiter("\\Z").next();
+            Type setType = new TypeToken<List<OpenPosition>>() {
+            }.getType();
+            GlobalVars.allPositions.addAll(gson.fromJson(content, setType));
+        } catch (IOException ex) {
+            LOG.error("Error while reading database!");
+        }
+
+        URL feedUrl = new URL(rssUrl);
+        SyndFeed feed = input.build(new XmlReader(feedUrl));
+        feed.getEntries().parallelStream().forEach(p -> new OpenPosition(rssUrl, p));
+
+        if (GlobalVars.isUpdated) {
+            JsonIO.downloadLogos(GlobalVars.allPositions);
+            JsonIO.writeAll(GlobalVars.allPositions);
+            JsonIO.writeAllSegments(GlobalVars.allPositions);
+        } else {
+            LOG.info("No new position is found!");
         }
     }
 }

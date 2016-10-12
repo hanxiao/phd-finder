@@ -30,17 +30,23 @@ class OpenPosition {
         this.title = sf.getTitle();
         this.institute = sf.getDescription().getValue();
         this.instituteId = Math.abs(this.institute.hashCode());
-        this.pageURL = sf.getLink();
-        this.publishTime = sf.getPublishedDate().getTime();
-        try {
-            this.logoURL = sf.getEnclosures().get(0).getUrl();
-        } catch (Exception ex) {
-            LOG.warn("empty image for {}", sf.getLink());
-            this.logoURL = null;
-        }
         this.positionId = this.hashCode();
-        fetchContent(this.pageURL);
-        this.fetchTime = System.currentTimeMillis();
+
+        if (!GlobalVars.allPositions.contains(this)) {
+            this.pageURL = sf.getLink();
+            this.publishTime = sf.getPublishedDate().getTime();
+            try {
+                this.logoURL = sf.getEnclosures().get(0).getUrl();
+            } catch (Exception ex) {
+                LOG.warn("empty image for {}", sf.getLink());
+                this.logoURL = null;
+            }
+            fetchContent(this.pageURL);
+            this.fetchTime = System.currentTimeMillis();
+            GlobalVars.allPositions.add(this);
+            GlobalVars.isUpdated = true;
+            LOG.info("new position {}: {} !", institute, title);
+        }
     }
 
     int getIdByGroup() {
