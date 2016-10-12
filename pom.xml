@@ -14,13 +14,6 @@
     </properties>
     <dependencies>
         <dependency>
-            <groupId>com.google</groupId>
-            <artifactId>com.google.translate</artifactId>
-            <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/translate/google-api-services-translate-v2-rev47-1.22.0.jar</systemPath>
-        </dependency>
-        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.1.2</version>

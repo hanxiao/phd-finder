@@ -60,13 +60,6 @@ public class Main {
             return;
         }
 
-        Translator translator = new Translator();
-        System.out.println("Saying goodbye in French:");
-        System.out.println(translator.translate("goodbye", Language.ENGLISH, Language.FRENCH));
-
-        System.out.println();
-
-
         runner.loadAll();
         runner.updateAll(runner);
         runner.saveAll();
