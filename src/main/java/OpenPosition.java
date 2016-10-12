@@ -45,7 +45,7 @@ class OpenPosition {
             this.fetchTime = System.currentTimeMillis();
             GlobalVars.allPositions.add(this);
             GlobalVars.isUpdated = true;
-            LOG.info("new position {}: {} !", institute, title);
+            LOG.info("[{}] new position {}: {} !", source, institute, title);
         }
     }
 

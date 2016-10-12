@@ -60,21 +60,30 @@ public class Main {
             return;
         }
 
+        String urlPrefix = "https://www.academics.de/wissenschaft/";
+        String urlSuffix = ".html?format=rss_2.0";
         try {
-            runner.update("https://www.academics.de/wissenschaft/promotionsstellen_37163.html?format=rss_2.0");
+            runner.update(urlPrefix + "promotionsstellen_37163" + urlSuffix, "phd");
+            runner.update(urlPrefix + "wissenschaftlicher_mitarbeiter_37189" + urlSuffix, "wimi");
+            runner.update(urlPrefix + "postdoc_37207" + urlSuffix, "postdoc");
+            runner.update(urlPrefix + "professur_37187" + urlSuffix, "prof");
+            runner.update(urlPrefix + "juniorprofessur_37188" + urlSuffix, "juniorprof");
+            runner.update(urlPrefix + "studien-_und_abschlussarbeiten_56193" + urlSuffix, "mthesis");
+            runner.update(urlPrefix + "praktikum_56194" + urlSuffix, "practical");
+            runner.update(urlPrefix + "studentische_hilfskraft_jobs_56195" + urlSuffix, "hiwi");
+            runner.update(urlPrefix + "stipendien_47347" + urlSuffix, "scholarship");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
 
-    private void update(String rssUrl) throws Exception {
+    private void update(String rssUrl, String sourceName) throws Exception {
         SyndFeedInput input = new SyndFeedInput();
 
         try {
             String content = new Scanner(new File("database/uncompressed/all.json")).useDelimiter("\\Z").next();
-            Type setType = new TypeToken<List<OpenPosition>>() {
-            }.getType();
+            Type setType = new TypeToken<List<OpenPosition>>() {}.getType();
             GlobalVars.allPositions.addAll(gson.fromJson(content, setType));
         } catch (IOException ex) {
             LOG.error("Error while reading database!");
@@ -82,7 +91,7 @@ public class Main {
 
         URL feedUrl = new URL(rssUrl);
         SyndFeed feed = input.build(new XmlReader(feedUrl));
-        feed.getEntries().parallelStream().forEach(p -> new OpenPosition(rssUrl, p));
+        feed.getEntries().parallelStream().forEach(p -> new OpenPosition(sourceName, p));
 
         if (GlobalVars.isUpdated) {
             JsonIO.downloadLogos(GlobalVars.allPositions);
