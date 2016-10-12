@@ -60,6 +60,19 @@ public class Main {
             return;
         }
 
+        Translator translator = new Translator();
+        System.out.println("Saying goodbye in French:");
+        System.out.println(translator.translate("goodbye", Language.ENGLISH, Language.FRENCH));
+
+        System.out.println();
+
+
+        runner.loadAll();
+        runner.updateAll(runner);
+        runner.saveAll();
+    }
+
+    private void updateAll(Main runner) {
         String urlPrefix = "https://www.academics.de/wissenschaft/";
         String urlSuffix = ".html?format=rss_2.0";
         try {
@@ -77,10 +90,7 @@ public class Main {
         }
     }
 
-
-    private void update(String rssUrl, String sourceName) throws Exception {
-        SyndFeedInput input = new SyndFeedInput();
-
+    private void loadAll() {
         try {
             String content = new Scanner(new File("database/uncompressed/all.json")).useDelimiter("\\Z").next();
             Type setType = new TypeToken<List<OpenPosition>>() {}.getType();
@@ -88,11 +98,9 @@ public class Main {
         } catch (IOException ex) {
             LOG.error("Error while reading database!");
         }
+    }
 
-        URL feedUrl = new URL(rssUrl);
-        SyndFeed feed = input.build(new XmlReader(feedUrl));
-        feed.getEntries().parallelStream().forEach(p -> new OpenPosition(sourceName, p));
-
+    private void saveAll() {
         if (GlobalVars.isUpdated) {
             JsonIO.downloadLogos(GlobalVars.allPositions);
             JsonIO.writeAll(GlobalVars.allPositions);
@@ -100,5 +108,12 @@ public class Main {
         } else {
             LOG.info("No new position is found!");
         }
+    }
+
+    private void update(String rssUrl, String sourceName) throws Exception {
+        SyndFeedInput input = new SyndFeedInput();
+        URL feedUrl = new URL(rssUrl);
+        SyndFeed feed = input.build(new XmlReader(feedUrl));
+        feed.getEntries().parallelStream().forEach(p -> new OpenPosition(sourceName, p));
     }
 }
