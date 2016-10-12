@@ -7,10 +7,7 @@ import org.jsoup.nodes.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
 
 /**
  * Created by hxiao on 2016/10/12.
@@ -18,11 +15,11 @@ import java.net.URL;
 class OpenPosition {
     private static transient final Logger LOG = LoggerFactory.getLogger(OpenPosition.class);
 
-    int id;
+    int positionId, instituteId;
     String institute;
     String title;
     String pageURL;
-    String logoURL, imageUrl;
+    String logoURL;
     long publishTime;
     long fetchTime;
     String source;
@@ -32,6 +29,7 @@ class OpenPosition {
         this.source = source;
         this.title = sf.getTitle();
         this.institute = sf.getDescription().getValue();
+        this.instituteId = Math.abs(this.institute.hashCode());
         this.pageURL = sf.getLink();
         this.publishTime = sf.getPublishedDate().getTime();
         try {
@@ -40,9 +38,13 @@ class OpenPosition {
             LOG.warn("empty image for {}", sf.getLink());
             this.logoURL = null;
         }
-        this.id = this.hashCode();
+        this.positionId = this.hashCode();
         fetchContent(this.pageURL);
         this.fetchTime = System.currentTimeMillis();
+    }
+
+    int getIdByGroup() {
+        return Math.abs(this.positionId % 50);
     }
 
     private void fetchContent(String sourceLink) {
@@ -67,33 +69,6 @@ class OpenPosition {
 
                 if (article != null) {
                     this.mainContent = article.getCleanedArticleText();
-
-                    if (article.getTopImage() != null) {
-                        imageUrl = article.getTopImage().getImageSrc();
-
-                        if (imageUrl != null) {
-                            if (!imageUrl.startsWith("http") && GlobalConfiguration.isValidImageUrl(imageUrl)) {
-
-                                fetchDoc.getElementsByTag("img")
-                                        .stream()
-                                        .map(p -> p.absUrl("src"))
-                                        .filter(p -> p.contains(imageUrl))
-                                        .distinct()
-                                        .findFirst().ifPresent(p -> {
-                                    LOG.info("Image {} is completed to {}", imageUrl, p);
-                                    imageUrl = p;
-                                });
-
-                                if (!imageUrl.startsWith("http")) {
-                                    LOG.warn("unclear image url: {}", imageUrl);
-                                }
-                            } else {
-                                imageUrl = (GlobalConfiguration.isValidImageUrl(imageUrl)
-                                        && imageUrl.trim().length() > 0) ?
-                                        this.imageUrl : null;
-                            }
-                        }
-                    }
                 }
             }
         }
@@ -118,4 +93,6 @@ class OpenPosition {
                 append(hashCode(), rhs.hashCode()).
                 isEquals();
     }
+
+
 }

@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Created by han on 8/16/15.
@@ -18,12 +20,6 @@ import java.util.LinkedHashSet;
 public class Main {
 
     private static transient final Logger LOG = LoggerFactory.getLogger(Main.class);
-
-    @Option(name = "--json", required = false, usage = "Filename for saving json file")
-    File dbJson;
-
-    @Option(name = "--kw", required = false, usage = "Keywords in json")
-    File kwJson;
 
     @Option(name = "--help", usage = "Print this help message")
     private boolean help = false;
@@ -63,7 +59,7 @@ public class Main {
 
     private void run() {
         SyndFeedInput input = new SyndFeedInput();
-        LinkedHashSet allPositions = new LinkedHashSet<OpenPosition>();
+        Set<OpenPosition> allPositions = new HashSet<>();
         try {
             String urlPattern = "https://www.academics.de/wissenschaft/promotionsstellen_37163.html?format=rss_2.0";
             URL feedUrl = new URL(urlPattern);
@@ -75,7 +71,9 @@ public class Main {
                         allPositions.add(p);
                         LOG.info("new position {}: {} !", p.institute, p.title);
                     });
-            int a = 1;
+            JsonIO.downloadLogos(allPositions);
+            JsonIO.writeAll(allPositions);
+            JsonIO.writeAllSegments(allPositions);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
