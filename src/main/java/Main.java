@@ -20,6 +20,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Created by han on 8/16/15.
@@ -66,7 +68,6 @@ public class Main {
         try {
             Translate.setClientId("phd-finder");
             Translate.setClientSecret("scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
-            Translate.getToken("phd-finder","scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
 
             String translatedText = Translate.execute("Bonjour le monde", Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
 
@@ -104,7 +105,9 @@ public class Main {
         try {
             String content = new Scanner(new File("database/uncompressed/all.json")).useDelimiter("\\Z").next();
             Type setType = new TypeToken<List<OpenPosition>>() {}.getType();
-            GlobalVars.allPositions.addAll(gson.fromJson(content, setType));
+            List<OpenPosition> prevHistory = gson.fromJson(content, setType);
+            GlobalVars.allPositions.putAll(prevHistory.stream().collect(Collectors.toMap(OpenPosition::hashCode,
+                    Function.identity())));
         } catch (IOException ex) {
             LOG.error("Error while reading database!");
         }
@@ -112,9 +115,9 @@ public class Main {
 
     private void saveAll() {
         if (GlobalVars.isUpdated) {
-            JsonIO.downloadLogos(GlobalVars.allPositions);
-            JsonIO.writeAll(GlobalVars.allPositions);
-            JsonIO.writeAllSegments(GlobalVars.allPositions);
+            JsonIO.downloadLogos(GlobalVars.allPositions.values());
+            JsonIO.writeAll(GlobalVars.allPositions.values());
+            JsonIO.writeAllSegments(GlobalVars.allPositions.values());
         } else {
             LOG.info("No new position is found!");
         }

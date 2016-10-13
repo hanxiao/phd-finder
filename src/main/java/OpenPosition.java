@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by hxiao on 2016/10/12.
@@ -24,6 +26,7 @@ class OpenPosition {
     long fetchTime;
     String source;
     String mainContent;
+    Set<String> tags;
 
     OpenPosition(String source, SyndEntry sf) {
         this.source = source;
@@ -32,7 +35,7 @@ class OpenPosition {
         this.instituteId = Math.abs(this.institute.hashCode());
         this.positionId = this.hashCode();
 
-        if (!GlobalVars.allPositions.contains(this)) {
+        if (!GlobalVars.allPositions.containsKey(positionId)) {
             this.pageURL = sf.getLink();
             this.publishTime = sf.getPublishedDate().getTime();
             try {
@@ -42,10 +45,18 @@ class OpenPosition {
                 this.logoURL = null;
             }
             fetchContent(this.pageURL);
+            this.tags = new HashSet<>();
+            this.tags.add(source);
             this.fetchTime = System.currentTimeMillis();
-            GlobalVars.allPositions.add(this);
+            GlobalVars.allPositions.put(positionId, this);
             GlobalVars.isUpdated = true;
-            LOG.info("[{}] new position {}: {} !", source, institute, title);
+            LOG.info("[{}] create position {}: {} !", source, institute, title);
+        } else {
+            if (!GlobalVars.allPositions.get(positionId).tags.contains(source)) {
+                GlobalVars.allPositions.get(positionId).tags.add(source);
+                GlobalVars.allPositions.get(positionId).fetchTime = System.currentTimeMillis();
+                LOG.info("[{}] update position {}: {} !", source, institute, title);
+            }
         }
     }
 
