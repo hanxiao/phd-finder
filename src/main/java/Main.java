@@ -64,11 +64,11 @@ public class Main {
 
 
         try {
-            Translate.setClientId("fzeit-backend");
-            Translate.setClientSecret("EMPqFQHxHvRtuSGWTWtDEDlXVeOQkwvp38guui4rGJ4");
-            Translate.setKey("");
+            Translate.setClientId("phd-finder");
+            Translate.setClientSecret("scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
+            Translate.getToken("phd-finder","scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
 
-            String translatedText = Translate.execute("Bonjour le monde", Language.FRENCH, Language.ENGLISH);
+            String translatedText = Translate.execute("Bonjour le monde", Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
 
             System.out.println(translatedText);
         } catch (Exception ex) {
