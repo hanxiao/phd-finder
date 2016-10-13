@@ -7,16 +7,19 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by han on 10/13/16.
  */
-public class MSTranslator {
-    private Map<String, String> cachedTranslates;
+class MSTranslator {
+    private Map<String, String> cachedTranslates = new ConcurrentHashMap<>();
 
-    public MSTranslator() {
-        this.cachedTranslates = new ConcurrentHashMap<>();
+    MSTranslator() {
+        doAuth();
+    }
+
+    void doAuth() {
         Translate.setClientId("phd-finder");
         Translate.setClientSecret("scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
     }
 
-    public String getTranslate(String sent) {
+    String getTranslate(String sent) {
         if (cachedTranslates.containsKey(sent.trim())) {
             return cachedTranslates.get(sent.trim());
         } else {

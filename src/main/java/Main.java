@@ -1,6 +1,5 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.memetix.mst.language.Language;
 import com.memetix.mst.translate.Translate;
 import com.rometools.rome.feed.synd.SyndFeed;
@@ -13,15 +12,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.CollectionAdapter;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URL;
 import java.util.Collection;
-import java.util.List;
-import java.util.Scanner;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Created by han on 8/16/15.
@@ -64,13 +58,11 @@ public class Main {
             return;
         }
 
-
         try {
             Translate.setClientId("phd-finder");
             Translate.setClientSecret("scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
 
             String translatedText = Translate.execute("Bonjour le monde", Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
-
             System.out.println(translatedText);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -103,13 +95,12 @@ public class Main {
 
     private void loadAll() {
         try {
-            String content = new Scanner(new File("database/uncompressed/all.json")).useDelimiter("\\Z").next();
-            Type setType = new TypeToken<List<OpenPosition>>() {}.getType();
-            List<OpenPosition> prevHistory = gson.fromJson(content, setType);
-            GlobalVars.allPositions.putAll(prevHistory.stream().collect(Collectors.toMap(OpenPosition::hashCode,
-                    Function.identity())));
-        } catch (IOException ex) {
-            LOG.error("Error while reading database!");
+            JsonIO.loadHistory();
+            JsonIO.loadTranslator();
+        } catch (FileNotFoundException ex) {
+            // init the translator
+            GlobalVars.msTranslator = new MSTranslator();
+            LOG.error("Empty history --> building database from scratch!");
         }
     }
 
@@ -118,6 +109,7 @@ public class Main {
             JsonIO.downloadLogos(GlobalVars.allPositions.values());
             JsonIO.writeAll(GlobalVars.allPositions.values());
             JsonIO.writeAllSegments(GlobalVars.allPositions.values());
+            JsonIO.writeTranslator();
         } else {
             LOG.info("No new position is found!");
         }

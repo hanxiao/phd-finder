@@ -26,28 +26,38 @@ class OpenPosition {
     long fetchTime;
     String source;
     String mainContent;
+
+    String mainContent_zh;
+    String title_zh;
+    String institute_zh;
+
     Set<String> tags;
 
     OpenPosition(String source, SyndEntry sf) {
         this.source = source;
-        this.title = sf.getTitle();
-        this.institute = sf.getDescription().getValue();
-        this.instituteId = Math.abs(this.institute.hashCode());
-        this.positionId = this.hashCode();
+        title = sf.getTitle();
+        institute = sf.getDescription().getValue();
+        instituteId = Math.abs(institute.hashCode());
+        positionId = this.hashCode();
 
         if (!GlobalVars.allPositions.containsKey(positionId)) {
-            this.pageURL = sf.getLink();
-            this.publishTime = sf.getPublishedDate().getTime();
+
+            title_zh = GlobalVars.msTranslator.getTranslate(title);
+            institute_zh = GlobalVars.msTranslator.getTranslate(institute);
+            mainContent_zh = GlobalVars.msTranslator.getTranslate(mainContent_zh);
+
+            pageURL = sf.getLink();
+            publishTime = sf.getPublishedDate().getTime();
             try {
-                this.logoURL = sf.getEnclosures().get(0).getUrl();
+                logoURL = sf.getEnclosures().get(0).getUrl();
             } catch (Exception ex) {
                 LOG.warn("empty image for {}", sf.getLink());
-                this.logoURL = null;
+                logoURL = null;
             }
             fetchContent(this.pageURL);
-            this.tags = new HashSet<>();
-            this.tags.add(source);
-            this.fetchTime = System.currentTimeMillis();
+            tags = new HashSet<>();
+            tags.add(source);
+            fetchTime = System.currentTimeMillis();
             GlobalVars.allPositions.put(positionId, this);
             GlobalVars.isUpdated = true;
             LOG.info("[{}] create position {}: {} !", source, institute, title);

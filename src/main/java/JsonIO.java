@@ -1,5 +1,6 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.rometools.utils.Strings;
 import org.imgscalr.Scalr;
 import org.slf4j.Logger;
@@ -11,10 +12,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
@@ -53,6 +52,26 @@ class JsonIO {
 
         writeToFile(new File("database/compressed/" + fn + ".lz"), jsonCompressed);
 
+    }
+
+    static void writeTranslator() {
+        String jsonOutput = gson.toJson(GlobalVars.msTranslator);
+        writeToFile(new File("database/translator.json"), jsonOutput);
+    }
+
+    static void loadHistory() throws FileNotFoundException {
+        String content = new Scanner(new File("database/uncompressed/all.json")).useDelimiter("\\Z").next();
+        Type setType = new TypeToken<List<OpenPosition>>() {}.getType();
+        List<OpenPosition> prevHistory = gson.fromJson(content, setType);
+        GlobalVars.allPositions.putAll(prevHistory.stream().collect(Collectors.toMap(OpenPosition::hashCode,
+                Function.identity())));
+    }
+
+    static void loadTranslator() throws FileNotFoundException {
+        String content = new Scanner(new File("database/translator.json")).useDelimiter("\\Z").next();
+        Type setType = new TypeToken<MSTranslator>() {}.getType();
+        GlobalVars.msTranslator = gson.fromJson(content, setType);
+        GlobalVars.msTranslator.doAuth();
     }
 
     static void writeAll(Collection<OpenPosition> tmpStoriesUnique) {

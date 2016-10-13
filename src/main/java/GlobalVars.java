@@ -11,6 +11,7 @@ class GlobalVars {
     static ForkJoinPool forkJoinPool = new ForkJoinPool(20);
     static Map<Integer, OpenPosition> allPositions = new ConcurrentHashMap<>();
     static boolean isUpdated = false;
+    static MSTranslator msTranslator;
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
     static long convertStr2Long(String timestamp) throws ParseException {
