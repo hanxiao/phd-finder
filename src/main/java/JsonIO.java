@@ -69,9 +69,9 @@ class JsonIO {
 
     static void loadTranslator() throws FileNotFoundException {
         String content = new Scanner(new File("database/translator.json")).useDelimiter("\\Z").next();
-        Type setType = new TypeToken<MSTranslator>() {}.getType();
-        GlobalVars.msTranslator = gson.fromJson(content, setType);
-        GlobalVars.msTranslator.doAuth();
+        Type setType = new TypeToken<Map<String, String>>() {}.getType();
+        GlobalVars.msTranslator = new MSTranslator();
+        GlobalVars.msTranslator.setCachedTranslates(gson.fromJson(content, setType));
     }
 
     static void writeAll(Collection<OpenPosition> tmpStoriesUnique) {

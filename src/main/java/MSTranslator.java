@@ -19,13 +19,18 @@ class MSTranslator {
         Translate.setClientSecret("scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
     }
 
+    void setCachedTranslates(Map<String, String> cT) {
+        cachedTranslates.putAll(cT);
+    }
+
     String getTranslate(String sent) {
-        if (cachedTranslates.containsKey(sent.trim())) {
-            return cachedTranslates.get(sent.trim());
+        sent = sent.replace("(m/w)","").trim();
+        if (cachedTranslates.containsKey(sent)) {
+            return cachedTranslates.get(sent);
         } else {
             try {
-                String translatedText = Translate.execute(sent.trim(), Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
-                cachedTranslates.put(sent.trim(), translatedText);
+                String translatedText = Translate.execute(sent, Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
+                cachedTranslates.put(sent, translatedText);
                 return translatedText;
             } catch (Exception e) {
                 e.printStackTrace();
