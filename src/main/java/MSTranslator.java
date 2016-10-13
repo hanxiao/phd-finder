@@ -24,7 +24,7 @@ class MSTranslator {
     }
 
     String getTranslate(String sent) {
-        sent = sent.replace("(m/w)","").trim();
+        sent = sent.replace("(m/w)","").replace("(f/m)","").trim();
         if (cachedTranslates.containsKey(sent)) {
             return cachedTranslates.get(sent);
         } else {
