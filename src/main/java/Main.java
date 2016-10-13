@@ -1,6 +1,8 @@
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.memetix.mst.language.Language;
+import com.memetix.mst.translate.Translate;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
@@ -59,6 +61,21 @@ public class Main {
             printHelp(parser);
             return;
         }
+
+
+        try {
+            Translate.setClientId("fzeit-backend");
+            Translate.setClientSecret("EMPqFQHxHvRtuSGWTWtDEDlXVeOQkwvp38guui4rGJ4");
+            Translate.setKey("");
+
+            String translatedText = Translate.execute("Bonjour le monde", Language.FRENCH, Language.ENGLISH);
+
+            System.out.println(translatedText);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
+
 
         runner.loadAll();
         runner.updateAll(runner);

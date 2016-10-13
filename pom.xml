@@ -14,6 +14,12 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>com.memetix</groupId>
+            <artifactId>microsoft-translator-java-api</artifactId>
+            <version>0.6.2</version>
+            <type>jar</type>
+        </dependency>
+        <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.1.2</version>
