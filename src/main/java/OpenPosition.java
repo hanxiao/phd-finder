@@ -1,3 +1,4 @@
+import com.memetix.mst.language.Language;
 import com.rometools.rome.feed.synd.SyndEntry;
 import com.sree.textbytes.readabilityBUNDLE.Article;
 import com.sree.textbytes.readabilityBUNDLE.ContentExtractor;
@@ -30,6 +31,9 @@ class OpenPosition {
     String mainContent_zh;
     String title_zh;
     String institute_zh;
+    String mainContent_en;
+    String title_en;
+    String institute_en;
 
     Set<String> tags;
 
@@ -41,11 +45,6 @@ class OpenPosition {
         positionId = this.hashCode();
 
         if (!GlobalVars.allPositions.containsKey(positionId)) {
-
-            title_zh = GlobalVars.msTranslator.getTranslate(title);
-            institute_zh = GlobalVars.msTranslator.getTranslate(institute);
-            mainContent_zh = GlobalVars.msTranslator.getTranslate(mainContent_zh);
-
             pageURL = sf.getLink();
             publishTime = sf.getPublishedDate().getTime();
             try {
@@ -58,6 +57,17 @@ class OpenPosition {
             tags = new HashSet<>();
             tags.add(source);
             fetchTime = System.currentTimeMillis();
+
+            // do the translation
+            title_zh = GlobalVars.msTranslator.getTranslate(title, Language.CHINESE_SIMPLIFIED);
+            institute_zh = GlobalVars.msTranslator.getTranslate(institute, Language.CHINESE_SIMPLIFIED);
+            mainContent_zh = GlobalVars.msTranslator.getTranslate(mainContent, Language.CHINESE_SIMPLIFIED);
+
+            title_en = GlobalVars.msTranslator.getTranslate(title, Language.ENGLISH);
+            institute_en = GlobalVars.msTranslator.getTranslate(institute, Language.ENGLISH);
+            mainContent_en = GlobalVars.msTranslator.getTranslate(mainContent, Language.ENGLISH);
+
+
             GlobalVars.allPositions.put(positionId, this);
             GlobalVars.isUpdated = true;
             LOG.info("[{}] create position {}: {} !", source, institute, title);

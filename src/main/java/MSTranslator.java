@@ -14,7 +14,7 @@ class MSTranslator {
         doAuth();
     }
 
-    void doAuth() {
+    private void doAuth() {
         Translate.setClientId("phd-finder");
         Translate.setClientSecret("scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
     }
@@ -23,14 +23,15 @@ class MSTranslator {
         cachedTranslates.putAll(cT);
     }
 
-    String getTranslate(String sent) {
+    String getTranslate(String sent, Language lang) {
         sent = sent.replace("(m/w)","").replace("(f/m)","").trim();
-        if (cachedTranslates.containsKey(sent)) {
-            return cachedTranslates.get(sent);
+        String skey = lang.toString() + sent;
+        if (cachedTranslates.containsKey(skey)) {
+            return cachedTranslates.get(skey);
         } else {
             try {
-                String translatedText = Translate.execute(sent, Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
-                cachedTranslates.put(sent, translatedText);
+                String translatedText = Translate.execute(sent, Language.AUTO_DETECT, lang);
+                cachedTranslates.put(skey, translatedText);
                 return translatedText;
             } catch (Exception e) {
                 e.printStackTrace();
