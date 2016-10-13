@@ -55,7 +55,7 @@ class JsonIO {
     }
 
     static void writeTranslator() {
-        String jsonOutput = gson.toJson(GlobalVars.msTranslator);
+        String jsonOutput = gson.toJson(GlobalVars.msTranslator.getCachedTranslates());
         writeToFile(new File("database/translator.json"), jsonOutput);
     }
 

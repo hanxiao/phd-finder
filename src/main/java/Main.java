@@ -58,17 +58,6 @@ public class Main {
             return;
         }
 
-        try {
-            Translate.setClientId("phd-finder");
-            Translate.setClientSecret("scBucjkN5FtVMVj4ET2WcjgBsi8FECJyDg/omVJJR1Q=");
-
-            String translatedText = Translate.execute("Bonjour le monde", Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
-            System.out.println(translatedText);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-
-
 
         runner.loadAll();
         runner.updateAll(runner);
@@ -88,6 +77,21 @@ public class Main {
             runner.update(urlPrefix + "praktikum_56194" + urlSuffix, "practical");
             runner.update(urlPrefix + "studentische_hilfskraft_jobs_56195" + urlSuffix, "hiwi");
             runner.update(urlPrefix + "stipendien_47347" + urlSuffix, "scholarship");
+
+            runner.update(urlPrefix + "life_sciences_stellenangebote_und_jobs_37330" + urlSuffix, "lifescience");
+            runner.update(urlPrefix + "stellenangebote_und_jobs_biologie_37265" + urlSuffix, "biologie");
+            runner.update(urlPrefix + "chemie_stellenangebote_und_jobs_47169" + urlSuffix, "chemie");
+            runner.update(urlPrefix + "stellenangebote_und_jobs_physik_47181" + urlSuffix, "physic");
+            runner.update(urlPrefix + "medizin_stellenangebote_und_jobs_47479" + urlSuffix, "medizin");
+            runner.update(urlPrefix + "psychologie_stellenangebote_und_jobs_47215" + urlSuffix, "psychologie");
+            runner.update(urlPrefix + "mathematik_stellenangebote_und_jobs_47282" + urlSuffix, "mathematik");
+            runner.update(urlPrefix + "stellenangebote_und_jobs_informatik_47280" + urlSuffix, "informatik");
+            runner.update(urlPrefix + "stellenangebote_und_jobs_ingenieurwissenschaften_37331" + urlSuffix, "engineer");
+            runner.update(urlPrefix + "stellenangebote_und_jobs_wirtschaftswissenschaften_47289" + urlSuffix, "economics");
+            runner.update(urlPrefix + "politikwissenschaften_stellenangebote_und_jobs_47227" + urlSuffix, "politic");
+            runner.update(urlPrefix + "geisteswissenschaften_stellenangebote_und_jobs_52513" + urlSuffix, "geisteswissen");
+            runner.update(urlPrefix + "stellenangebote_und_jobs_soziologie_47217" + urlSuffix, "soziologie");
+            runner.update(urlPrefix + "stellenangebote_und_jobs_kulturwissenschaften_47291" + urlSuffix, "kulturwissen");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -95,8 +99,8 @@ public class Main {
 
     private void loadAll() {
         try {
-            JsonIO.loadHistory();
             JsonIO.loadTranslator();
+            JsonIO.loadHistory();
         } catch (FileNotFoundException ex) {
             // init the translator
             GlobalVars.msTranslator = new MSTranslator();

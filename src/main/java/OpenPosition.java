@@ -61,11 +61,11 @@ class OpenPosition {
             // do the translation
             title_zh = GlobalVars.msTranslator.getTranslate(title, Language.CHINESE_SIMPLIFIED);
             institute_zh = GlobalVars.msTranslator.getTranslate(institute, Language.CHINESE_SIMPLIFIED);
-            mainContent_zh = GlobalVars.msTranslator.getTranslate(mainContent, Language.CHINESE_SIMPLIFIED);
+            //mainContent_zh = GlobalVars.msTranslator.getTranslate(mainContent, Language.CHINESE_SIMPLIFIED);
 
             title_en = GlobalVars.msTranslator.getTranslate(title, Language.ENGLISH);
             institute_en = GlobalVars.msTranslator.getTranslate(institute, Language.ENGLISH);
-            mainContent_en = GlobalVars.msTranslator.getTranslate(mainContent, Language.ENGLISH);
+            //mainContent_en = GlobalVars.msTranslator.getTranslate(mainContent, Language.ENGLISH);
 
 
             GlobalVars.allPositions.put(positionId, this);
