@@ -35,6 +35,9 @@ class OpenPosition {
     String title_en;
     String institute_en;
 
+    boolean isFav = false;
+    boolean isPushed = false;
+
     Set<String> tags;
 
     OpenPosition(String source, SyndEntry sf) {

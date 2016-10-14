@@ -20,11 +20,12 @@ class MSTranslator {
     }
 
     private void doAuth() {
-        Translate.setClientId("phd-trans");
-        Translate.setClientSecret("fhasBUfHIsNMStTTlFHMdH1RgsWekcSiX+qcp+9GjoU=");
+        Translate.setClientId("phd-gmail-account");
+        Translate.setClientSecret("LJPP1Nc+GPd60MvdHujdXFKnYHo0yd+lrIT6VYfcpUU=");
 
         try {
-            String translatedText = Translate.execute("Bonjour le monde", Language.AUTO_DETECT, Language.CHINESE_SIMPLIFIED);
+            String translatedText = Translate.execute("laptop is good", Language.AUTO_DETECT, Language
+                    .CHINESE_SIMPLIFIED);
             System.out.println(translatedText);
         } catch (Exception ex) {
             ex.printStackTrace();

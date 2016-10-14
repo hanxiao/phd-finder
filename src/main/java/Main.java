@@ -1,21 +1,12 @@
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.memetix.mst.language.Language;
-import com.memetix.mst.translate.Translate;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
-import org.kohsuke.args4j.CmdLineException;
-import org.kohsuke.args4j.CmdLineParser;
-import org.kohsuke.args4j.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.CollectionAdapter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collection;
 
 /**
  * Created by han on 8/16/15.
@@ -23,41 +14,9 @@ import java.util.Collection;
 public class Main {
 
     private static transient final Logger LOG = LoggerFactory.getLogger(Main.class);
-    private static Gson gson = new GsonBuilder()
-            .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();
-
-    @Option(name = "--help", usage = "Print this help message")
-    private boolean help = false;
-
-    private static void printHelp(final CmdLineParser parser) {
-        System.out.print("java -jar phdfinder.jar");
-        parser.printSingleLineUsage(System.out);
-        System.out.println();
-        parser.printUsage(System.out);
-    }
 
     public static void main(final String[] args) throws IOException {
         Main runner = new Main();
-
-        CmdLineParser parser = new CmdLineParser(runner);
-        try {
-            parser.parseArgument(args);
-        } catch (CmdLineException e) {
-            if (runner.help) {
-                printHelp(parser);
-            }
-
-            // handling of wrong arguments
-            System.err.println(e.getMessage());
-            parser.printUsage(System.err);
-            return;
-        }
-
-        if (runner.help) {
-            printHelp(parser);
-            return;
-        }
-
 
         runner.loadAll();
         runner.updateAll(runner);
