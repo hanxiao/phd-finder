@@ -52,6 +52,7 @@ function translate2LocalData(json, lang) {
             });
             break;
     }
+    localeData.id = lang;
     return json;
 }
 
@@ -61,7 +62,13 @@ function loadPositions(positionUrl) {
 
     $.getJSON(positionUrl, function (json) {
         console.log("finish loading %s", positionUrl);
-        curPositions = translate2LocalData(json, localeId);
+        vm = new Vue({
+            el: '#langswitch-bar',
+            data: localeData
+        });
+
+        curPositions = translate2LocalData(json, localeData.id);
+
         new Vue({
             el: '#all-positions',
             data: {positions: curPositions},

@@ -10,3 +10,21 @@
 .top-navbar .navbar-inner {
     padding-top: 10px;
 }
+
+.subnavbar {
+    background: #738ABB;
+    color: white;
+}
+
+.theme-white >.tab-link {
+    color: white !important;
+}
+
+.theme-white >.tab-link.active {
+    color: #738ABB !important;
+}
+
+.subnavbar>.buttons-row {
+    width: 80%;
+    margin: 0 auto;
+}

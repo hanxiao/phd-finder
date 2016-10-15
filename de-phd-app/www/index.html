@@ -47,12 +47,25 @@
         <div class="navbar top-navbar">
             <div class="navbar-inner">
                 <div class="center sliding">学术职位</div>
+                <div class="subnavbar">
+                    <div class="buttons-row theme-white" id="langswitch-bar">
+                        <div class="button tab-link" v-bind:class="{active: id=='de'}"
+                             onclick="translate2LocalData(curPositions, 'de')">德文
+                        </div>
+                        <div class="button tab-link" v-bind:class="{active: id=='zh-cn'}"
+                             onclick="translate2LocalData(curPositions, 'zh-cn')">中文
+                        </div>
+                        <div class="button tab-link" v-bind:class="{active: id=='en-us'}"
+                             onclick="translate2LocalData(curPositions, 'en-us')">英文
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
         <div class="pages navbar-through">
             <!-- Page, data-page contains page name-->
-            <div data-page="index-1" class="page">
+            <div data-page="index-1" class="page with-subnavbar">
                 <!-- Scrollable page content-->
                 <div class="page-content" id="my-portfolio">
 
@@ -62,27 +75,34 @@
                             <div class="list-block order-list media-list">
                                 <ul>
                                     <li class="swipeout" v-for="pos in positions">
-                                        <div class="swipeout-content">
+                                        <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                             <a href="#" class="item-content item-link">
                                                 <div class="item-media">
                                                     <img :src="'img/institute/'+ pos.instituteId +'.png'"
                                                          style="max-width:100%; max-height:100%;"
-                                                         onError="this.onerror=null;this.src='';"
-                                                    >
+                                                         onError="this.onerror=null;this.src='';">
                                                 </div>
                                                 <div class="item-inner">
                                                     <div class="item-title-row">
                                                         <div class="item-title">{{pos.disTitle}}</div>
-                                                        <div class="item-after">{{renderVal(pos.publishTime,'date')}}</div>
+                                                        <div class="item-after">{{renderVal(pos.publishTime,'date')}}
+                                                        </div>
                                                     </div>
                                                     <div class="item-subtitle">{{pos.disInstitute}}</div>
-                                                    <div class="item-text">{{pos.mainContent}}</div>
+                                                    <div class="item-text">
+                                                        <ul class="tag-cloud">
+                                                            <li class="fav-icon" v-if="pos.isFav"><i
+                                                                    class="fa fa-gratipay"></i></li>
+                                                            <li v-for="tag in pos.tags">{{tag}}</li>
+                                                        </ul>
+                                                        {{pos.mainContent}}
+                                                    </div>
                                                 </div>
                                             </a>
                                         </div>
 
                                         <div class="swipeout-actions-right">
-                                            <a href="#" class="mark bg-orange">收藏</a>
+                                            <a href="#" class="mark swipe-bg-color"><i class="fa fa-gratipay"></i>&nbsp;收藏</a>
                                         </div>
                                     </li>
                                 </ul>

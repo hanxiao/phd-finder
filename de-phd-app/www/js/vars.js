@@ -24,7 +24,7 @@ myApp.addView('#profile-view', {
     dynamicNavbar: true
 });
 
-var allPositionUrl = 'http://ojins.com/data/phd/uncompressed/all.json';
+var allPositionUrl = 'http://ojins.com/data/phd/uncompressed/segment-0.json';
 var fieldTextMapUrl = 'data/field-text-en.json';
 var strategyPoolUrl = 'data/dummy/strategies.json';
 
@@ -67,12 +67,10 @@ var pieChartOptions = {
     }
 };
 
-var localeId = 'zh-cn';
-var localeCur = 'USD';
+var localeData = {id: 'de'};
 var fieldTextMap;
 var currentPool;
-
-moment.locale(localeId);
+moment.locale('zh-cn');
 
 var recoSwiper = myApp.swiper('.reco-swiper', {
     pagination:'.reco-swiper .swiper-pagination',
