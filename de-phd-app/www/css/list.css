@@ -71,12 +71,13 @@
 }
 
 #all-positions .item-media {
-    width: 50px;
+    width: 15%;
 }
 
 #all-positions .item-after {
     font-size: 10px;
     color: darkgrey;
+    line-height: 25px;
 }
 
 #all-positions {

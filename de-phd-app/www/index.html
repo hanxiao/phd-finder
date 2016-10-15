@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:max-width="http://www.w3.org/1999/xhtml">
+<html xmlns:max-width="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
     <!--
     Customize this policy to fit your own app's needs. For more guidance, see:
@@ -61,18 +61,28 @@
                         <div id="all-positions">
                             <div class="list-block order-list media-list">
                                 <ul>
-                                    <li class="item-content" v-for="pos in positions">
-                                        <div class="item-media">
-                                            <img src="img/institute/{{pos.instituteId}}.png"
-                                                 style="max-width:100%; max-height:100%;">
+                                    <li class="swipeout" v-for="pos in positions">
+                                        <div class="swipeout-content">
+                                            <a href="#" class="item-content item-link">
+                                                <div class="item-media">
+                                                    <img :src="'img/institute/'+ pos.instituteId +'.png'"
+                                                         style="max-width:100%; max-height:100%;"
+                                                         onError="this.onerror=null;this.src='';"
+                                                    >
+                                                </div>
+                                                <div class="item-inner">
+                                                    <div class="item-title-row">
+                                                        <div class="item-title">{{pos.disTitle}}</div>
+                                                        <div class="item-after">{{renderVal(pos.publishTime,'date')}}</div>
+                                                    </div>
+                                                    <div class="item-subtitle">{{pos.disInstitute}}</div>
+                                                    <div class="item-text">{{pos.mainContent}}</div>
+                                                </div>
+                                            </a>
                                         </div>
-                                        <div class="item-inner">
-                                            <div class="item-title-row">
-                                                <div class="item-title">{{pos.disTitle}}</div>
-                                                <div class="item-after">{{renderVal(pos.publishTime,'date')}}</div>
-                                            </div>
-                                            <div class="item-subtitle">{{pos.disInstitute}}</div>
-                                            <div class="item-text">{{pos.mainContent}}</div>
+
+                                        <div class="swipeout-actions-right">
+                                            <a href="#" class="mark bg-orange">收藏</a>
                                         </div>
                                     </li>
                                 </ul>
@@ -223,27 +233,27 @@
         <div class="toolbar-inner">
             <a href="#port-view" class="tab-link active">
                 <span class="icon">
-                <i class="fa fa-line-chart"></i>
+                <i class="fa fa-graduation-cap"></i>
                 </span>
                 <span class="tabbar-label">职位</span>
             </a>
             <a href="#invest-view" class="tab-link" onclick="refreshSparklines()">
                 <span class="icon">
-                <i class="fa fa-shopping-basket"></i>
+                <i class="fa fa-gratipay"></i>
                 </span>
                 <span class="tabbar-label">收藏</span>
             </a>
             <a href="#profile-view" class="tab-link">
                 <span class="icon">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-comments-o"></i>
                 </span>
                 <span class="tabbar-label">咨询</span>
             </a>
             <a href="#profile-view" class="tab-link">
                 <span class="icon">
-                <i class="fa fa-user"></i>
+                <i class="fa fa-bars"></i>
                 </span>
-                <span class="tabbar-label">设置</span>
+                <span class="tabbar-label">更多</span>
             </a>
         </div>
     </div>
