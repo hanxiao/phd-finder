@@ -28,3 +28,8 @@
     width: 80%;
     margin: 0 auto;
 }
+
+html.ios-gt-8 .navbar .center {
+    font-weight: normal;
+    padding-top: 10px;
+}

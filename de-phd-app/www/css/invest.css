@@ -1,40 +1,3 @@
-#invest-view .top-navbar {
-    height: 35%;
-}
-
-#invest-view .navbar-inner {
-    height: 44px;
-}
-
-#invest-view .navbar {
-    background: linear-gradient(135deg, #738abb, #56d9b6, #6fc7db, #8a81e0, #abd6c1, #c4b6d1);
-    background-size: 1200% 1200%;
-
-    -webkit-animation: gradientbackground2 53s ease infinite;
-    -moz-animation: gradientbackground2 53s ease infinite;
-    animation: gradientbackground2 53s ease infinite;
-}
-
-#invest-view .pages {
-    top: 35%;
-    height: 65%;
-}
-
-@-webkit-keyframes gradientbackground2 {
-    0%{background-position:0% 52%}
-    50%{background-position:100% 49%}
-    100%{background-position:0% 52%}
-}
-@-moz-keyframes gradientbackground2 {
-    0%{background-position:0% 52%}
-    50%{background-position:100% 49%}
-    100%{background-position:0% 52%}
-}
-@keyframes gradientbackground2 {
-    0%{background-position:0% 52%}
-    50%{background-position:100% 49%}
-    100%{background-position:0% 52%}
-}
 
 .searchbar:after {
     content: none;
@@ -48,10 +11,6 @@
 
 .searchbar .searchbar-input {
     height: 38px;
-}
-
-#invest-view .pages .page .page-content {
-    padding-top: 0;
 }
 
 ::-webkit-input-placeholder {

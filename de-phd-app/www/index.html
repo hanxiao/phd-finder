@@ -19,7 +19,7 @@
     <meta name="msapplication-tap-highlight" content="no">
     <meta name="viewport"
           content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-    <title>Quantiness</title>
+    <title>找德到</title>
     <link rel="stylesheet" href="css/myfont.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
@@ -92,7 +92,7 @@
                                                     <div class="item-text">
                                                         <ul class="tag-cloud">
                                                             <li class="fav-icon" v-if="pos.isFav"><i
-                                                                    class="fa fa-gratipay"></i></li>
+                                                                    class="fa fa-heart"></i></li>
                                                             <li v-for="tag in pos.tags">{{tag}}</li>
                                                         </ul>
                                                         {{pos.mainContent}}
@@ -102,9 +102,10 @@
                                         </div>
 
                                         <div class="swipeout-actions-right">
-                                            <a href="#" class="mark swipe-bg-color"><i class="fa fa-gratipay"></i>&nbsp;收藏</a>
+                                            <a href="#" class="mark swipe-bg-color"><i class="fa fa-heart"></i>&nbsp;收藏</a>
                                         </div>
                                     </li>
+                                    <infinite-loading :on-infinite="onInfinite" :distance="distance" v-if="positions.length < 500"></infinite-loading>
                                 </ul>
 
                             </div>
@@ -156,93 +157,64 @@
         <div class="navbar top-navbar">
             <div class="navbar-inner">
                 <div class="center sliding">收藏的职位</div>
-            </div>
-            <div class="navbar-search">
-                <!-- Search Bar -->
-                <form data-search-list=".list-block-search" data-search-in=".item-title"
-                      class="searchbar searchbar-init">
-                    <div class="searchbar-input">
-                        <input type="search" style="font-size: 28px;" placeholder="How do you want to invest?"><a
-                            href="#" class="searchbar-clear"></a>
+                <div class="subnavbar">
+                    <div class="buttons-row theme-white" id="langswitch-bar2">
+                        <div class="button tab-link" v-bind:class="{active: id=='de'}"
+                             onclick="translate2LocalData(curPositions, 'de')">德文
+                        </div>
+                        <div class="button tab-link" v-bind:class="{active: id=='zh-cn'}"
+                             onclick="translate2LocalData(curPositions, 'zh-cn')">中文
+                        </div>
+                        <div class="button tab-link" v-bind:class="{active: id=='en-us'}"
+                             onclick="translate2LocalData(curPositions, 'en-us')">英文
+                        </div>
                     </div>
-                </form>
-            </div>
-            <div class="tag-cloud">
-                <div class="outline-btn">Most popular</div>
-                <div class="outline-btn">High-growth</div>
-                <div class="outline-btn">Dividend-based</div>
-                <div class="outline-btn">Long term</div>
-                <div class="outline-btn">Short term</div>
-                <div class="outline-btn">Hedged</div>
-                <div class="outline-btn">Focus US</div>
+                </div>
             </div>
         </div>
         <div class="pages navbar-through">
-            <div data-page="strategy-store" class="page">
+            <div data-page="strategy-store" class="page with-subnavbar">
                 <div class="page-content smooth-scroll">
-                    <div class="content-block-title">
-                        Recommend for You
-                    </div>
-                    <div class="list-block accordion-list" id="current-pool">
-                        <ul>
-                            <li class="accordion-item" v-for="strategy in pool">
-                                <a href="#" class="item-content item-link">
-                                    <div class="item-media sparkline-holder"
-                                         id="{{strategy['strategy_id']}}-sparkline-icon"
-                                         data-series-short="{{strategy['series_week']}}"
-                                         data-series-long="{{strategy['series_month']}}">
-                                        <img src="img/infinity.gif" height="30px">
-                                    </div>
-                                    <div class="item-inner">
-                                        <div class="item-title algo-name-inlist">{{strategy[':strategy_name']}}</div>
-                                        <div class="item-after">{{renderVal(strategy[':invested_capital'],'cur')}}</div>
-                                        <div class="item-after">{{renderVal(strategy[':perf_last_month'], 'pct')}}</div>
-                                    </div>
-                                </a>
+                    <div class="content-block status-board">
 
-                                <div class="accordion-item-content">
-                                    <div class="content-block">
-                                        <div class="list-block detail-list">
-                                            <ul>
-                                                <li class="item-content"
-                                                    v-for="value in strategy | filterBy ':' in '$key'">
-                                                    <div class="item-inner">
-                                                        <div class="item-title">{{getNameOfKey($key)}}</div>
-                                                        <div class="item-after">{{renderVal(value,
-                                                            getTypeOfKey($key))}}
+                        <div id="fav-positions">
+                            <div class="list-block order-list media-list">
+                                <ul>
+                                    <li class="swipeout" v-for="pos in favPositions">
+                                        <div class="swipeout-content">
+                                            <a href="#" class="item-content item-link">
+                                                <div class="item-media">
+                                                    <img :src="'img/institute/'+ pos.instituteId +'.png'"
+                                                         style="max-width:100%; max-height:100%;"
+                                                         onError="this.onerror=null;this.src='';">
+                                                </div>
+                                                <div class="item-inner">
+                                                    <div class="item-title-row">
+                                                        <div class="item-title">{{pos.disTitle}}</div>
+                                                        <div class="item-after">{{renderVal(pos.publishTime,'date')}}
                                                         </div>
                                                     </div>
-                                                </li>
-                                            </ul>
+                                                    <div class="item-subtitle">{{pos.disInstitute}}</div>
+                                                    <div class="item-text">
+                                                        <ul class="tag-cloud">
+                                                            <li class="fav-icon" v-if="pos.isFav"><i
+                                                                    class="fa fa-heart"></i></li>
+                                                            <li v-for="tag in pos.tags">{{tag}}</li>
+                                                        </ul>
+                                                        {{pos.mainContent}}
+                                                    </div>
+                                                </div>
+                                            </a>
                                         </div>
-                                        <div class="list-block">
-                                            <ul>
-                                                <li>
-                                                    <a href="#" class="item-link list-button">
-                                                        <i class="fa fa-shopping-basket"></i> &nbsp;&nbsp;
-                                                        Apply to my portfolio</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="item-link list-button">
-                                                        <i class="fa fa-eye" aria-hidden="true"></i> &nbsp;&nbsp;
-                                                        Add to my watchlist</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="item-link list-button">
-                                                        <i class="fa fa-random" aria-hidden="true"></i>&nbsp;&nbsp;
-                                                        Compare with other strategies</a>
-                                                </li>
-                                                <li>
-                                                    <a href="#" class="item-link list-button">
-                                                        <i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;&nbsp;
-                                                        Learn more about the performance</a>
-                                                </li>
-                                            </ul>
+
+                                        <div class="swipeout-actions-right">
+                                            <a href="#" class="mark swipe-bg-color-del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
                                         </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -259,7 +231,7 @@
             </a>
             <a href="#invest-view" class="tab-link" onclick="refreshSparklines()">
                 <span class="icon">
-                <i class="fa fa-gratipay"></i>
+                <i class="fa fa-heart-o"></i>
                 </span>
                 <span class="tabbar-label">收藏</span>
             </a>
@@ -294,6 +266,7 @@
 <script type="text/javascript" src="lib/js/jquery.sparkline.min.js"></script>
 <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
 <script type="text/javascript" src="lib/js/welcomescreen.js"></script>
+<script type="text/javascript" src="lib/js/vue-infinite-loading.js"></script>
 <!-- Path to your app js-->
 <script type="text/javascript" src="js/vars.js"></script>
 <script type="text/javascript" src="js/data-render.js"></script>

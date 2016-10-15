@@ -85,6 +85,21 @@
     color: black;
 }
 
+#fav-positions .item-media {
+    width: 15%;
+    max-width: 64px;
+}
+
+#fav-positions .item-after {
+    font-size: 10px;
+    color: darkgrey;
+    line-height: 25px;
+}
+
+#fav-positions {
+    color: black;
+}
+
 .tag-cloud {
     padding-left: 0 !important;
     font-size: small;
@@ -119,6 +134,10 @@
 
 .swipe-bg-color {
     background-color: #56d9b6 !important;
+}
+
+.swipe-bg-color-del {
+    background-color: #C4B6D1 !important;
 }
 
 .favPosition {

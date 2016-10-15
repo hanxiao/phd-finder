@@ -24,7 +24,7 @@ myApp.addView('#profile-view', {
     dynamicNavbar: true
 });
 
-var allPositionUrl = 'http://ojins.com/data/phd/uncompressed/segment-0.json';
+var allPositionUrl = 'http://ojins.com/data/phd/uncompressed/all.json';
 var fieldTextMapUrl = 'data/field-text-en.json';
 var strategyPoolUrl = 'data/dummy/strategies.json';
 

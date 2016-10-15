@@ -62,8 +62,12 @@ function loadPositions(positionUrl) {
 
     $.getJSON(positionUrl, function (json) {
         console.log("finish loading %s", positionUrl);
-        vm = new Vue({
+        new Vue({
             el: '#langswitch-bar',
+            data: localeData
+        });
+        new Vue({
+            el: '#langswitch-bar2',
             data: localeData
         });
 
@@ -71,10 +75,53 @@ function loadPositions(positionUrl) {
 
         new Vue({
             el: '#all-positions',
+            data: {
+                distance: 100,
+                positions: []
+            },
+            ready: function () {
+                for (var i = 0; i < 20; i++) {
+                    this.positions.push(curPositions[i]);
+                }
+            },
+            methods: {
+                renderVal: function (val, typ) {
+                    return renderValue(val, typ);
+                },
+                onInfinite: function () {
+                    setTimeout(function () {
+                        var temp = [];
+                        for (var i = this.positions.length; i <= this.positions.length + 20; i++) {
+                            temp.push(curPositions[i]);
+                        }
+                        this.positions = this.positions.concat(temp);
+                        this.$broadcast('$InfiniteLoading:loaded');
+                    }.bind(this), 300);
+                }
+            },
+            created: function () {
+                myApp.hideIndicator();
+                try {
+                    navigator.splashscreen.hide();
+                } catch (ex) {
+                    console.error("hide splash screen error");
+                }
+            }
+        });
+
+        new Vue({
+            el: '#fav-positions',
             data: {positions: curPositions},
             methods: {
                 renderVal: function (val, typ) {
                     return renderValue(val, typ);
+                }
+            },
+            computed: {
+                favPositions: function () {
+                    return this.positions.filter(function (x) {
+                        return x.isFav
+                    })
                 }
             },
             created: function () {
