@@ -1,0 +1,60 @@
+.ct-series-a .ct-area, .ct-series-a .ct-slice-pie {
+    fill: #738ABB;
+}
+
+.ct-series-a .ct-point, .ct-series-a .ct-line {
+    /* Colour of your points */
+    stroke: #738ABB;
+}
+
+.ct-series-b .ct-area, .ct-series-b .ct-slice-pie {
+    fill: #56D9B6;
+}
+
+.ct-series-b .ct-point, .ct-series-b .ct-line {
+    /* Colour of your points */
+    stroke: #56D9B6;
+}
+
+.ct-line {
+    stroke-width: 2px;
+}
+
+.ct-point {
+    stroke-width: 6px;
+}
+
+.ct-series-a .ct-point {
+    /* Colour of your points */
+    stroke: #08349c;
+}
+
+.ct-series-a .ct-slice-donut {
+    /* fill of the pie slieces */
+    /* give your pie slices some outline or separate them visually by using the background color here */
+    stroke: #738ABB !important;
+}
+
+.ct-series-b .ct-slice-donut {
+    stroke: #56D9B6 !important;
+}
+
+.ct-series-c .ct-slice-donut {
+    stroke: #658E84 !important;
+}
+
+.ct-series-d .ct-slice-donut {
+    stroke: #6FC7DB !important;
+}
+
+.ct-series-e .ct-slice-donut {
+    stroke: #8A81E0 !important;
+}
+
+.ct-series-f .ct-slice-donut {
+    stroke: #ABD6C1 !important;
+}
+
+.ct-series-g .ct-slice-donut {
+    stroke: #C4B6D1 !important;
+}

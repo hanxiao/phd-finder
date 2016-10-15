@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns:max-width="http://www.w3.org/1999/xhtml">
+<head>
+    <!--
+    Customize this policy to fit your own app's needs. For more guidance, see:
+        https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
+    Some notes:
+        * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
+        * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
+        * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
+            * Enable inline JS: add 'unsafe-inline' to default-src
+    -->
+    <meta charset="utf-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="msapplication-tap-highlight" content="no">
+    <meta name="viewport"
+          content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+    <title>Quantiness</title>
+    <link rel="stylesheet" href="css/myfont.css">
+    <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
+    <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
+    <link rel="stylesheet" href="lib/css/animate.css">
+    <link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="lib/css/chartist.min.css">
+    <link rel="stylesheet" href="lib/css/welcomescreen.css">
+    <!-- Path to your custom app styles-->
+    <link rel="stylesheet" href="css/tabbar.css">
+    <link rel="stylesheet" href="css/general.css">
+    <link rel="stylesheet" href="css/chart.css">
+    <link rel="stylesheet" href="css/card.css">
+    <link rel="stylesheet" href="css/list.css">
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/invest.css">
+    <link rel="stylesheet" href="css/login.css">
+
+</head>
+<body>
+<!-- We need to set "toolbar-through" class on it to keep space for our tab bar-->
+<div class="views tabs toolbar-through">
+    <!-- Your first view, it is also a .tab and should have "active" class to make it visible by default-->
+    <div id="port-view" class="view view-main tab active">
+        <!-- Pages-->
+        <div class="navbar top-navbar">
+            <div class="navbar-inner">
+                <div class="center sliding">学术职位</div>
+            </div>
+        </div>
+
+        <div class="pages navbar-through">
+            <!-- Page, data-page contains page name-->
+            <div data-page="index-1" class="page">
+                <!-- Scrollable page content-->
+                <div class="page-content" id="my-portfolio">
+
+                    <div class="content-block status-board">
+
+                        <div id="all-positions">
+                            <div class="list-block order-list media-list">
+                                <ul>
+                                    <li class="item-content" v-for="pos in positions">
+                                        <div class="item-media">
+                                            <img src="img/institute/{{pos.instituteId}}.png"
+                                                 style="max-width:100%; max-height:100%;">
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-title-row">
+                                                <div class="item-title">{{pos.disTitle}}</div>
+                                                <div class="item-after">{{renderVal(pos.publishTime,'date')}}</div>
+                                            </div>
+                                            <div class="item-subtitle">{{pos.disInstitute}}</div>
+                                            <div class="item-text">{{pos.mainContent}}</div>
+                                        </div>
+                                    </li>
+                                </ul>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Second view (for second wrap)-->
+    <div id="profile-view" class="view tab">
+        <!-- We can make with view with navigation, let's add Top Navbar-->
+        <div class="navbar top-navbar">
+            <div class="navbar-inner">
+                <div class="center sliding">咨询</div>
+            </div>
+        </div>
+        <div class="pages navbar-through">
+            <div data-page="index-2" class="page">
+                <div class="page-content smooth-scroll">
+                    <div class="content-block">
+                        <p>This is a second view. Lets, for example, have here some internal pages with navbar
+                            navigation</p>
+                    </div>
+                    <div class="list-block">
+                        <ul>
+                            <li><a href="about.html" class="item-link">
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">About Us</div>
+                                    </div>
+                                </div>
+                            </a></li>
+                            <li><a href="services.html" class="item-link">
+                                <div class="item-content">
+                                    <div class="item-inner">
+                                        <div class="item-title">Services</div>
+                                    </div>
+                                </div>
+                            </a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="invest-view" class="view tab">
+        <!-- We can make with view with navigation, let's add Top Navbar-->
+        <div class="navbar top-navbar">
+            <div class="navbar-inner">
+                <div class="center sliding">收藏的职位</div>
+            </div>
+            <div class="navbar-search">
+                <!-- Search Bar -->
+                <form data-search-list=".list-block-search" data-search-in=".item-title"
+                      class="searchbar searchbar-init">
+                    <div class="searchbar-input">
+                        <input type="search" style="font-size: 28px;" placeholder="How do you want to invest?"><a
+                            href="#" class="searchbar-clear"></a>
+                    </div>
+                </form>
+            </div>
+            <div class="tag-cloud">
+                <div class="outline-btn">Most popular</div>
+                <div class="outline-btn">High-growth</div>
+                <div class="outline-btn">Dividend-based</div>
+                <div class="outline-btn">Long term</div>
+                <div class="outline-btn">Short term</div>
+                <div class="outline-btn">Hedged</div>
+                <div class="outline-btn">Focus US</div>
+            </div>
+        </div>
+        <div class="pages navbar-through">
+            <div data-page="strategy-store" class="page">
+                <div class="page-content smooth-scroll">
+                    <div class="content-block-title">
+                        Recommend for You
+                    </div>
+                    <div class="list-block accordion-list" id="current-pool">
+                        <ul>
+                            <li class="accordion-item" v-for="strategy in pool">
+                                <a href="#" class="item-content item-link">
+                                    <div class="item-media sparkline-holder"
+                                         id="{{strategy['strategy_id']}}-sparkline-icon"
+                                         data-series-short="{{strategy['series_week']}}"
+                                         data-series-long="{{strategy['series_month']}}">
+                                        <img src="img/infinity.gif" height="30px">
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title algo-name-inlist">{{strategy[':strategy_name']}}</div>
+                                        <div class="item-after">{{renderVal(strategy[':invested_capital'],'cur')}}</div>
+                                        <div class="item-after">{{renderVal(strategy[':perf_last_month'], 'pct')}}</div>
+                                    </div>
+                                </a>
+
+                                <div class="accordion-item-content">
+                                    <div class="content-block">
+                                        <div class="list-block detail-list">
+                                            <ul>
+                                                <li class="item-content"
+                                                    v-for="value in strategy | filterBy ':' in '$key'">
+                                                    <div class="item-inner">
+                                                        <div class="item-title">{{getNameOfKey($key)}}</div>
+                                                        <div class="item-after">{{renderVal(value,
+                                                            getTypeOfKey($key))}}
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                        <div class="list-block">
+                                            <ul>
+                                                <li>
+                                                    <a href="#" class="item-link list-button">
+                                                        <i class="fa fa-shopping-basket"></i> &nbsp;&nbsp;
+                                                        Apply to my portfolio</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="item-link list-button">
+                                                        <i class="fa fa-eye" aria-hidden="true"></i> &nbsp;&nbsp;
+                                                        Add to my watchlist</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="item-link list-button">
+                                                        <i class="fa fa-random" aria-hidden="true"></i>&nbsp;&nbsp;
+                                                        Compare with other strategies</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="item-link list-button">
+                                                        <i class="fa fa-tachometer" aria-hidden="true"></i>&nbsp;&nbsp;
+                                                        Learn more about the performance</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bottom Tabbar-->
+    <div class="toolbar tabbar tabbar-labels">
+        <div class="toolbar-inner">
+            <a href="#port-view" class="tab-link active">
+                <span class="icon">
+                <i class="fa fa-line-chart"></i>
+                </span>
+                <span class="tabbar-label">职位</span>
+            </a>
+            <a href="#invest-view" class="tab-link" onclick="refreshSparklines()">
+                <span class="icon">
+                <i class="fa fa-shopping-basket"></i>
+                </span>
+                <span class="tabbar-label">收藏</span>
+            </a>
+            <a href="#profile-view" class="tab-link">
+                <span class="icon">
+                <i class="fa fa-user"></i>
+                </span>
+                <span class="tabbar-label">咨询</span>
+            </a>
+            <a href="#profile-view" class="tab-link">
+                <span class="icon">
+                <i class="fa fa-user"></i>
+                </span>
+                <span class="tabbar-label">设置</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="lib/js/jquery-2.1.4.min.js"></script>
+<!-- Path to Framework7 Library JS-->
+<script type="text/javascript" src="lib/js/js.cookie.js"></script>
+<script type="text/javascript" src="lib/js/jsonselect.js"></script>
+<script type="text/javascript" src="lib/js/moment.js"></script>
+<script type="text/javascript" src="lib/js/lz-string.min.js"></script>
+<script type="text/javascript" src="lib/js/Chartist.min.js"></script>
+<script type="text/javascript" src="lib/js/vue.js"></script>
+<script type="text/javascript" src="lib/js/inobounce.js"></script>
+<script type="text/javascript" src="lib/js/in-view.min.js"></script>
+<script type="text/javascript" src="lib/js/accounting.min.js"></script>
+<script type="text/javascript" src="lib/js/jquery.sparkline.min.js"></script>
+<script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
+<script type="text/javascript" src="lib/js/welcomescreen.js"></script>
+<!-- Path to your app js-->
+<script type="text/javascript" src="js/vars.js"></script>
+<script type="text/javascript" src="js/data-render.js"></script>
+<script type="text/javascript" src="js/data-loader.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/init-account.js"></script>
+</body>
+</html>

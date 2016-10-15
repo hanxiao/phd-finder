@@ -21,8 +21,8 @@ class OpenPosition {
     int positionId, instituteId;
     String institute;
     String title;
-    String pageURL;
-    String logoURL;
+    transient String pageURL;
+    transient String logoURL;
     long publishTime;
     long fetchTime;
     String source;
@@ -35,8 +35,11 @@ class OpenPosition {
     String title_en;
     String institute_en;
 
+    String summary;
+
     boolean isFav = false;
     boolean isPushed = false;
+    boolean hasLogo = false;
 
     Set<String> tags;
 
@@ -109,6 +112,7 @@ class OpenPosition {
 
                 if (article != null) {
                     this.mainContent = article.getCleanedArticleText();
+                    this.summary = article.getMetaDescription();
                 }
             }
         }
