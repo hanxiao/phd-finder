@@ -81,6 +81,12 @@ public class Main {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream("update-time.json"), "utf-8"))) {
+            writer.write("{\"updateTime:\"" + System.currentTimeMillis() + "}");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void update(String rssUrl, String sourceName) throws Exception {

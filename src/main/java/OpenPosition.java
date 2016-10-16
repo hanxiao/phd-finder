@@ -49,6 +49,7 @@ class OpenPosition {
         institute = sf.getDescription().getValue();
         instituteId = Math.abs(institute.hashCode());
         positionId = this.hashCode();
+        System.out.print(".");
 
         if (positionId == 578374952) return;
 
