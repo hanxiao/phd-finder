@@ -66,7 +66,8 @@ function loadPositions(positionUrl) {
                 positions: [],
                 tagMap: translateTags,
                 lang: localeData,
-                eIdx: 0
+                eIdx: 0,
+                focusPosition: false
             },
             ready: function () {
                 this.eIdx = populatePosition(0, 20, this.positions, this.curTag);

@@ -39,9 +39,9 @@
     <link rel="stylesheet" href="css/login.css">
 
 </head>
-<body>
+<body id="all-positions">
 <!-- We need to set "toolbar-through" class on it to keep space for our tab bar-->
-<div class="views tabs toolbar-through" id="all-positions">
+<div class="views tabs toolbar-through">
     <!-- Your first view, it is also a .tab and should have "active" class to make it visible by default-->
     <div id="port-view" class="view view-main tab active">
         <!-- Pages-->
@@ -99,7 +99,7 @@
 
                         <div class="list-block order-list media-list">
                             <ul>
-                                <li class="swipeout"
+                                <li data-popup=".popup-detail" class="open-popup swipeout" v-on:click="focusPosition=positions[$index]"
                                     v-for="pos in positions | orderBy 'publishTime' -1">
                                     <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                         <a href="#" class="item-content item-link">
@@ -114,7 +114,7 @@
                                                     {{pos.disInstitute}}
                                                 </div>
                                                 <div class="uni-logo">
-                                                    <img :src="'img/institute/'+ pos.instituteId +'.png'"
+                                                    <img :src="'img/logo/'+ pos.instituteId +'.png'"
                                                          style="max-width:100%; max-height:100%;"
                                                          onError="imgError(this)">
                                                 </div>
@@ -124,7 +124,7 @@
                                                                 class="fa fa-heart"></i></li>
                                                         <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
                                                     </ul>
-                                                    {{pos.mainContent}}
+                                                    {{pos.summary}}
                                                 </div>
                                             </div>
                                         </a>
@@ -193,14 +193,10 @@
                             <div v-if="favPositions.length>0">
                                 <div class="list-block order-list media-list">
                                     <ul>
-                                        <li class="swipeout" v-for="pos in favPositions">
-                                            <div class="swipeout-content">
+                                        <li data-popup=".popup-detail" class="open-popup swipeout" v-on:click="focusPosition=favPositions[$index]"
+                                            v-for="pos in favPositions | orderBy 'publishTime' -1">
+                                            <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                                 <a href="#" class="item-content item-link">
-                                                    <div class="item-media">
-                                                        <img :src="'img/institute/'+ pos.instituteId +'.png'"
-                                                             style="max-width:100%; max-height:100%;"
-                                                             onError="this.onerror=null;this.src='';">
-                                                    </div>
                                                     <div class="item-inner">
                                                         <div class="item-title-row">
                                                             <div class="item-title">{{pos.disTitle}}</div>
@@ -208,14 +204,21 @@
                                                                 {{renderVal(pos.publishTime,'date')}}
                                                             </div>
                                                         </div>
-                                                        <div class="item-subtitle">{{pos.disInstitute}}</div>
+                                                        <div class="item-subtitle">
+                                                            {{pos.disInstitute}}
+                                                        </div>
+                                                        <div class="uni-logo">
+                                                            <img :src="'img/logo/'+ pos.instituteId +'.png'"
+                                                                 style="max-width:100%; max-height:100%;"
+                                                                 onError="imgError(this)">
+                                                        </div>
                                                         <div class="item-text">
                                                             <ul class="tag-cloud">
                                                                 <li class="fav-icon" v-if="pos.isFav"><i
                                                                         class="fa fa-heart"></i></li>
                                                                 <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
                                                             </ul>
-                                                            {{pos.mainContent}}
+                                                            {{pos.summary}}
                                                         </div>
                                                     </div>
                                                 </a>
@@ -283,35 +286,94 @@
             </div>
         </div>
     </div>
+
+
     <!-- Bottom Tabbar-->
     <div class="toolbar tabbar tabbar-labels">
         <div class="toolbar-inner">
             <a href="#port-view" class="tab-link active">
-                <span class="icon">
-                <i class="fa fa-graduation-cap"></i>
-                </span>
+                <i class="icon">
+                    <i class="fa fa-graduation-cap"></i>
+                </i>
                 <span class="tabbar-label">职位</span>
             </a>
-            <a href="#invest-view" class="tab-link" onclick="refreshSparklines()">
-                <span class="icon">
-                <i class="fa fa-heart-o"></i>
-                </span>
+            <a href="#invest-view" class="tab-link">
+                <i class="icon">
+                    <i class="fa fa-heart"></i>
+                    <span v-if="favPositions.length >0" class="badge bg-green">{{favPositions.length}}</span>
+                </i>
+
                 <span class="tabbar-label">收藏</span>
             </a>
             <a href="#profile-view" class="tab-link">
-                <span class="icon">
-                <i class="fa fa-comments-o"></i>
-                </span>
+                <i class="icon">
+                    <i class="fa fa-comments-o"></i>
+                </i>
                 <span class="tabbar-label">咨询</span>
             </a>
             <a href="#profile-view" class="tab-link">
-                <span class="icon">
-                <i class="fa fa-bars"></i>
-                </span>
+                <i class="icon">
+                    <i class="fa fa-bars"></i>
+                </i>
                 <span class="tabbar-label">更多</span>
             </a>
         </div>
     </div>
+
+
+</div>
+
+<div class="popup popup-detail ">
+    <div v-if="focusPosition" class="page toolbar-fixed navbar-fixed">
+        <div class="page-content">
+            <div class="content-block">
+                <p class="detail-title">{{focusPosition.disTitle}}</p>
+            </div>
+            <div class="content-block">
+                <p class="detail-uni">{{focusPosition.disInstitute}}</p>
+                <ul class="tag-cloud">
+                    <li class="fav-icon" v-if="focusPosition.isFav"><i
+                            class="fa fa-heart"></i></li>
+                    <li v-for="tag in focusPosition.tags">{{transTag(tag)}}</li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <p class="detail-date">{{renderVal(focusPosition.publishTime,'date')}}</p>
+            </div>
+            <div class="content-block">
+                <div align="center">
+                    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+                    <!-- inside-phdapp-detailpage -->
+                    <ins class="adsbygoogle"
+                         style="display:inline-block;width:320px;height:100px"
+                         data-ad-client="ca-pub-5408889511302651"
+                         data-ad-slot="8872926327"></ins>
+                    <script>
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    </script>
+                </div>
+            </div>
+            <div class="content-block inset">
+                <div class="content-block-inner">
+                    <p class="detail-main">{{{focusPosition.mainContent}}}</p>
+                </div>
+            </div>
+        </div>
+        <div class="toolbar" v-bind:class="[focusPosition.isFav? 'fav-toolbar' : '']">
+            <div class="toolbar-inner">
+                <a href="#" class="link"><i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享</a>
+                <a href="#" v-if='focusPosition.isFav' @click="focusPosition.isFav=false">
+                    <i class="fa fa-trash-o"></i>&nbsp;撤销收藏
+                </a>
+                <a v-else @click="focusPosition.isFav=true">
+                    <i class="fa fa-heart"></i>&nbsp;收藏
+                </a>
+                <a href="#" class="link close-popup"><i class="fa fa-times-circle-o" aria-hidden="true"></i>&nbsp;关闭</a>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 
 <script type="text/javascript" src="cordova.js"></script>

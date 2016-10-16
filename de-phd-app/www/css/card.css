@@ -40,6 +40,10 @@
     animation: gradientbackground 53s ease infinite;
 }
 
+.bg-green {
+    background: #56d9b6;
+}
+
 @-webkit-keyframes gradientbackground {
     0%{background-position:0% 82%}
     50%{background-position:100% 19%}

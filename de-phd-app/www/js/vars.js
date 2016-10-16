@@ -32,7 +32,7 @@ myApp.addView('#profile-view', {
     dynamicNavbar: true
 });
 
-var allPositionUrl = 'http://ojins.com/data/phd/uncompressed/all.json';
+var allPositionUrl = 'http://ojins.com/data/phd/database/uncompressed/all.json';
 var fieldTextMapUrl = 'data/field-text-en.json';
 var strategyPoolUrl = 'data/dummy/strategies.json';
 

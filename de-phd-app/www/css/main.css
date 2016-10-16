@@ -63,3 +63,27 @@
 .smart-select-page .navbar {
     height: 0;
 }
+
+.popup-detail .content-block {
+    color: black;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.popup-detail .tag-cloud {
+    display: inline-block;
+}
+
+.popup-detail .detail-title {
+    font-size: large;
+    font-weight: bold;
+}
+
+.popup-detail .detail-uni {
+    font-size: medium;
+}
+
+.popup-detail .content-block.inset {
+    margin-left: 15px !important;
+    margin-right: 15px !important;
+}

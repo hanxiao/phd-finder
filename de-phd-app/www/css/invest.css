@@ -45,6 +45,8 @@
     background: #56d9b6;
 }
 
+
+
 .outline-btn:active {
     border: 2px solid #56d9b6;
     background: #56d9b6;
@@ -101,4 +103,8 @@ html:not(.watch-active-state) label.label-checkbox:active, html:not(.watch-activ
     -webkit-transition-duration: 0s;
     transition-duration: 0s;
     background-color: rgba(86, 217, 182, 0.59);
+}
+
+.fav-toolbar {
+    background: #4ebb9e !important;
 }
