@@ -76,3 +76,29 @@
 .list-block .item-link.list-button {
     color: #738abb;
 }
+
+#invest-view .subnavbar {
+    background: #4ebb9e;
+}
+
+#invest-view .top-navbar {
+    background: #4ebb9e;
+}
+
+#invest-view .theme-white >.tab-link.active {
+    color: #4ebb9e !important;
+}
+
+.list-block .item-link.active-state {
+    background-color: rgba(86, 217, 182, 0.59);
+}
+
+.list-block .item-link.active-state {
+    background-color: rgba(86, 217, 182, 0.59);
+}
+
+html:not(.watch-active-state) label.label-checkbox:active, html:not(.watch-active-state) label.label-radio:active, label.label-checkbox.active-state, label.label-radio.active-state {
+    -webkit-transition-duration: 0s;
+    transition-duration: 0s;
+    background-color: rgba(86, 217, 182, 0.59);
+}

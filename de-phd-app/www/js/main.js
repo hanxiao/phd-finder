@@ -20,3 +20,4 @@ var app = {
 };
 
 app.initialize();
+

@@ -2,35 +2,6 @@
  * Created by hxiao on 16/9/1.
  */
 
-function generateVueComputed(x, result, ref) {
-    $.each(x, function (idx, ss) {
-        result['_' + ss + '_name'] = function () {
-            return fieldTextMap[ss].text
-        };
-        result['_' + ss + '_value'] = function () {
-            return renderValue(ref[ss], fieldTextMap[ss].type)
-        }
-    });
-    return result;
-}
-
-function generateVueComputedHomo(ss) {
-    result = {};
-    result['_name'] = fieldTextMap[ss].text;
-    result['_value'] = renderValue(curPositions[ss], fieldTextMap[ss].type);
-    return result;
-}
-
-function loadFieldTextMapping(fieldMapUrl) {
-    myApp.showIndicator();
-    console.log("start loading field-text mapping from %s", fieldMapUrl);
-    $.getJSON(fieldMapUrl, function (json) {
-        console.log("finish loading %s", fieldMapUrl);
-        fieldTextMap = json;
-        loadPositions(allPositionUrl)
-    });
-}
-
 function translate2LocalData(json, lang) {
     switch (lang) {
         case "zh-cn":
@@ -56,123 +27,126 @@ function translate2LocalData(json, lang) {
     return json;
 }
 
+function populatePosition(sidx, k, target, filters) {
+    var i = sidx;
+    var pi = 0;
+    while (pi < k && i < curPositions.length) {
+        var arr2 = filters;
+        var isSuperset = true;
+
+        if (arr2.length > 0) {
+            var arr1 = curPositions[i].tags;
+            isSuperset = arr2.every(function(val) { return arr1.indexOf(val) >= 0; });
+        }
+
+        if (isSuperset) {
+            target.push(curPositions[i]);
+            pi++;
+        }
+        i++;
+    }
+    myApp.sizeNavbars('.view-main');
+    return i;
+}
+
 function loadPositions(positionUrl) {
     myApp.showIndicator();
     console.log("start loading positions from %s", positionUrl);
 
     $.getJSON(positionUrl, function (json) {
         console.log("finish loading %s", positionUrl);
-        new Vue({
-            el: '#langswitch-bar',
-            data: localeData
-        });
-        new Vue({
-            el: '#langswitch-bar2',
-            data: localeData
-        });
 
         curPositions = translate2LocalData(json, localeData.id);
 
-        new Vue({
+        vm = new Vue({
             el: '#all-positions',
             data: {
+                curTag: [],
                 distance: 100,
-                positions: []
+                positions: [],
+                tagMap: translateTags,
+                lang: localeData,
+                eIdx: 0
             },
             ready: function () {
-                for (var i = 0; i < 20; i++) {
-                    this.positions.push(curPositions[i]);
+                this.eIdx = populatePosition(0, 20, this.positions, this.curTag);
+                myApp.hideIndicator();
+                myApp.sizeNavbars('.view-main');
+                try {
+                    navigator.splashscreen.hide();
+                } catch (ex) {
+                    console.error("hide splash screen error");
                 }
             },
             methods: {
                 renderVal: function (val, typ) {
                     return renderValue(val, typ);
                 },
+                closeAllSwipe: function (p1, p2) {
+                    $.each($('.swipeout'), function (idx, x) {
+                        myApp.swipeoutClose(x)
+                    });
+                    p1.isFav = p2;
+                },
                 onInfinite: function () {
                     setTimeout(function () {
-                        var temp = [];
-                        for (var i = this.positions.length; i <= this.positions.length + 20; i++) {
-                            temp.push(curPositions[i]);
-                        }
-                        this.positions = this.positions.concat(temp);
+                        this.eIdx = populatePosition(this.eIdx, 20, this.positions, this.curTag);
                         this.$broadcast('$InfiniteLoading:loaded');
-                    }.bind(this), 300);
-                }
-            },
-            created: function () {
-                myApp.hideIndicator();
-                try {
-                    navigator.splashscreen.hide();
-                } catch (ex) {
-                    console.error("hide splash screen error");
-                }
-            }
-        });
-
-        new Vue({
-            el: '#fav-positions',
-            data: {positions: curPositions},
-            methods: {
-                renderVal: function (val, typ) {
-                    return renderValue(val, typ);
+                    }.bind(this), 200);
+                },
+                changeFilter: function () {
+                    this.positions = [];
+                    this.eIdx = 0;
+                    this.$broadcast('$InfiniteLoading:reset');
+                },
+                resetFilter: function () {
+                    this.curTag = [];
+                    this.changeFilter();
+                },
+                transTag: function (val) {
+                    return translateTags[val].short;
                 }
             },
             computed: {
                 favPositions: function () {
                     return this.positions.filter(function (x) {
-                        return x.isFav
-                    })
-                }
-            },
-            created: function () {
-                myApp.hideIndicator();
-                try {
-                    navigator.splashscreen.hide();
-                } catch (ex) {
-                    console.error("hide splash screen error");
+                        return x.isFav;
+                    });
+                },
+                tagList: function () {
+                    var translateTagsList = [];
+                    for (var key in this.tagMap) {
+                        var tmp = this.tagMap[key];
+                        tmp["key"] = key;
+                        translateTagsList.push(tmp);
+                    }
+                    return translateTagsList;
+                },
+                totalSize: function() {
+                    var i = 0;
+                    var pi = 0;
+                    while (i < curPositions.length) {
+                        var arr2 = this.curTag;
+                        var isSuperset = true;
+
+                        if (arr2.length > 0) {
+                            var arr1 = curPositions[i].tags;
+                            isSuperset = arr2.every(function(val) { return arr1.indexOf(val) >= 0; });
+                        }
+
+                        if (isSuperset) {
+                            pi ++;
+                        }
+                        i++;
+                    }
+                    return pi;
                 }
             }
         });
     });
 }
 
-function loadStrategyPool(poolUrl) {
-    console.log("start loading pool from %s", poolUrl);
-
-    $.getJSON(poolUrl, function (json) {
-        console.log("finish loading %s", poolUrl);
-        currentPool = json;
-        new Vue({
-            el: '#current-pool',
-            data: currentPool,
-            methods: {
-                renderVal: function(val, typ) {
-                    return renderValue(val, typ);
-                },
-                getNameOfKey: function(key) {
-                    if (key[0]==':') {
-                        // is a public key
-                        return fieldTextMap[key.substring(1)].text;
-                    }
-                    return key;
-                },
-                getTypeOfKey: function(key) {
-                    if (key[0]==':') {
-                        // is a public key
-                        return fieldTextMap[key.substring(1)].type;
-                    }
-                    return key;
-                }
-            }
-        });
-    });
-}
-
-function refreshSparklines() {
-    setTimeout(function() {
-        var allStrategies = $(".sparkline-holder");
-        $.each(allStrategies, function(idx, ss) {
-            $(ss).sparkline(currentPool.pool[idx].series_week, {type: 'line', height: '30px', width: '50px'});
-        });
-    }, 500);
+function imgError(x) {
+    x.onerror=null;
+    $(x).parent('.uni-logo').remove();
 }

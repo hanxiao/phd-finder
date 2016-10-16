@@ -70,19 +70,15 @@
     height: 100px;
 }
 
-#all-positions .item-media {
+.swipeout .item-media {
     width: 15%;
     max-width: 64px;
 }
 
-#all-positions .item-after {
+.swipeout .item-after {
     font-size: 10px;
     color: darkgrey;
     line-height: 25px;
-}
-
-#all-positions {
-    color: black;
 }
 
 #fav-positions .item-media {
@@ -104,19 +100,22 @@
     padding-left: 0 !important;
     font-size: small;
     background: transparent !important;
+    max-width: 80%;
 }
 
 .tag-cloud li {
-    display: inline;
     border-width: 1px;
     border-style: solid;
-    padding-right: 4px;
-    padding-left: 4px;
+    padding: 2px;
     margin-left: 4px;
     border-radius: 5px;
     color: white;
     border-color: #738ABB;
+    float: left;
+    display: inline-block;
     background-color: #738ABB;
+    line-height: 1;
+    margin-bottom: 2px;
 }
 
 .tag-cloud .fav-icon {
@@ -141,10 +140,57 @@
 }
 
 .favPosition {
-    background-color: aliceblue !important;
+    background-color: rgba(86, 217, 182, 0.15) !important;
 }
 
 .list-block .item-text {
     height: 62px;
+}
 
+.swipeout {
+    color: black;
+}
+
+.back.link {
+    color: white;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkbox, label.label-checkbox input[type=radio]:checked+.item-media i.icon-form-checkbox {
+    border: none;
+    background-color: #56d9b6;
+}
+
+.list-block .autocomplete-opener .item-after, .list-block .smart-select .item-after {
+    color: #ffffff !important;
+}
+
+.smart-select {
+    margin-bottom: 5px;
+}
+.subnavbar:after {
+    content: none;
+}
+
+.list-block.media-list .item-link .item-title-row {
+    padding-right: 0;
+    background: no-repeat right center;
+    background-image: none;
+}
+
+.list-block .item-link .item-inner {
+    background-image: none;
+}
+
+.uni-logo {
+    max-width: 48px;
+    width: 15%;
+    position: absolute;
+    right: 10px;
+    top: 30%;
+}
+
+.swipeout .item-subtitle {
+    max-width: 80%;
 }

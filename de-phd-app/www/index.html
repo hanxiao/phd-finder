@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:max-width="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html xmlns:max-width="http://www.w3.org/1999/xhtml" xmlns:v-bind="http://www.w3.org/1999/xhtml"
+      xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
     <!--
     Customize this policy to fit your own app's needs. For more guidance, see:
@@ -40,25 +41,49 @@
 </head>
 <body>
 <!-- We need to set "toolbar-through" class on it to keep space for our tab bar-->
-<div class="views tabs toolbar-through">
+<div class="views tabs toolbar-through" id="all-positions">
     <!-- Your first view, it is also a .tab and should have "active" class to make it visible by default-->
     <div id="port-view" class="view view-main tab active">
         <!-- Pages-->
         <div class="navbar top-navbar">
             <div class="navbar-inner">
-                <div class="center sliding">学术职位</div>
+                <div class="center sliding">学术职位 (共{{totalSize}}个)</div>
                 <div class="subnavbar">
                     <div class="buttons-row theme-white" id="langswitch-bar">
-                        <div class="button tab-link" v-bind:class="{active: id=='de'}"
+                        <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
                              onclick="translate2LocalData(curPositions, 'de')">德文
                         </div>
-                        <div class="button tab-link" v-bind:class="{active: id=='zh-cn'}"
+                        <div class="button tab-link" v-bind:class="{active: lang.id=='zh-cn'}"
                              onclick="translate2LocalData(curPositions, 'zh-cn')">中文
                         </div>
-                        <div class="button tab-link" v-bind:class="{active: id=='en-us'}"
+                        <div class="button tab-link" v-bind:class="{active: lang.id=='en-us'}"
                              onclick="translate2LocalData(curPositions, 'en-us')">英文
                         </div>
                     </div>
+                    <a href="#" class="item-link smart-select">
+                        <select multiple v-model="curTag" @change="changeFilter()">
+                            <optgroup label="按职位过滤">
+                                <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'position' in 'type'">
+                                    {{tag.short}}
+                                </option>
+                            </optgroup>
+                            <optgroup label="按学科过滤">
+                                <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'subject' in 'type'">
+                                    {{tag.short}}
+                                </option>
+                            </optgroup>
+                        </select>
+
+                        <div v-if="curTag.length==0" class="button filter-icon"><i class="fa fa-sliders"
+                                                                                   aria-hidden="true"></i></div>
+                        <div v-else class="button filter-icon" v-on:taphold="resetFilter()">
+                            <span class="fa-stack">
+                              <i class="fa fa-certificate subscript fa-spin" aria-hidden="true"></i>
+                              <i class="fa fa-sliders fa-stack-1x"
+                                 aria-hidden="true"></i>
+                            </span>
+                        </div>
+                    </a>
                 </div>
             </div>
         </div>
@@ -71,43 +96,149 @@
 
                     <div class="content-block status-board">
 
-                        <div id="all-positions">
-                            <div class="list-block order-list media-list">
-                                <ul>
-                                    <li class="swipeout" v-for="pos in positions">
-                                        <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
-                                            <a href="#" class="item-content item-link">
-                                                <div class="item-media">
+
+                        <div class="list-block order-list media-list">
+                            <ul>
+                                <li class="swipeout"
+                                    v-for="pos in positions | orderBy 'publishTime' -1">
+                                    <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
+                                        <a href="#" class="item-content item-link">
+                                            <div class="item-inner">
+                                                <div class="item-title-row">
+                                                    <div class="item-title">{{pos.disTitle}}</div>
+                                                    <div class="item-after">
+                                                        {{renderVal(pos.publishTime,'date')}}
+                                                    </div>
+                                                </div>
+                                                <div class="item-subtitle">
+                                                    {{pos.disInstitute}}
+                                                </div>
+                                                <div class="uni-logo">
                                                     <img :src="'img/institute/'+ pos.instituteId +'.png'"
                                                          style="max-width:100%; max-height:100%;"
-                                                         onError="this.onerror=null;this.src='';">
+                                                         onError="imgError(this)">
                                                 </div>
-                                                <div class="item-inner">
-                                                    <div class="item-title-row">
-                                                        <div class="item-title">{{pos.disTitle}}</div>
-                                                        <div class="item-after">{{renderVal(pos.publishTime,'date')}}
+                                                <div class="item-text">
+                                                    <ul class="tag-cloud">
+                                                        <li class="fav-icon" v-if="pos.isFav"><i
+                                                                class="fa fa-heart"></i></li>
+                                                        <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
+                                                    </ul>
+                                                    {{pos.mainContent}}
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                                    <div v-if='pos.isFav' class="swipeout-actions-right">
+                                        <a href="#" class="mark swipe-bg-color-del swipeout-overswipe"
+                                           @click="closeAllSwipe(pos, false);">
+                                            <i class="fa fa-trash-o"></i>&nbsp;删除
+                                        </a>
+                                    </div>
+                                    <div v-else class="swipeout-actions-right">
+                                        <a href="#" class="mark swipe-bg-color swipeout-overswipe"
+                                           @click="closeAllSwipe(pos, true);">
+                                            <i class="fa fa-heart"></i>&nbsp;收藏
+                                        </a>
+                                    </div>
+                                </li>
+                                <infinite-loading :on-infinite="onInfinite" :distance="distance"
+                                                  v-if="positions.length < 500">
+                                </infinite-loading>
+
+                            </ul>
+
+                        </div>
+                        <div v-else>
+                            <div class="embrass-tip">
+                                <center>
+                                    <i class="fa fa-meh-o" aria-hidden="true"></i>
+                                    近期的职位都看过啦
+                                </center>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Second view (for second wrap)-->
+    <div id="invest-view" class="view tab">
+        <!-- We can make with view with navigation, let's add Top Navbar-->
+        <div class="navbar top-navbar">
+            <div class="navbar-inner">
+                <div class="center sliding">收藏的职位</div>
+                <div class="subnavbar">
+                    <div class="buttons-row theme-white" id="langswitch-bar2">
+                        <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
+                             onclick="translate2LocalData(curPositions, 'de')">德文
+                        </div>
+                        <div class="button tab-link" v-bind:class="{active: lang.id=='zh-cn'}"
+                             onclick="translate2LocalData(curPositions, 'zh-cn')">中文
+                        </div>
+                        <div class="button tab-link" v-bind:class="{active: lang.id=='en-us'}"
+                             onclick="translate2LocalData(curPositions, 'en-us')">英文
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pages navbar-through">
+            <div data-page="strategy-store" class="page with-subnavbar">
+                <div class="page-content smooth-scroll">
+                    <div class="content-block status-board">
+                        <div id="fav-positions">
+                            <div v-if="favPositions.length>0">
+                                <div class="list-block order-list media-list">
+                                    <ul>
+                                        <li class="swipeout" v-for="pos in favPositions">
+                                            <div class="swipeout-content">
+                                                <a href="#" class="item-content item-link">
+                                                    <div class="item-media">
+                                                        <img :src="'img/institute/'+ pos.instituteId +'.png'"
+                                                             style="max-width:100%; max-height:100%;"
+                                                             onError="this.onerror=null;this.src='';">
+                                                    </div>
+                                                    <div class="item-inner">
+                                                        <div class="item-title-row">
+                                                            <div class="item-title">{{pos.disTitle}}</div>
+                                                            <div class="item-after">
+                                                                {{renderVal(pos.publishTime,'date')}}
+                                                            </div>
+                                                        </div>
+                                                        <div class="item-subtitle">{{pos.disInstitute}}</div>
+                                                        <div class="item-text">
+                                                            <ul class="tag-cloud">
+                                                                <li class="fav-icon" v-if="pos.isFav"><i
+                                                                        class="fa fa-heart"></i></li>
+                                                                <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
+                                                            </ul>
+                                                            {{pos.mainContent}}
                                                         </div>
                                                     </div>
-                                                    <div class="item-subtitle">{{pos.disInstitute}}</div>
-                                                    <div class="item-text">
-                                                        <ul class="tag-cloud">
-                                                            <li class="fav-icon" v-if="pos.isFav"><i
-                                                                    class="fa fa-heart"></i></li>
-                                                            <li v-for="tag in pos.tags">{{tag}}</li>
-                                                        </ul>
-                                                        {{pos.mainContent}}
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
+                                                </a>
+                                            </div>
 
-                                        <div class="swipeout-actions-right">
-                                            <a href="#" class="mark swipe-bg-color"><i class="fa fa-heart"></i>&nbsp;收藏</a>
-                                        </div>
-                                    </li>
-                                    <infinite-loading :on-infinite="onInfinite" :distance="distance" v-if="positions.length < 500"></infinite-loading>
-                                </ul>
+                                            <div v-if='pos.isFav' class="swipeout-actions-right">
+                                                <a href="#" class="mark swipe-bg-color-del swipeout-overswipe"
+                                                   @click="closeAllSwipe(pos, false);">
+                                                    <i class="fa fa-trash-o"></i>&nbsp;删除
+                                                </a>
+                                            </div>
+                                        </li>
+                                    </ul>
 
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="embrass-tip">
+                                    <center>
+                                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                                        你还没有收藏任何职位
+                                    </center>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -115,7 +246,7 @@
             </div>
         </div>
     </div>
-    <!-- Second view (for second wrap)-->
+
     <div id="profile-view" class="view tab">
         <!-- We can make with view with navigation, let's add Top Navbar-->
         <div class="navbar top-navbar">
@@ -147,74 +278,6 @@
                                 </div>
                             </a></li>
                         </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="invest-view" class="view tab">
-        <!-- We can make with view with navigation, let's add Top Navbar-->
-        <div class="navbar top-navbar">
-            <div class="navbar-inner">
-                <div class="center sliding">收藏的职位</div>
-                <div class="subnavbar">
-                    <div class="buttons-row theme-white" id="langswitch-bar2">
-                        <div class="button tab-link" v-bind:class="{active: id=='de'}"
-                             onclick="translate2LocalData(curPositions, 'de')">德文
-                        </div>
-                        <div class="button tab-link" v-bind:class="{active: id=='zh-cn'}"
-                             onclick="translate2LocalData(curPositions, 'zh-cn')">中文
-                        </div>
-                        <div class="button tab-link" v-bind:class="{active: id=='en-us'}"
-                             onclick="translate2LocalData(curPositions, 'en-us')">英文
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="pages navbar-through">
-            <div data-page="strategy-store" class="page with-subnavbar">
-                <div class="page-content smooth-scroll">
-                    <div class="content-block status-board">
-
-                        <div id="fav-positions">
-                            <div class="list-block order-list media-list">
-                                <ul>
-                                    <li class="swipeout" v-for="pos in favPositions">
-                                        <div class="swipeout-content">
-                                            <a href="#" class="item-content item-link">
-                                                <div class="item-media">
-                                                    <img :src="'img/institute/'+ pos.instituteId +'.png'"
-                                                         style="max-width:100%; max-height:100%;"
-                                                         onError="this.onerror=null;this.src='';">
-                                                </div>
-                                                <div class="item-inner">
-                                                    <div class="item-title-row">
-                                                        <div class="item-title">{{pos.disTitle}}</div>
-                                                        <div class="item-after">{{renderVal(pos.publishTime,'date')}}
-                                                        </div>
-                                                    </div>
-                                                    <div class="item-subtitle">{{pos.disInstitute}}</div>
-                                                    <div class="item-text">
-                                                        <ul class="tag-cloud">
-                                                            <li class="fav-icon" v-if="pos.isFav"><i
-                                                                    class="fa fa-heart"></i></li>
-                                                            <li v-for="tag in pos.tags">{{tag}}</li>
-                                                        </ul>
-                                                        {{pos.mainContent}}
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-
-                                        <div class="swipeout-actions-right">
-                                            <a href="#" class="mark swipe-bg-color-del"><i class="fa fa-trash-o"></i>&nbsp;删除</a>
-                                        </div>
-                                    </li>
-                                </ul>
-
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>

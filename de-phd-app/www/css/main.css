@@ -13,3 +13,53 @@
 .no-padding-top {
     padding-top: 0 !important;
 }
+
+.embrass-tip {
+    padding: 20px;
+}
+
+.filter-bar {
+    margin: 0;
+    background-color: #738ABB;
+    color: white;
+    font-size: 14px;
+}
+
+.filter-bar ul {
+    background: none;
+}
+
+.filter-icon {
+    border: none;
+    color: white;
+    display: inline;
+    vertical-align: middle;
+    position: absolute;
+    right: 10px;
+    top: -26px;
+    font-size: 20px;
+}
+
+.filter-icon .fa-stack {
+    position: static;
+    width: 2em;
+    height: 2em;
+    line-height: inherit;
+    vertical-align: middle;
+    display: inline; !important;
+}
+
+.filter-icon .fa-stack .subscript {
+    right: -5px;
+    bottom: -5px;
+    position: relative;
+    font-size: 15px;
+}
+
+.smart-select-page .list-block {
+    margin: 0;
+}
+
+.smart-select-page .navbar {
+    height: 0;
+}
