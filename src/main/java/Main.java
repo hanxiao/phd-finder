@@ -4,8 +4,7 @@ import com.rometools.rome.io.XmlReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 
 /**
@@ -75,6 +74,12 @@ public class Main {
             JsonIO.writeTranslator();
         } else {
             LOG.info("No new position is found!");
+        }
+        try (Writer writer = new BufferedWriter(new OutputStreamWriter(
+                new FileOutputStream("is_update.status"), "utf-8"))) {
+            writer.write(GlobalVars.isUpdated? "1":"0");
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
 

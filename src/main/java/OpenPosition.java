@@ -47,6 +47,8 @@ class OpenPosition {
         instituteId = Math.abs(institute.hashCode());
         positionId = this.hashCode();
 
+        if (positionId == 578374952) return;
+
         if (!GlobalVars.allPositions.containsKey(positionId)) {
             pageURL = sf.getLink();
             publishTime = sf.getPublishedDate().getTime();
@@ -78,6 +80,7 @@ class OpenPosition {
             if (!GlobalVars.allPositions.get(positionId).tags.contains(source)) {
                 GlobalVars.allPositions.get(positionId).tags.add(source);
                 GlobalVars.allPositions.get(positionId).fetchTime = System.currentTimeMillis();
+                GlobalVars.isUpdated = true;
                 LOG.info("[{}] update position {}: {} !", source, institute, title);
             }
         }
