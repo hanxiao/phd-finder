@@ -1,0 +1,31 @@
+@font-face {
+    font-family: 'economist';
+    src:
+            url('../font/economica/Economica-Regular.ttf')
+            format('truetype'); /* Safari, Android, iOS */
+    src:
+            url('../font/economica/Economica-Regular.ttf')
+            format('opentype'); /* Safari, Android, iOS */
+}
+
+@font-face {
+    font-family: 'economist';
+    src:
+            url('../font/economica/Economica-Bold.ttf')
+            format('truetype'); /* Safari, Android, iOS */
+    src:
+            url('../font/economica/Economica-Bold.ttf')
+            format('opentype'); /* Safari, Android, iOS */
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: 'economist';
+    src:
+            url('../font/economica/Economica-Italic.ttf')
+            format('truetype'); /* Safari, Android, iOS */
+    src:
+            url('../font/economica/Economica-Italic.ttf')
+            format('opentype'); /* Safari, Android, iOS */
+    font-style: italic;
+}

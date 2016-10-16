@@ -1,0 +1,110 @@
+{
+  "strategy_name": {
+    "text": "Name",
+    "type": "str"
+  },
+  "date": {
+    "text": "Date",
+    "type": "date"
+  },
+  "create_date": {
+    "text": "Date created",
+    "type": "date"
+  },
+  "perf_since_create": {
+    "text": "Performance since creation",
+    "type": "pct"
+  },
+  "perf_last_month": {
+    "text": "Performance last month",
+    "type": "pct"
+  },
+  "perf_last_week": {
+    "text": "Performance last week",
+    "type": "pct"
+  },
+  "max_loss": {
+    "text": "Maximum loss (to date)",
+    "type": "pct"
+  },
+  "first_issuance": {
+    "text": "First issuance",
+    "type": "date"
+  },
+  "return_ratio": {
+    "text": "Return ratio for investor",
+    "type": "pct"
+  },
+  "developer": {
+    "text": "Developer",
+    "type": "str"
+  },
+  "invested_capital": {
+    "text": "Invested capital",
+    "type": "cur"
+  },
+  "num_investor": {
+    "text": "Number of investors",
+    "type": "num"
+  },
+  "trade_freq": {
+    "text": "Trading frequency",
+    "type": "day"
+  },
+  "tags": {
+    "text": "Tags",
+    "type": "list"
+  },
+  "return_pct": {
+    "text": "Return",
+    "type": "pct"
+  },
+  "dollar_pl": {
+    "text": "Dollar P/L",
+    "type": "cur"
+  },
+  "sharpe": {
+    "text": "Sharpe",
+    "type": "num"
+  },
+  "longexp": {
+    "text": "Long Exposure",
+    "type": "cur"
+  },
+  "shortexp": {
+    "text": "Short Exposure",
+    "type": "cur"
+  },
+  "available_cash": {
+    "text": "Available Cash",
+    "type": "cur"
+  },
+  "total_value": {
+    "text": "Current Balance",
+    "type": "cur"
+  },
+  "total_return": {
+    "text": "Total Return",
+    "type": "cur"
+  },
+  "last_return": {
+    "text": "Yesterday's Return",
+    "type": "cur"
+  },
+  "price": {
+    "text": "Price",
+    "type": "cur"
+  },
+  "shares": {
+    "text": "Shares",
+    "type": "num"
+  },
+  "security": {
+    "text": "Security",
+    "type": "str"
+  },
+  "type": {
+    "text": "Order type",
+    "type": "str"
+  }
+}

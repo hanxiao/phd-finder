@@ -1,0 +1,196 @@
+
+.order-list {
+    margin: 0;
+}
+
+.order-list .list-group ul {
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 3px;
+}
+
+.order-list .list-group ul:after {
+    content: none;
+}
+
+.order-list .list-group ul:before {
+    content: none;
+}
+
+.buy-icon {
+    color: #738ABB;
+}
+
+.sell-icon {
+    color: #56D9B6;
+}
+
+.list-title-right {
+    right: 4%;
+    position: absolute;
+}
+
+.list-title-center {
+    right: 40%;
+    position: absolute;
+}
+
+.detail-list .item-content {
+    height: 34px;
+    min-height: 34px;
+}
+
+.detail-list .item-inner {
+    padding-left: 10px;
+    padding-top: 0;
+    padding-bottom: 0;
+    min-height: 0;
+}
+
+.detail-list .item-content .item-inner:after {
+    content: none !important;
+}
+
+.algo-name-inlist {
+    width: 100px;
+}
+
+.reco-strategy span {
+    text-align:center;
+    display:block;
+    margin: 20px;
+    font-size:21px;
+}
+
+.reco-strategy {
+    background: #fff;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    width: 100px;
+    height: 100px;
+}
+
+.swipeout .item-media {
+    width: 15%;
+    max-width: 64px;
+}
+
+.swipeout .item-after {
+    font-size: 10px;
+    color: darkgrey;
+    line-height: 25px;
+}
+
+#fav-positions .item-media {
+    width: 15%;
+    max-width: 64px;
+}
+
+#fav-positions .item-after {
+    font-size: 10px;
+    color: darkgrey;
+    line-height: 25px;
+}
+
+#fav-positions {
+    color: black;
+}
+
+.tag-cloud {
+    padding-left: 0 !important;
+    font-size: small;
+    background: transparent !important;
+    max-width: 80%;
+}
+
+.tag-cloud li {
+    border-width: 1px;
+    border-style: solid;
+    padding: 2px;
+    margin-left: 4px;
+    border-radius: 5px;
+    color: white;
+    border-color: #738ABB;
+    float: left;
+    display: inline-block;
+    background-color: #738ABB;
+    line-height: 1;
+    margin-bottom: 2px;
+}
+
+.tag-cloud .fav-icon {
+    display: inline;
+    border-width: 1px;
+    border-style: solid;
+    padding-right: 4px;
+    padding-left: 4px;
+    margin-left: 4px;
+    border-radius: 5px;
+    color: white;
+    border-color: #56d9b6;
+    background-color: #56d9b6;
+}
+
+.swipe-bg-color {
+    background-color: #56d9b6 !important;
+}
+
+.swipe-bg-color-del {
+    background-color: #C4B6D1 !important;
+}
+
+.favPosition {
+    background-color: rgba(86, 217, 182, 0.15) !important;
+}
+
+.list-block .item-text {
+    height: 62px;
+}
+
+.swipeout {
+    color: black;
+}
+
+.back.link {
+    color: white;
+    font-size: 18px;
+    font-weight: normal;
+}
+
+label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkbox, label.label-checkbox input[type=radio]:checked+.item-media i.icon-form-checkbox {
+    border: none;
+    background-color: #56d9b6;
+}
+
+.list-block .autocomplete-opener .item-after, .list-block .smart-select .item-after {
+    color: #ffffff !important;
+}
+
+.smart-select {
+    margin-bottom: 5px;
+}
+.subnavbar:after {
+    content: none;
+}
+
+.list-block.media-list .item-link .item-title-row {
+    padding-right: 0;
+    background: no-repeat right center;
+    background-image: none;
+}
+
+.list-block .item-link .item-inner {
+    background-image: none;
+}
+
+.uni-logo {
+    max-width: 48px;
+    width: 15%;
+    position: absolute;
+    right: 10px;
+    top: 30%;
+}
+
+.swipeout .item-subtitle {
+    max-width: 80%;
+}

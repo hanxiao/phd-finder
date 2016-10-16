@@ -1,0 +1,35 @@
+.tabbar a.active {
+    color: #738ABB;
+}
+
+.top-navbar {
+    background: #738ABB;
+    color: white;
+}
+
+.top-navbar .navbar-inner {
+    padding-top: 10px;
+}
+
+.subnavbar {
+    background: #738ABB;
+    color: white;
+}
+
+.theme-white >.tab-link {
+    color: white !important;
+}
+
+.theme-white >.tab-link.active {
+    color: #738ABB !important;
+}
+
+.subnavbar>.buttons-row {
+    width: 80%;
+    margin: 0 auto;
+}
+
+html.ios-gt-8 .navbar .center {
+    font-weight: normal;
+    padding-top: 10px;
+}
