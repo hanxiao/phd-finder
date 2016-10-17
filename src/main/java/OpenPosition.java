@@ -9,7 +9,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -87,6 +89,25 @@ class OpenPosition {
                 GlobalVars.isUpdated = true;
                 LOG.info("[{}] update position {}: {} !", source, institute, title);
             }
+        }
+
+        // do some translate patching
+        patchTranslateCN(positionId);
+
+    }
+
+    private void patchTranslateCN(int positionId) {
+        String title_zh = GlobalVars.allPositions.get(positionId).title_zh;
+        String ins_zh = GlobalVars.allPositions.get(positionId).institute_zh;
+        for (HashMap.Entry<String, String> val : GlobalVars.cnPatch.entrySet()) {
+            title_zh = title_zh.replace(val.getKey(), val.getValue());
+            ins_zh = ins_zh.replace(val.getKey(), val.getValue());
+        }
+        if (!Objects.equals(GlobalVars.allPositions.get(positionId).title_zh, title_zh) ||
+                !Objects.equals(GlobalVars.allPositions.get(positionId).institute_zh, ins_zh)) {
+            GlobalVars.allPositions.get(positionId).title_zh = title_zh;
+            GlobalVars.allPositions.get(positionId).institute_zh = ins_zh;
+            GlobalVars.isUpdated = true;
         }
     }
 

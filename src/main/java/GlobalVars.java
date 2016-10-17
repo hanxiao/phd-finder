@@ -1,5 +1,6 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ForkJoinPool;
@@ -38,5 +39,20 @@ class GlobalVars {
         }
         return true;
     }
+
+    static Map<String, String> cnPatch = new HashMap<String, String>() {{
+        put("初中教授", "青年教授");
+        put("基础家庭打扮", "Klee家庭基金");
+        put("供奉 Klasing", "Delius Klasing");
+        put("邮政 Doc", "博士后");
+        put("学术人员与能力对促进", "研究员");
+        put("那个博士后的职位", "博士后职位");
+        put("卡尔斯鲁厄技术 （工具包）", "卡尔斯鲁厄理工大学 (KIT)");
+        put("技术大学", "工业大学");
+        put("技术大学多特蒙德", "多特蒙德工业大学");
+        put("工业大学多特蒙德", "多特蒙德工业大学");
+        put("学术人员", "研究员");
+        put("作为学术的员工", "研究员");
+    }};
 
 }
