@@ -106,6 +106,9 @@ function loadPositions(positionUrl) {
                 },
                 transTag: function (val) {
                     return translateTags[val].short;
+                },
+                removeMailto: function(val) {
+                    return val.replace('mailto:', '');
                 }
             },
             computed: {
@@ -116,6 +119,14 @@ function loadPositions(positionUrl) {
                         doc = $('<p>').html(doc).find('img').remove().end().html();
                     }
                     return doc;
+                },
+                richHtml: function() {
+                    var doc = $(this.focusHtml);
+                    $('a', doc).each(function(idx, x){
+                        $(x).attr('target', '_system');
+                        $(x).addClass('external');
+                    });
+                    return doc.html();
                 },
                 focusLinks: function() {
                     var tmp = new Set();
@@ -174,5 +185,11 @@ function imgError(x) {
 
 function imgErrorHide(x) {
     x.onerror=null;
-    x.src = '';
+    $(x).hide();
+    $(x).css('visibility', 'hidden');
+}
+
+function imgLoadShow(x) {
+    $(x).show();
+    $(x).css('visibility', 'visible');
 }

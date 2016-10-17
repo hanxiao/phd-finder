@@ -2,7 +2,6 @@ function renderWhenReady() {
     $('.popup-detail').on('open', function () {
         $('#detail-content').scrollTop(0);
     });
-    window.open = cordova.InAppBrowser.open;
     loadPositions(allPositionUrl);
 }
 

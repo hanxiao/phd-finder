@@ -114,7 +114,7 @@
                                                 <div class="uni-logo">
                                                     <img :src="'img/logo/'+ pos.instituteId +'.png'"
                                                          style="max-width:100%; max-height:100%;"
-                                                         onError="imgError(this)">
+                                                         onerror="imgError(this)">
                                                 </div>
                                                 <div class="item-text">
                                                     <ul class="tag-cloud">
@@ -209,7 +209,7 @@
                                                         <div class="uni-logo">
                                                             <img :src="'img/logo/'+ pos.instituteId +'.png'"
                                                                  style="max-width:100%; max-height:100%;"
-                                                                 onError="imgError(this)">
+                                                                 onerror="imgError(this)">
                                                         </div>
                                                         <div class="item-text">
                                                             <ul class="tag-cloud">
@@ -253,7 +253,7 @@
         <!-- We can make with view with navigation, let's add Top Navbar-->
         <div class="navbar top-navbar">
             <div class="navbar-inner">
-                <div class="center sliding">咨询</div>
+                <div class="center sliding">更多</div>
             </div>
         </div>
         <div class="pages navbar-through">
@@ -306,12 +306,6 @@
             </a>
             <a href="#profile-view" class="tab-link">
                 <i class="icon">
-                    <i class="fa fa-comments-o"></i>
-                </i>
-                <span class="tabbar-label">咨询</span>
-            </a>
-            <a href="#profile-view" class="tab-link">
-                <i class="icon">
                     <i class="fa fa-bars"></i>
                 </i>
                 <span class="tabbar-label">更多</span>
@@ -332,7 +326,7 @@
                 <div class="uni-logo">
                     <img :src="'img/logo/'+ focusPosition.instituteId +'.png'"
                          style="max-width:100%; max-height:100%;"
-                         onError="imgErrorHide(this)">
+                         onerror="imgErrorHide(this)" onload="imgLoadShow(this)">
                 </div>
                 <p class="detail-uni">{{focusPosition.disInstitute}}</p>
                 <ul class="tag-cloud">
@@ -357,7 +351,7 @@
                                         <i v-else class="fa fa-link" aria-hidden="true"></i>
                                     </div>
                                     <div class="item-inner">
-                                        <div class="item-title">{{link}}</div>
+                                        <div class="item-title">{{removeMailto(link)}}</div>
                                     </div>
                                 </a>
                             </li>
@@ -380,7 +374,7 @@
             </div>-->
             <div class="content-block inset">
                 <div class="content-block-inner">
-                    <p class="detail-main">{{{focusHtml}}}</p>
+                    <p class="detail-main">{{{richHtml}}}</p>
                 </div>
             </div>
         </div>
@@ -388,7 +382,7 @@
             <div class="toolbar-inner">
                 <a href="#" class="link"><i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享</a>
                 <a href="#" v-if='focusPosition.isFav' @click="focusPosition.isFav=false">
-                    <i class="fa fa-trash-o"></i>&nbsp;撤销收藏
+                    <i class="fa fa-trash-o"></i>&nbsp;移除收藏
                 </a>
                 <a v-else @click="focusPosition.isFav=true">
                     <i class="fa fa-heart"></i>&nbsp;收藏
