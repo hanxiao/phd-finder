@@ -259,26 +259,77 @@
         <div class="pages navbar-through">
             <div data-page="index-2" class="page">
                 <div class="page-content smooth-scroll">
-                    <div class="content-block">
-                        <p>This is a second view. Lets, for example, have here some internal pages with navbar
-                            navigation</p>
+                    <div class="content-block-title">
+                        <p>消息推送</p>
                     </div>
                     <div class="list-block">
                         <ul>
-                            <li><a href="about.html" class="item-link">
+                            <li>
                                 <div class="item-content">
                                     <div class="item-inner">
-                                        <div class="item-title">关于</div>
+                                        <div class="item-title label">有新职位时通知我</div>
+                                        <div class="item-input">
+                                            <label class="label-switch">
+                                                <input type="checkbox">
+                                                <div class="checkbox"></div>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                            </a></li>
-                            <li><a href="services.html" class="item-link">
-                                <div class="item-content">
-                                    <div class="item-inner">
-                                        <div class="item-title">其它服务</div>
+                            </li>
+                            <li>
+                                <a href="#" class="item-link smart-select">
+                                    <select multiple v-model="pushTag" @change="">
+                                        <optgroup label="按职位过滤">
+                                            <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'position' in 'type'">
+                                                {{tag.short}}
+                                            </option>
+                                        </optgroup>
+                                        <optgroup label="按学科过滤">
+                                            <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'subject' in 'type'">
+                                                {{tag.short}}
+                                            </option>
+                                        </optgroup>
+                                    </select>
+
+                                    <div class="item-content">
+                                        <div class="item-inner">
+                                            <!-- Select label -->
+                                            <div class="item-title">仅对特定类别通知我</div>
+                                            <!-- Selected value, not required -->
+                                            <div class="item-after">全部</div>
+                                        </div>
                                     </div>
-                                </div>
-                            </a></li>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="content-block-title">
+                        <p>其它</p>
+                    </div>
+                    <div class="list-block">
+                        <ul>
+                            <li>
+                                <a href="#" class="item-link list-button">
+                                    向朋友推荐此App
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="item-link list-button">
+                                    给我们评分
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="item-link list-button">
+                                    德国博士申请咨询
+                                </a>
+                            </li>
+                            <li>
+                                <a href="http://ojins.com" target="_system" class="item-link list-button external">
+                                    关于欧金所
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
