@@ -1,5 +1,8 @@
 function renderWhenReady() {
-    
+    $('.popup-detail').on('open', function () {
+        $('#detail-content').scrollTop(0);
+    });
+    window.open = cordova.InAppBrowser.open;
     loadPositions(allPositionUrl);
 }
 
@@ -12,6 +15,7 @@ var app = {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
     onDeviceReady: function() {
+        window.open = cordova.InAppBrowser.open;
         app.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event

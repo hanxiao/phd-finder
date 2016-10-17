@@ -11,6 +11,9 @@ function renderValue(x, type) {
         case "date":
             var tmpDate =  new Date(x);
             return moment(tmpDate).fromNow();
+        case "fulldate":
+            tmpDate =  new Date(x);
+            return moment(tmpDate).format('MMMM Do YYYY, h:mm:ss a');
         default:
             return x;
     }

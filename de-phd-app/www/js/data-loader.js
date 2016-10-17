@@ -109,6 +109,26 @@ function loadPositions(positionUrl) {
                 }
             },
             computed: {
+                focusHtml: function() {
+                    var doc = "";
+                    if (this.focusPosition) {
+                        doc = this.focusPosition.mainContent;
+                        doc = $('<p>').html(doc).find('img').remove().end().html();
+                    }
+                    return doc;
+                },
+                focusLinks: function() {
+                    var tmp = new Set();
+                    var result = [];
+                    var links = $('a', this.focusHtml);
+                    $.each(links, function (idx, x) {
+                        if (!tmp.has(x.href)) {
+                            tmp.add(x.href);
+                            result.push(x.href);
+                        }
+                    });
+                    return result;
+                },
                 favPositions: function () {
                     return this.positions.filter(function (x) {
                         return x.isFav;
@@ -150,4 +170,9 @@ function loadPositions(positionUrl) {
 function imgError(x) {
     x.onerror=null;
     $(x).parent('.uni-logo').remove();
+}
+
+function imgErrorHide(x) {
+    x.onerror=null;
+    x.src = '';
 }

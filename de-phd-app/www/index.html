@@ -21,7 +21,6 @@
     <meta name="viewport"
           content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
     <title>找德到</title>
-    <link rel="stylesheet" href="css/myfont.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
     <link rel="stylesheet" href="lib/css/animate.css">
@@ -31,12 +30,10 @@
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/tabbar.css">
     <link rel="stylesheet" href="css/general.css">
-    <link rel="stylesheet" href="css/chart.css">
     <link rel="stylesheet" href="css/card.css">
     <link rel="stylesheet" href="css/list.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/invest.css">
-    <link rel="stylesheet" href="css/login.css">
 
 </head>
 <body id="all-positions">
@@ -99,7 +96,8 @@
 
                         <div class="list-block order-list media-list">
                             <ul>
-                                <li data-popup=".popup-detail" class="open-popup swipeout" v-on:click="focusPosition=positions[$index]"
+                                <li data-popup=".popup-detail" class="open-popup swipeout"
+                                    v-on:click="focusPosition=positions[$index]"
                                     v-for="pos in positions | orderBy 'publishTime' -1">
                                     <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                         <a href="#" class="item-content item-link">
@@ -193,7 +191,8 @@
                             <div v-if="favPositions.length>0">
                                 <div class="list-block order-list media-list">
                                     <ul>
-                                        <li data-popup=".popup-detail" class="open-popup swipeout" v-on:click="focusPosition=favPositions[$index]"
+                                        <li data-popup=".popup-detail" class="open-popup swipeout"
+                                            v-on:click="focusPosition=favPositions[$index]"
                                             v-for="pos in favPositions | orderBy 'publishTime' -1">
                                             <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                                 <a href="#" class="item-content item-link">
@@ -325,11 +324,16 @@
 
 <div class="popup popup-detail ">
     <div v-if="focusPosition" class="page toolbar-fixed navbar-fixed">
-        <div class="page-content">
+        <div class="page-content" id="detail-content">
             <div class="content-block">
                 <p class="detail-title">{{focusPosition.disTitle}}</p>
             </div>
             <div class="content-block">
+                <div class="uni-logo">
+                    <img :src="'img/logo/'+ focusPosition.instituteId +'.png'"
+                         style="max-width:100%; max-height:100%;"
+                         onError="imgErrorHide(this)">
+                </div>
                 <p class="detail-uni">{{focusPosition.disInstitute}}</p>
                 <ul class="tag-cloud">
                     <li class="fav-icon" v-if="focusPosition.isFav"><i
@@ -338,12 +342,33 @@
                 </ul>
             </div>
             <div class="content-block">
-                <p class="detail-date">{{renderVal(focusPosition.publishTime,'date')}}</p>
+                <p class="detail-date">
+                    {{renderVal(focusPosition.publishTime,'date')}} 于
+                    {{renderVal(focusPosition.publishTime,'fulldate')}}</p>
             </div>
-            <div class="content-block">
+            <div class="card">
+                <div class="card-content">
+                    <div class="list-block">
+                        <ul>
+                            <li v-for="link in focusLinks">
+                                <a v-bind:href="link" target="_blank" class="item-link item-content external">
+                                    <div class="item-media">
+                                        <i v-if="link.indexOf('mailto') !== -1" class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        <i v-else class="fa fa-link" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title">{{link}}</div>
+                                    </div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--<div class="content-block">
                 <div align="center">
                     <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-                    <!-- inside-phdapp-detailpage -->
+                    &lt;!&ndash; inside-phdapp-detailpage &ndash;&gt;
                     <ins class="adsbygoogle"
                          style="display:inline-block;width:320px;height:100px"
                          data-ad-client="ca-pub-5408889511302651"
@@ -352,10 +377,10 @@
                         (adsbygoogle = window.adsbygoogle || []).push({});
                     </script>
                 </div>
-            </div>
+            </div>-->
             <div class="content-block inset">
                 <div class="content-block-inner">
-                    <p class="detail-main">{{{focusPosition.mainContent}}}</p>
+                    <p class="detail-main">{{{focusHtml}}}</p>
                 </div>
             </div>
         </div>
