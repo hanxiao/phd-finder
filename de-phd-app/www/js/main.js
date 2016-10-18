@@ -37,7 +37,7 @@ function setupPush() {
         if (oldRegId !== data.registrationId) {
             // Save new registration ID
             localStorage.setItem('registrationId', data.registrationId);
-            registerDeviceNotification(data.registrationId);
+            registerDeviceNotification(data.registrationId, 1, '[]');
             // Post registrationId to your app server as the value has changed
         }
         console.log(localStorage.getItem('registrationId'));
@@ -65,14 +65,14 @@ function setupPush() {
 }
 
 
-function registerDeviceNotification(pushId) {
+function registerDeviceNotification(pushId, intVal, favTag) {
     var userInfo =  {
         deviceId : pushId,
         deviceOS : myApp.device.os,
         timezone: moment().format("Z"),
         sysLang: window.navigator.userLanguage || window.navigator.language,
-        pushInterval: window.localStorage.getItem('pushInterval') || "3",
-        favTopic: window.localStorage.getItem('favTopic') || 'all'
+        enablePush: intVal,
+        favTopic: JSON.stringify(favTag)
     };
 
     $.ajax({
@@ -129,7 +129,7 @@ function tellFriend() {
     if (vm.hasWechat) {
 
     } else {
-        window.plugins.socialsharing.share("想去德国读博, 做实习? 快用「找德到」! 免费App, 让职位找到你",
+        window.plugins.socialsharing.share("给想去德国留学的亲们推荐这个app, 「找德到」让德国教职找到你",
             "找德到 - 帮你你找到德国的大学职位!",
             "http://phd.ojins.com/img/log128.png",
             'http://phd.ojins.com/');

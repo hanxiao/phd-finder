@@ -279,7 +279,7 @@
                                         <div class="item-after">
                                             <div class="item-input">
                                                 <label class="label-switch">
-                                                    <input type="checkbox" v-model="enablePush">
+                                                    <input type="checkbox" v-model="enablePush" @change="registerPush">
 
                                                     <div class="checkbox"></div>
                                                 </label>
@@ -290,7 +290,7 @@
                             </li>
                             <li>
                                 <a href="#" class="item-link smart-select">
-                                    <select name="pushFav" multiple v-model="pushTag" @change="">
+                                    <select name="pushFav" multiple v-model="pushTag" @change="registerPush">
                                         <optgroup label="按职位过滤">
                                             <option value="{{tag.key}}"
                                                     v-for="tag in tagList | filterBy 'position' in 'type'">

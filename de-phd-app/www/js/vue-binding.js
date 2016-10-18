@@ -120,10 +120,14 @@ function loadPositions(positionUrl) {
                         "找德到-新职位!" + val.disInstitute,
                         "http://home.in.tum.de/~xiaoh/thumbnail/" + val.instituteId + ".png",
                         'http://phd.ojins.com/position.html?id=' + val.positionId);
+                },
+                registerPush: function (val) {
+                    registerDeviceNotification(localStorage.getItem('registrationId'),
+                        this.enablePush, this.pushTag);
                 }
             },
             computed: {
-                hasWechat: function() {
+                hasWechat: function () {
                     return checkWechat();
                 },
                 focusSearch: function () {
