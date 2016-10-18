@@ -23,14 +23,10 @@
     <title>找德到</title>
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.min.css">
     <link rel="stylesheet" href="lib/framework7/css/framework7.ios.colors.min.css">
-    <link rel="stylesheet" href="lib/css/animate.css">
     <link rel="stylesheet" href="lib/fontawesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="lib/css/chartist.min.css">
-    <link rel="stylesheet" href="lib/css/welcomescreen.css">
     <!-- Path to your custom app styles-->
     <link rel="stylesheet" href="css/tabbar.css">
     <link rel="stylesheet" href="css/general.css">
-    <link rel="stylesheet" href="css/card.css">
     <link rel="stylesheet" href="css/list.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/invest.css">
@@ -75,7 +71,7 @@
                                                                                    aria-hidden="true"></i></div>
                         <div v-else class="button filter-icon" v-on:taphold="resetFilter()">
                             <span class="fa-stack">
-                              <i class="fa fa-certificate subscript fa-spin" aria-hidden="true"></i>
+                              <i class="fa fa-cog subscript fa-spin" aria-hidden="true"></i>
                               <i class="fa fa-sliders fa-stack-1x"
                                  aria-hidden="true"></i>
                             </span>
@@ -97,8 +93,8 @@
                         <div class="list-block order-list media-list">
                             <ul>
                                 <li data-popup=".popup-detail" class="open-popup swipeout"
-                                    v-on:click="focusPosition=positions[$index]"
-                                    v-for="pos in positions | orderBy 'publishTime' -1">
+                                    v-for="pos in positions | orderBy 'publishTime' -1"
+                                    v-on:click="focusPosition=pos">
                                     <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                         <a href="#" class="item-content item-link">
                                             <div class="item-inner">
@@ -144,7 +140,6 @@
                                 <infinite-loading :on-infinite="onInfinite" :distance="distance"
                                                   v-if="positions.length < 500">
                                 </infinite-loading>
-
                             </ul>
 
                         </div>
@@ -259,34 +254,52 @@
         <div class="pages navbar-through">
             <div data-page="index-2" class="page">
                 <div class="page-content smooth-scroll">
-                    <div class="content-block-title">
-                        <p>消息推送</p>
-                    </div>
                     <div class="list-block">
                         <ul>
                             <li>
+                                <a href="#" class="item-link smart-select">
+                                    <select name="searchEng" v-model="searchEngine">
+                                        <option value="bing" selected>微软Bing</option>
+                                        <option value="baidu">百度搜索</option>
+                                        <option value="google">谷歌搜索</option>
+                                    </select>
+
+                                    <div class="item-content">
+                                        <div class="item-inner">
+                                            <div class="item-title">自定义搜索引擎</div>
+                                            <div class="item-after">全部</div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
                                 <div class="item-content">
                                     <div class="item-inner">
-                                        <div class="item-title label">有新职位时通知我</div>
-                                        <div class="item-input">
-                                            <label class="label-switch">
-                                                <input type="checkbox">
-                                                <div class="checkbox"></div>
-                                            </label>
+                                        <div class="item-title">有新职位时通知我</div>
+                                        <div class="item-after">
+                                            <div class="item-input">
+                                                <label class="label-switch">
+                                                    <input type="checkbox" v-model="enablePush">
+
+                                                    <div class="checkbox"></div>
+                                                </label>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </li>
                             <li>
                                 <a href="#" class="item-link smart-select">
-                                    <select multiple v-model="pushTag" @change="">
+                                    <select name="pushFav" multiple v-model="pushTag" @change="">
                                         <optgroup label="按职位过滤">
-                                            <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'position' in 'type'">
+                                            <option value="{{tag.key}}"
+                                                    v-for="tag in tagList | filterBy 'position' in 'type'">
                                                 {{tag.short}}
                                             </option>
                                         </optgroup>
                                         <optgroup label="按学科过滤">
-                                            <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'subject' in 'type'">
+                                            <option value="{{tag.key}}"
+                                                    v-for="tag in tagList | filterBy 'subject' in 'type'">
                                                 {{tag.short}}
                                             </option>
                                         </optgroup>
@@ -311,23 +324,39 @@
                     <div class="list-block">
                         <ul>
                             <li>
-                                <a href="#" class="item-link list-button">
-                                    向朋友推荐此App
+                                <a href="#" class="item-link" onclick="tellFriend()">
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="fa fa-thumbs-o-up fa-fw"
+                                                                   aria-hidden="true"></i></div>
+                                        <div class="item-inner">向朋友推荐</div>
+                                    </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="item-link list-button">
-                                    给我们评分
+                                <a href="#" class="item-link">
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="fa fa-star-half-o fa-fw"
+                                                                   aria-hidden="true"></i></div>
+                                        <div class="item-inner">给App评分</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li v-if="hasWechat">
+                                <a href="#" class="item-link">
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="fa fa-wechat fa-fw"
+                                                                   aria-hidden="true"></i></div>
+                                        <div class="item-inner">德国博士申请一对一咨询</div>
+                                    </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="item-link list-button">
-                                    德国博士申请咨询
-                                </a>
-                            </li>
-                            <li>
-                                <a href="http://ojins.com" target="_system" class="item-link list-button external">
-                                    关于欧金所
+                                <a href="http://ojins.com" class="item-link external" target="_blank">
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="fa fa-question fa-fw" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="item-inner">关于欧金所</div>
+                                    </div>
                                 </a>
                             </li>
                         </ul>
@@ -398,11 +427,32 @@
                             <li v-for="link in focusLinks">
                                 <a v-bind:href="link" target="_blank" class="item-link item-content external">
                                     <div class="item-media">
-                                        <i v-if="link.indexOf('mailto') !== -1" class="fa fa-envelope-o" aria-hidden="true"></i>
-                                        <i v-else class="fa fa-link" aria-hidden="true"></i>
+                                        <i v-if="link.indexOf('mailto') !== -1" class="fa fa-envelope-o"
+                                           aria-hidden="true"></i>
+                                        <i v-else class="fa fa-link fa-fw" aria-hidden="true"></i>
                                     </div>
                                     <div class="item-inner">
                                         <div class="item-title">{{removeMailto(link)}}</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a v-bind:href="focusSearch" target="_blank" class="item-link item-content external">
+                                    <div class="item-media">
+                                        <i class="fa fa-search fa-fw" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title">在网上搜索这个职位信息</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li v-if="hasWechat">
+                                <a href="#" target="_blank" class="item-link item-content">
+                                    <div class="item-media">
+                                        <i class="fa fa-wechat fa-fw" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title">微信一对一咨询</div>
                                     </div>
                                 </a>
                             </li>
@@ -423,19 +473,29 @@
                     </script>
                 </div>
             </div>-->
-            <div class="content-block inset">
+            <div v-if="focusHtml.trim().length>0" class="content-block inset">
                 <div class="content-block-inner">
                     <p class="detail-main">{{{richHtml}}}</p>
+                </div>
+            </div>
+            <div v-else>
+                <div class="embrass-tip">
+                    <center>
+                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                        呃...有关这个职位的信息神奇的消失了
+                    </center>
                 </div>
             </div>
         </div>
         <div class="toolbar" v-bind:class="[focusPosition.isFav? 'fav-toolbar' : '']">
             <div class="toolbar-inner">
-                <a href="#" class="link"><i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享</a>
-                <a href="#" v-if='focusPosition.isFav' @click="focusPosition.isFav=false">
+                <a href="#" class="link" @click="shareTo(focusPosition)">
+                    <i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享
+                </a>
+                <a href="#" class="link" v-if='focusPosition.isFav' @click="focusPosition.isFav=false">
                     <i class="fa fa-trash-o"></i>&nbsp;移除收藏
                 </a>
-                <a v-else @click="focusPosition.isFav=true">
+                <a v-else class="link" @click="focusPosition.isFav=true">
                     <i class="fa fa-heart"></i>&nbsp;收藏
                 </a>
                 <a href="#" class="link close-popup"><i class="fa fa-times-circle-o" aria-hidden="true"></i>&nbsp;关闭</a>
@@ -452,21 +512,16 @@
 <script type="text/javascript" src="lib/js/js.cookie.js"></script>
 <script type="text/javascript" src="lib/js/jsonselect.js"></script>
 <script type="text/javascript" src="lib/js/moment.js"></script>
-<script type="text/javascript" src="lib/js/lz-string.min.js"></script>
-<script type="text/javascript" src="lib/js/Chartist.min.js"></script>
 <script type="text/javascript" src="lib/js/vue.js"></script>
 <script type="text/javascript" src="lib/js/inobounce.js"></script>
 <script type="text/javascript" src="lib/js/in-view.min.js"></script>
-<script type="text/javascript" src="lib/js/accounting.min.js"></script>
 <script type="text/javascript" src="lib/js/jquery.sparkline.min.js"></script>
 <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
-<script type="text/javascript" src="lib/js/welcomescreen.js"></script>
 <script type="text/javascript" src="lib/js/vue-infinite-loading.js"></script>
 <!-- Path to your app js-->
 <script type="text/javascript" src="js/vars.js"></script>
-<script type="text/javascript" src="js/data-render.js"></script>
-<script type="text/javascript" src="js/data-loader.js"></script>
+<script type="text/javascript" src="js/vue-binding.js"></script>
+<script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
-<script type="text/javascript" src="js/init-account.js"></script>
 </body>
 </html>

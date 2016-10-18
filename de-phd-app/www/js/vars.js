@@ -1,11 +1,5 @@
 var myApp = new Framework7({
     modalTitle: '找德到',
-    onAjaxStart: function (xhr) {
-        myApp.showIndicator();
-    },
-    onAjaxComplete: function (xhr) {
-        myApp.hideIndicator();
-    },
     tapHold: true, //enable tap hold events
     modalButtonOk: '好',
     modalButtonCancel: '取消',
@@ -33,47 +27,8 @@ myApp.addView('#profile-view', {
 });
 
 var allPositionUrl = 'http://ojins.com/data/phd/database/uncompressed/all.json';
-var fieldTextMapUrl = 'data/field-text-en.json';
-var strategyPoolUrl = 'data/dummy/strategies.json';
 
 var curPositions;
-var chartSeq = 0;
-var trendChart;
-var pieChart;
-var trendChartOptions = {
-    high: 2,
-    low: -2,
-    showArea: true,
-    showLine: true,
-    showPoint: true,
-    fullWidth: true,
-    stretch: true,
-    chartPadding: {
-        right: 10,
-        left: -20
-    },
-    axisX: {
-        showGrid: true
-    },
-    axisY: {
-        offset: 60,
-        labelInterpolationFnc: function (value) {
-            return value + '%'
-        },
-        scaleMinSpace: 30
-    },
-    lineSmooth: Chartist.Interpolation.cardinal({
-        fillHoles: true
-    })
-};
-
-var pieChartOptions = {
-    donut: true,
-    showLabel: true,
-    labelInterpolationFnc: function (l, p) {
-        return l + ': ' + Math.round(curPositions.positions.series[p]) + '%';
-    }
-};
 
 var localeData = {id: 'de'};
 
@@ -197,9 +152,23 @@ var translateTags = {
 
 moment.locale('zh-cn');
 
-var recoSwiper = myApp.swiper('.reco-swiper', {
-    pagination:'.reco-swiper .swiper-pagination',
-    spaceBetween: 20
-});
-
 var account_screen;
+
+var app = {
+    // Application Constructor
+    initialize: function () {
+        this.bindEvents();
+    },
+    bindEvents: function () {
+        document.addEventListener('deviceready', this.onDeviceReady, false);
+    },
+    onDeviceReady: function() {
+        window.open = cordova.InAppBrowser.open;
+        app.receivedEvent('deviceready');
+    },
+    // Update DOM on a Received Event
+    receivedEvent: function(id) {
+        renderWhenReady();
+        setupPush();
+    }
+};

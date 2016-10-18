@@ -17,59 +17,6 @@
     content: none;
 }
 
-.buy-icon {
-    color: #738ABB;
-}
-
-.sell-icon {
-    color: #56D9B6;
-}
-
-.list-title-right {
-    right: 4%;
-    position: absolute;
-}
-
-.list-title-center {
-    right: 40%;
-    position: absolute;
-}
-
-.detail-list .item-content {
-    height: 34px;
-    min-height: 34px;
-}
-
-.detail-list .item-inner {
-    padding-left: 10px;
-    padding-top: 0;
-    padding-bottom: 0;
-    min-height: 0;
-}
-
-.detail-list .item-content .item-inner:after {
-    content: none !important;
-}
-
-.algo-name-inlist {
-    width: 100px;
-}
-
-.reco-strategy span {
-    text-align:center;
-    display:block;
-    margin: 20px;
-    font-size:21px;
-}
-
-.reco-strategy {
-    background: #fff;
-    box-sizing: border-box;
-    border: 1px solid #ccc;
-    width: 100px;
-    height: 100px;
-}
-
 .swipeout .item-media {
     width: 15%;
     max-width: 64px;
@@ -164,9 +111,6 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
     background-color: #56d9b6;
 }
 
-.list-block .autocomplete-opener .item-after, .list-block .smart-select .item-after {
-    color: #ffffff !important;
-}
 
 .smart-select {
     margin-bottom: 5px;
@@ -196,3 +140,27 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 .swipeout .item-subtitle {
     max-width: 80%;
 }
+
+.card {
+    box-shadow: none;
+    margin: 5px;
+    border-radius: 10px;
+}
+
+.bg-green {
+    background: #56d9b6;
+}
+
+
+.status-board {
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
