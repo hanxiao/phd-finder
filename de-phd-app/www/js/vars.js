@@ -170,5 +170,9 @@ var app = {
     receivedEvent: function(id) {
         renderWhenReady();
         setupPush();
+        var obj = {name: "NativeStorage", author: "GillesCallebaut"};
+
+        // be certain to make an unique reference String for each variable!
+        NativeStorage.setItem("reference", obj, setSuccess, setError);
     }
 };

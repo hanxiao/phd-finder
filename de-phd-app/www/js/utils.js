@@ -45,3 +45,30 @@ function renderValue(x, type) {
             return x;
     }
 }
+
+function setSuccess(obj) {
+    console.log("storage success");
+}
+
+function setError(error) {
+    console.log("storage wrong:" + error.code);
+    if (error.exception !== "") console.log(error.exception);
+}
+
+function getSuccess(obj) {
+    console.log("get storage success");
+}
+
+function getError(error) {
+    console.log("storage wrong:" + error.code);
+    if (error.exception !== "") console.log(error.exception);
+}
+
+function removeSuccess() {
+    console.log("Removed");
+}
+
+function removeError(error) {
+    console.log(error.code);
+    if (error.exception !== "") console.log(error.exception);
+}

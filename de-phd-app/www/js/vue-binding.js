@@ -41,15 +41,15 @@ function loadPositions(positionUrl) {
             data: {
                 curTag: [],
                 pushTag: [],
+                searchEngine: "bing",
+                lang: localeData,
                 enablePush: true,
-                distance: 100,
                 allPos: curPositions,
+                distance: 100,
                 positions: [],
                 tagMap: translateTags,
-                lang: localeData,
                 eIdx: 0,
-                focusPosition: false,
-                searchEngine: "bing"
+                focusPosition: false
             },
             ready: function () {
                 this.eIdx = this.populatePosition(20);
@@ -62,6 +62,24 @@ function loadPositions(positionUrl) {
                 }
             },
             methods: {
+                saveState: function () {
+                    var state = {
+                        _pushTag: this.pushTag,
+                        _searchEngine: this.searchEngine,
+                        _enablePush: this.enablePush
+                    };
+                    NativeStorage.setItem("curState", state, setSuccess, setError);
+                },
+                loadState: function() {
+                    NativeStorage.getItem("curState", function(val) {
+                        vm.curTag = val._curTag;
+                        vm.pushTag = val._pushTag;
+                        vm.searchEngine = val._searchEngine;
+                        vm.lang = val._lang;
+                        vm.enablePush = val._enablePush;
+                        console.log('load success')
+                    }, getError);
+                },
                 populatePosition: function (k) {
                     var i = this.eIdx;
                     var pi = 0;
