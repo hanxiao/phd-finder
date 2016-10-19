@@ -94,7 +94,7 @@
                             <ul>
                                 <li data-popup=".popup-detail" class="open-popup swipeout"
                                     v-for="pos in positions | orderBy 'publishTime' -1"
-                                    v-on:click="focusPosition=pos">
+                                    v-on:click="focusPosition=pos" track-by="positionId">
                                     <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                         <a href="#" class="item-content item-link">
                                             <div class="item-inner">

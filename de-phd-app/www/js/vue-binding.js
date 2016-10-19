@@ -63,20 +63,29 @@ function loadPositions(positionUrl) {
             },
             methods: {
                 saveState: function () {
+                    var favId = {};
+                    $.each(this.favPositions, function(idx, x) {
+                        favId[x.positionId] = 1;
+                    });
                     var state = {
                         _pushTag: this.pushTag,
                         _searchEngine: this.searchEngine,
-                        _enablePush: this.enablePush
+                        _enablePush: this.enablePush,
+                        _favId: favId
                     };
                     NativeStorage.setItem("curState", state, setSuccess, setError);
                 },
                 loadState: function() {
                     NativeStorage.getItem("curState", function(val) {
-                        vm.curTag = val._curTag;
-                        vm.pushTag = val._pushTag;
-                        vm.searchEngine = val._searchEngine;
-                        vm.lang = val._lang;
-                        vm.enablePush = val._enablePush;
+                        vm.$set(pushTag, val._pushTag);
+                        vm.$set(searchEngine, val._searchEngine);
+                        vm.$set(enablePush, val._enablePush);
+                        // load those favid, remap to allpos
+                        $.each(vm.allPos, function (idx, x) {
+                            if (x.positionId in val._favId) {
+                                vm.allPos[idx].$set('isFav', true);
+                            }
+                        });
                         console.log('load success')
                     }, getError);
                 },
