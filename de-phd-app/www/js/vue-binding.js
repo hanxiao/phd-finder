@@ -41,7 +41,7 @@ function loadPositions(positionUrl) {
             data: {
                 curTag: [],
                 pushTag: [],
-                searchEngine: "bing",
+                searchEngine: "google",
                 lang: localeData,
                 enablePush: true,
                 allPos: curPositions,

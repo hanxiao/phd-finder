@@ -24,3 +24,7 @@ body {
 ::-webkit-scrollbar {
     display: none;
 }
+
+a {
+    color: #738ABB;
+}
