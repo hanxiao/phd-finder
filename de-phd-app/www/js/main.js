@@ -1,5 +1,5 @@
 function renderWhenReady() {
-    loadPositions(allPositionUrl);
+    loadPositions();
     setupEventListener();
 }
 

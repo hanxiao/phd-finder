@@ -62,6 +62,15 @@ function loadPositions(positionUrl) {
                 }
             },
             methods: {
+                updateData: function() {
+                    this.saveState();
+                    $.getJSON(allPositionUrl, function (newjson) {
+                        console.log("finish loading %s", allPositionUrl);
+                        vm.$set(allPos, translate2LocalData(newjson, localeData.id));
+                        this.loadState();
+                        resetFilter();
+                    });
+                },
                 saveState: function () {
                     var favId = {};
                     $.each(this.favPositions, function(idx, x) {
