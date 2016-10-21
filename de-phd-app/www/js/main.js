@@ -118,7 +118,7 @@ function showHan() {
                 bold: true
             }
         ]
-    })
+    });
 }
 
 function tellFriend() {

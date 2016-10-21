@@ -2,6 +2,24 @@
  * Created by hxiao on 16/9/1.
  */
 
+
+function showApology() {
+    var modal = myApp.modal({
+        title: '当你读到蹩脚的中文时, 请您理解它们是由德文通过机器翻译生成的',
+        text: '由于我们每天需要从近百所德国科研机构采集最新的职位信息, 目前没有人力和财力资源对每个职位进行人工翻译. ' +
+        '我们能做的是利用算法对机器翻译结果进行修正, 这个过程是日积月累而不是一蹴而就的. 请您保持耐心, 我们的翻译质量会逐步提高.',
+        buttons: [
+            {
+                text: '甭说没用的!'
+            },
+            {
+                text: '我能理解',
+                bold: true
+            }
+        ]
+    })
+}
+
 function translate2LocalData(json, lang) {
     switch (lang) {
         case "zh-cn":
@@ -9,6 +27,9 @@ function translate2LocalData(json, lang) {
                 x.disTitle = x.title_zh;
                 x.disInstitute = x.institute_zh;
             });
+            if (firstOpenApp) {
+
+            }
             break;
         case "en-us":
             $.each(json, function (_, x) {
