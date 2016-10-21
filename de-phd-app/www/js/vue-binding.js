@@ -49,10 +49,13 @@ function loadPositions(positionUrl) {
                 positions: [],
                 tagMap: translateTags,
                 eIdx: 0,
-                focusPosition: false
+                focusPosition: false,
+                hasWechat: false
             },
             ready: function () {
                 this.eIdx = this.populatePosition(20);
+                this.loadState();
+                this.checkWechat();
                 myApp.hideIndicator();
                 myApp.sizeNavbars('.view-main');
                 try {
@@ -60,20 +63,54 @@ function loadPositions(positionUrl) {
                 } catch (ex) {
                     console.error("hide splash screen error");
                 }
+                if (firstOpenApp) {
+                    nextTutorial("bars-tutorial");
+                } else {
+                    showMyAds('banner', false);
+                }
+            },
+            watch: {
+                'pushTag': function (val, oldVal) {
+                    console.log('push setting changed!');
+                    this.saveState()
+                },
+                'searchEngine': function (val, oldVal) {
+                    console.log('search setting changed!');
+                    this.saveState()
+                },
+                'enablePush': function (val, oldVal) {
+                    console.log('enablepush setting changed!');
+                    this.saveState()
+                },
+                'favPositions': function (val, oldVal) {
+                    console.log('fav change!');
+                    this.saveState();
+                }
             },
             methods: {
-                updateData: function() {
+                checkWechat: function () {
+                    if (typeof Wechat == "undefined") {
+                        this.hasWechat = false;
+                    } else {
+                        Wechat.isInstalled(function (installed) {
+                            vm.hasWechat = true;
+                        }, function (reason) {
+                            vm.hasWechat = false;
+                        });
+                    }
+                },
+                updateData: function () {
                     this.saveState();
                     $.getJSON(allPositionUrl, function (newjson) {
                         console.log("finish loading %s", allPositionUrl);
-                        vm.$set(allPos, translate2LocalData(newjson, localeData.id));
-                        this.loadState();
+                        vm.allPos = translate2LocalData(newjson, localeData.id);
+                        vm.loadState();
                         resetFilter();
                     });
                 },
                 saveState: function () {
                     var favId = {};
-                    $.each(this.favPositions, function(idx, x) {
+                    $.each(this.favPositions, function (idx, x) {
                         favId[x.positionId] = 1;
                     });
                     var state = {
@@ -82,37 +119,42 @@ function loadPositions(positionUrl) {
                         _enablePush: this.enablePush,
                         _favId: favId
                     };
-                    NativeStorage.setItem("curState", state, setSuccess, setError);
+                    try {
+                        NativeStorage.setItem("curState", state, setSuccess, setError);
+                    } catch (ex) {
+                    }
+
                 },
-                loadState: function() {
-                    NativeStorage.getItem("curState", function(val) {
-                        vm.$set(pushTag, val._pushTag);
-                        vm.$set(searchEngine, val._searchEngine);
-                        vm.$set(enablePush, val._enablePush);
-                        // load those favid, remap to allpos
-                        $.each(vm.allPos, function (idx, x) {
-                            if (x.positionId in val._favId) {
-                                vm.allPos[idx].$set('isFav', true);
-                            }
-                        });
-                        console.log('load success')
-                    }, getError);
+                loadState: function () {
+                    try {
+                        NativeStorage.getItem("curState", function (val) {
+                            vm.pushTag = val._pushTag;
+                            vm.searchEngine = val._searchEngine;
+                            vm.enablePush = val._enablePush;
+                            // load those favid, remap to allpos
+                            $.each(vm.allPos, function (idx, x) {
+                                if (x.positionId in val._favId) {
+                                    vm.allPos[idx].isFav = true;
+                                }
+                            });
+                            console.log('load success')
+                        }, getError);
+                    } catch (ex) {
+                    }
                 },
                 populatePosition: function (k) {
                     var i = this.eIdx;
                     var pi = 0;
                     while (pi < k && i < this.allPos.length) {
                         var arr2 = this.curTag;
-                        var isSuperset = true;
+                        var shouldAdd = true;
 
                         if (arr2.length > 0) {
                             var arr1 = this.allPos[i].tags;
-                            isSuperset = arr2.every(function (val) {
-                                return arr1.indexOf(val) >= 0;
-                            });
+                            shouldAdd = checkIntersect(arr1, arr2);
                         }
 
-                        if (isSuperset) {
+                        if (shouldAdd) {
                             this.positions.push(this.allPos[i]);
                             pi++;
                         }
@@ -152,19 +194,47 @@ function loadPositions(positionUrl) {
                     return val.replace('mailto:', '');
                 },
                 shareTo: function (val) {
-                    window.plugins.socialsharing.share("找德到-" + val.disTitle + "来自" + val.disInstitute,
-                        "找德到-新职位!" + val.disInstitute,
-                        "http://home.in.tum.de/~xiaoh/thumbnail/" + val.instituteId + ".png",
-                        'http://phd.ojins.com/position.html?id=' + val.positionId);
+                    if (val) {
+                        window.plugins.socialsharing.share("找德到-" + val.disTitle + "来自" + val.disInstitute,
+                            "找德到-新职位!" + val.disInstitute,
+                            null,
+                            'http://phd.ojins.com/position.html?id=' + val.positionId);
+                    }
+                },
+                shareWechat: function (val, circle) {
+                    var myscene = circle ? Wechat.Scene.TIMELINE : Wechat.Scene.SESSION;
+                    Wechat.share({
+                        message: {
+                            title: "我在「找德到」发现的好职位-" + val.disTitle,
+                            description: "更多" + val.disInstitute + "职位来自「找德到」! 德国硕博,博后,教授,实习,毕设,奖学金通通能找到!",
+                            thumb: "www/img/log128.png",
+                            mediaTagName: "de-phd",
+                            messageExt: "找德到分享",
+                            messageAction: "<action>dotalist</action>",
+                            media: {
+                                type: Wechat.Type.WEBPAGE,
+                                webpageUrl: 'http://phd.ojins.com/position.html?id=' + val.positionId
+                            }
+                        },
+                        scene: myscene   // share to Timeline
+                    }, function () {
+                        myApp.alert('分享成功!');
+                    }, function (reason) {
+                        myApp.alert('额...分享失败了');
+                    });
                 },
                 registerPush: function (val) {
-                    registerDeviceNotification(localStorage.getItem('registrationId'),
+                    registerDeviceNotification(window.localStorage.getItem('registrationId'),
                         this.enablePush, this.pushTag);
                 }
             },
             computed: {
-                hasWechat: function () {
-                    return checkWechat();
+                focusWiki: function () {
+                    if (this.focusPosition) {
+                        return "https://en.m.wikipedia.org/wiki/" +
+                            this.focusPosition.institute.replace(/\(.*\)/, "").trim();
+                    }
+                    return false;
                 },
                 focusSearch: function () {
                     var par = encodeURIComponent(this.focusPosition.title + ' ' + this.focusPosition.institute);
@@ -230,16 +300,14 @@ function loadPositions(positionUrl) {
                     var pi = 0;
                     while (i < this.allPos.length) {
                         var arr2 = this.curTag;
-                        var isSuperset = true;
+                        var shouldAdd = true;
 
                         if (arr2.length > 0) {
                             var arr1 = this.allPos[i].tags;
-                            isSuperset = arr2.every(function (val) {
-                                return arr1.indexOf(val) >= 0;
-                            });
+                            shouldAdd = checkIntersect(arr1, arr2);
                         }
 
-                        if (isSuperset) {
+                        if (shouldAdd) {
                             pi++;
                         }
                         i++;
@@ -294,3 +362,4 @@ function renderValue(x, type) {
             return x;
     }
 }
+

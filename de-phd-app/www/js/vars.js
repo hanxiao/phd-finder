@@ -21,7 +21,7 @@ myApp.addView('#invest-view', {
     dynamicNavbar: true
 });
 
-myApp.addView('#profile-view', {
+var settingView = myApp.addView('#profile-view', {
     // Because we use fixed-through navbar we can enable dynamic navbar
     dynamicNavbar: true
 });
@@ -152,7 +152,6 @@ var translateTags = {
 
 moment.locale('zh-cn');
 
-var account_screen;
 
 var app = {
     // Application Constructor
@@ -170,9 +169,9 @@ var app = {
     receivedEvent: function(id) {
         renderWhenReady();
         setupPush();
-        var obj = {name: "NativeStorage", author: "GillesCallebaut"};
-
-        // be certain to make an unique reference String for each variable!
-        NativeStorage.setItem("reference", obj, setSuccess, setError);
     }
 };
+
+var nodejsServer = 'http://zdd-push.ojins.com:8080';
+var firstOpenApp = JSON.parse(window.localStorage.getItem('firstOpenApp') || 'true');
+var showAds = JSON.parse(window.localStorage.getItem('showAds') || 'true');

@@ -72,3 +72,17 @@ function removeError(error) {
     console.log(error.code);
     if (error.exception !== "") console.log(error.exception);
 }
+
+
+function checkIntersect(x, y) {
+    var result = false;
+    for (var i = 0; i < x.length; i++) {
+        for (var z = 0; z < y.length; z++) {
+            if (x[i] == y[z]) {
+                result = true;
+                break;
+            }
+        }
+    }
+    return result;
+}

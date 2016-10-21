@@ -130,10 +130,12 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 }
 
 .uni-logo {
-    max-width: 48px;
-    width: 15%;
+    width: 64px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 64px;
     position: absolute;
-    right: 10px;
+    right: 15px;
     top: 30%;
 }
 

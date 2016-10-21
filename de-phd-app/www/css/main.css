@@ -64,12 +64,17 @@
     height: 0;
 }
 
+.popup-detail {
+    overflow: hidden;
+}
+
 .popup-detail .content-block {
     color: black;
     margin-left: 10px;
     margin-right: 10px;
     margin-top: 0;
     margin-bottom: 0;
+    overflow: hidden;
 }
 
 .popup-detail .tag-cloud {
@@ -80,10 +85,13 @@
 .popup-detail .detail-title {
     font-size: x-large;
     font-weight: bold;
+    overflow: hidden;
+
 }
 
 .popup-detail .detail-uni {
     font-size: medium;
+    overflow: hidden;
 }
 
 .popup-detail .content-block.inset {
@@ -108,4 +116,12 @@
 .popup-detail .card {
     margin-left: 15px !important;
     margin-right: 15px !important;
+}
+
+.popover {
+    max-width: 60%;
+}
+
+.modal-button {
+    color: #738ABB;
 }

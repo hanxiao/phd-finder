@@ -30,9 +30,39 @@
     <link rel="stylesheet" href="css/list.css">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/invest.css">
+    <link rel="stylesheet" href="css/tutorial.css">
 
 </head>
 <body id="all-positions">
+<div class="tutorial-overlay" style="display: none;">
+    <div class="tutorial-page bars-tutorial">
+        <div class="tutorial-arrow tutorial-arrow-bars"></div>
+        <div class="center-block">
+            <div class="tutorial-text tutorial-text-only">
+                在这里切换职位和大学的显示语言. 中文和英文是从德文自动翻译而来.
+            </div>
+            <div class="button button-big color-white" onclick="nextTutorial('pull-tutorial')">我知道了 <i class="fa fa-angle-right"></i></div>
+        </div>
+    </div>
+    <div class="tutorial-page pull-tutorial">
+        <div class="tutorial-arrow tutorial-arrow-pull"></div>
+        <div class="center-block">
+            <div class="tutorial-text tutorial-text-only">
+                向左滑动条目可以将它加入到收藏夹, 再次滑动将移除收藏夹.
+            </div>
+            <div class="button button-big color-white" onclick="nextTutorial('search-tutorial')">我知道了 <i class="fa fa-angle-right"></i></div>
+        </div>
+    </div>
+    <div class="tutorial-page search-tutorial">
+        <div class="tutorial-arrow tutorial-arrow-search"></div>
+        <div class="center-block">
+            <div class="tutorial-text tutorial-text-only">
+                点击右上角的图标可以按类别筛选职位.
+            </div>
+            <div class="button button-big color-white" onclick="closeTutorial()">我都知道了</div>
+        </div>
+    </div>
+</div>
 <!-- We need to set "toolbar-through" class on it to keep space for our tab bar-->
 <div class="views tabs toolbar-through">
     <!-- Your first view, it is also a .tab and should have "active" class to make it visible by default-->
@@ -53,8 +83,8 @@
                              onclick="translate2LocalData(curPositions, 'en-us')">英文
                         </div>
                     </div>
-                    <a href="#" class="item-link smart-select">
-                        <select multiple v-model="curTag" @change="changeFilter()">
+                    <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-close-text="关闭">
+                        <select multiple v-model="curTag" @change="changeFilter">
                             <optgroup label="按职位过滤">
                                 <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'position' in 'type'">
                                     {{tag.short}}
@@ -107,10 +137,10 @@
                                                 <div class="item-subtitle">
                                                     {{pos.disInstitute}}
                                                 </div>
-                                                <div class="uni-logo">
-                                                    <img :src="'img/logo/'+ pos.instituteId +'.png'"
-                                                         style="max-width:100%; max-height:100%;"
-                                                         onerror="imgError(this)">
+                                                <div class="uni-logo" v-bind:style="{backgroundImage: 'url(img/logo/'+ pos.instituteId +'.png)'}">
+                                                    <!--<img :src="'img/logo/'+ pos.instituteId +'.png'"-->
+                                                         <!--style="max-width:100%; max-height:100%;"-->
+                                                         <!--onerror="imgError(this)">-->
                                                 </div>
                                                 <div class="item-text">
                                                     <ul class="tag-cloud">
@@ -201,10 +231,7 @@
                                                         <div class="item-subtitle">
                                                             {{pos.disInstitute}}
                                                         </div>
-                                                        <div class="uni-logo">
-                                                            <img :src="'img/logo/'+ pos.instituteId +'.png'"
-                                                                 style="max-width:100%; max-height:100%;"
-                                                                 onerror="imgError(this)">
+                                                        <div class="uni-logo" v-bind:style="{backgroundImage: 'url(img/logo/'+ pos.instituteId +'.png)'}">
                                                         </div>
                                                         <div class="item-text">
                                                             <ul class="tag-cloud">
@@ -254,10 +281,14 @@
         <div class="pages navbar-through">
             <div data-page="index-2" class="page">
                 <div class="page-content smooth-scroll">
+                    <div class="content-block-title">
+                        <p>设置</p>
+                    </div>
                     <div class="list-block">
                         <ul>
                             <li>
-                                <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-close-text="完成">
+                                <a href="#" class="item-link smart-select" data-open-in="picker"
+                                   data-picker-close-text="使用它搜索">
                                     <select name="searchEng" v-model="searchEngine">
                                         <option value="bing">微软Bing</option>
                                         <option value="baidu">百度搜索</option>
@@ -323,16 +354,34 @@
                     <div class="list-block">
                         <ul>
                             <li>
-                                <a href="#" class="item-link" onclick="tellFriend()">
+                                <a href="faq.html" class="item-link">
                                     <div class="item-content">
-                                        <div class="item-media"><i class="fa fa-thumbs-o-up fa-fw"
+                                        <div class="item-media"><i class="fa fa-question-circle fa-fw"
                                                                    aria-hidden="true"></i></div>
-                                        <div class="item-inner">向朋友推荐</div>
+                                        <div class="item-inner">常见问题</div>
                                     </div>
                                 </a>
                             </li>
                             <li>
-                                <a href="#" class="item-link">
+                                <a href="#" class="item-link" onclick="tellFriend()">
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="fa fa-thumbs-o-up fa-fw"
+                                                                   aria-hidden="true"></i></div>
+                                        <div v-if="hasWechat" class="item-inner">向朋友推荐去广告</div>
+                                        <div v-else class="item-inner">向朋友推荐</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li v-if="!showAds">
+                                <a href="#" class="item-link" onclick="showMyAds('fullpage', true)">
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="fa fa-money fa-w" aria-hidden="true"></i></div>
+                                        <div class="item-inner">我要点广告以表支持</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://itunes.apple.com/us/app/zhao-dao-zui-quan-zui-xin/id1166618336?ls=1&mt=8" class="item-link external">
                                     <div class="item-content">
                                         <div class="item-media"><i class="fa fa-star-half-o fa-fw"
                                                                    aria-hidden="true"></i></div>
@@ -341,7 +390,7 @@
                                 </a>
                             </li>
                             <li v-if="hasWechat">
-                                <a href="#" class="item-link">
+                                <a href="#" class="item-link" onclick="showHan()">
                                     <div class="item-content">
                                         <div class="item-media"><i class="fa fa-wechat fa-fw"
                                                                    aria-hidden="true"></i></div>
@@ -352,7 +401,7 @@
                             <li>
                                 <a href="http://ojins.com" class="item-link external" target="_blank">
                                     <div class="item-content">
-                                        <div class="item-media"><i class="fa fa-question fa-fw" aria-hidden="true"></i>
+                                        <div class="item-media"><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i>
                                         </div>
                                         <div class="item-inner">关于欧金所</div>
                                     </div>
@@ -402,10 +451,7 @@
                 <p class="detail-title">{{focusPosition.disTitle}}</p>
             </div>
             <div class="content-block">
-                <div class="uni-logo">
-                    <img :src="'img/logo/'+ focusPosition.instituteId +'.png'"
-                         style="max-width:100%; max-height:100%;"
-                         onerror="imgErrorHide(this)" onload="imgLoadShow(this)">
+                <div class="uni-logo" v-bind:style="{backgroundImage: 'url(img/logo/'+ focusPosition.instituteId +'.png)'}">
                 </div>
                 <p class="detail-uni">{{focusPosition.disInstitute}}</p>
                 <ul class="tag-cloud">
@@ -416,7 +462,7 @@
             </div>
             <div class="content-block">
                 <p class="detail-date">
-                    {{renderVal(focusPosition.publishTime,'date')}} 于
+                    发表于{{renderVal(focusPosition.publishTime,'date')}} 在
                     {{renderVal(focusPosition.publishTime,'fulldate')}}</p>
             </div>
             <div class="card">
@@ -426,7 +472,7 @@
                             <li v-for="link in focusLinks">
                                 <a v-bind:href="link" target="_blank" class="item-link item-content external">
                                     <div class="item-media">
-                                        <i v-if="link.indexOf('mailto') !== -1" class="fa fa-envelope-o"
+                                        <i v-if="link.indexOf('mailto') !== -1" class="fa fa-envelope-o fa-fw"
                                            aria-hidden="true"></i>
                                         <i v-else class="fa fa-link fa-fw" aria-hidden="true"></i>
                                     </div>
@@ -445,8 +491,18 @@
                                     </div>
                                 </a>
                             </li>
+                            <li>
+                                <a v-bind:href="focusWiki" target="_blank" class="item-link item-content external">
+                                    <div class="item-media">
+                                        <i class="fa fa-wikipedia-w fa-w" aria-hidden="true"></i>
+                                    </div>
+                                    <div class="item-inner">
+                                        <div class="item-title">维基百科上的{{focusPosition.institute}}</div>
+                                    </div>
+                                </a>
+                            </li>
                             <li v-if="hasWechat">
-                                <a href="#" target="_blank" class="item-link item-content">
+                                <a href="#" target="_blank" class="item-link item-content" onclick="showHan()">
                                     <div class="item-media">
                                         <i class="fa fa-wechat fa-fw" aria-hidden="true"></i>
                                     </div>
@@ -488,8 +544,11 @@
         </div>
         <div class="toolbar" v-bind:class="[focusPosition.isFav? 'fav-toolbar' : '']">
             <div class="toolbar-inner">
-                <a href="#" class="link" @click="shareTo(focusPosition)">
+                <a v-if='hasWechat' href="#" class="link open-popover" data-popover=".popover-share">
                     <i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享
+                </a>
+                <a v-else href="#" class="link" @click="shareTo(focusPosition)">
+                    <i class="fa fa-share-square-o" aria-hidden="true"></i>&nbsp;分享
                 </a>
                 <a href="#" class="link" v-if='focusPosition.isFav' @click="focusPosition.isFav=false">
                     <i class="fa fa-trash-o"></i>&nbsp;移除收藏
@@ -501,26 +560,36 @@
             </div>
         </div>
     </div>
+</div>
 
-
+<div class="popover popover-share">
+    <div class="popover-angle"></div>
+    <div class="popover-inner">
+        <div class="list-block">
+            <ul>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, false)">分享给微信好友</a></li>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, true)">分享到微信朋友圈</a></li>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareTo(focusPosition)"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;发送到其它程序</a></li>
+            </ul>
+        </div>
+    </div>
 </div>
 
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="lib/js/jquery-2.1.4.min.js"></script>
 <!-- Path to Framework7 Library JS-->
-<script type="text/javascript" src="lib/js/js.cookie.js"></script>
-<script type="text/javascript" src="lib/js/jsonselect.js"></script>
 <script type="text/javascript" src="lib/js/moment.js"></script>
 <script type="text/javascript" src="lib/js/vue.js"></script>
 <script type="text/javascript" src="lib/js/inobounce.js"></script>
 <script type="text/javascript" src="lib/js/in-view.min.js"></script>
-<script type="text/javascript" src="lib/js/jquery.sparkline.min.js"></script>
 <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
 <script type="text/javascript" src="lib/js/vue-infinite-loading.js"></script>
 <!-- Path to your app js-->
+<script type="text/javascript" src="js/myads.js"></script>
 <script type="text/javascript" src="js/vars.js"></script>
 <script type="text/javascript" src="js/vue-binding.js"></script>
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="js/tutorial.js"></script>
 </body>
 </html>
