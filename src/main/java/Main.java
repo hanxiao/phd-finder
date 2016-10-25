@@ -20,6 +20,13 @@ public class Main {
         runner.loadAll();
         runner.updateAll(runner);
         runner.saveAll();
+
+        try {
+            EmbassyExtractor.getNews();
+        } catch (Exception ex) {
+            LOG.error("Error when extracting embassy news!");
+            ex.printStackTrace();
+        }
     }
 
     private void updateAll(Main runner) {

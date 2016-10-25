@@ -36,10 +36,9 @@ public class EmbassyExtractor {
 
     private static class EmbassyNews {
         String title;
-        String mainContent;
+        String mainContent = "";
         long timestamp;
         String url;
-        String text;
         boolean isNew = false;
 
         private transient final String regex = "\\((\\d{4}-\\d{1,2}-\\d{1,2})\\)";
@@ -70,11 +69,12 @@ public class EmbassyExtractor {
                         .timeout(12000)
                         .followRedirects(true)
                         .get();
+
+                this.mainContent = fetchDoc.select(".font14").select("tr").last().text().trim();
             } catch (IOException ex) {
                 LOG.info("Connection timeout on {}", this.url);
             }
 
-            this.mainContent = fetchDoc.select(".font14").select("tr").last().text().trim();
             LOG.info("succesfully fetched the news!");
         }
 
@@ -83,7 +83,7 @@ public class EmbassyExtractor {
         }
     }
 
-    public static void main(final String[] args) throws IOException {
+    public static void getNews() throws IOException {
         Document doc = Jsoup.connect("http://www.de-moe.edu.cn/article_list.php?sortid=12016")
                 .ignoreContentType(true)
                 .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
