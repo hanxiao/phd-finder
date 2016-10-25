@@ -90,7 +90,7 @@ class JsonIO {
     }
 
 
-    private static void writeToFile(File outFile, String jsonOutput) {
+    static void writeToFile(File outFile, String jsonOutput) {
         try {
             PrintWriter writer = new PrintWriter(new FileOutputStream(outFile, false));
             writer.println(jsonOutput);

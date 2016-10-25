@@ -1,18 +1,18 @@
-import com.sree.textbytes.readabilityBUNDLE.Article;
-import com.sree.textbytes.readabilityBUNDLE.ContentExtractor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.CollectionAdapter;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,13 +22,14 @@ import java.util.stream.Collectors;
  * Created by hxiao on 2016/10/24.
  */
 public class EmbassyExtractor {
-    private static transient final Logger LOG = LoggerFactory.getLogger(OpenPosition.class);
-
+    private static transient final Logger LOG = LoggerFactory.getLogger(EmbassyExtractor.class);
+    private static Gson gson = new GsonBuilder()
+            .registerTypeHierarchyAdapter(Collection.class, new CollectionAdapter()).create();
 
     private static long parseDate(String text)
             throws ParseException
     {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("(YYYY-MM-DD)");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("(yyyy-MM-dd)");
         dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
         return dateFormat.parse(text).getTime();
     }
@@ -74,19 +75,32 @@ public class EmbassyExtractor {
             }
 
             this.mainContent = fetchDoc.select(".font14").select("tr").last().text().trim();
+            LOG.info("succesfully fetched the news!");
+        }
+
+        long getTimestamp() {
+            return timestamp;
         }
     }
 
     public static void main(final String[] args) throws IOException {
-        Document doc = Jsoup.connect("http://www.de-moe.edu.cn/article_list.php?sortid=12016").get();
+        Document doc = Jsoup.connect("http://www.de-moe.edu.cn/article_list.php?sortid=12016")
+                .ignoreContentType(true)
+                .userAgent("Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:25.0) Gecko/20100101 Firefox/25.0")
+                .referrer("http://www.google.com")
+                .timeout(12000)
+                .followRedirects(true)
+                .get();
         Elements newsHeadlines = doc.select("li");
 
         List<EmbassyNews> allNews = newsHeadlines
                 .parallelStream()
                 .map(el -> new EmbassyNews(el.text(), el.select("a").first().attr("href")))
+                .sorted((e1, e2) -> -Long.compare(e1.getTimestamp(), e2.getTimestamp()))
                 .collect(Collectors.toList());
 
-        int a = 1;
+        String jsonOutput = gson.toJson(allNews);
+        JsonIO.writeToFile(new File("database/embassynews.json"), jsonOutput);
 
     }
 }
