@@ -14,7 +14,10 @@ import org.slf4j.LoggerFactory;
 import utils.CollectionAdapter;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -64,8 +67,8 @@ public class Notifier {
 
         ApnsService service =
                 APNS.newService()
-                        .withCert("certificate/dev.p12", "xh0531")
-                        .withSandboxDestination()
+                        .withCert("certificate/prod.p12", "xh0531")
+                        .withProductionDestination()
                         .build();
 
         deviceStream
@@ -131,7 +134,7 @@ public class Notifier {
 
     public static void main(final String[] args) throws IOException {
         List<Device> devices = getDeviceList();
-        send2IOS(devices.stream().distinct(), "测试", "测试两下，看到麻烦微信我", 5);
+        send2IOS(devices.stream().distinct(), "又有新教职啦", "新发布了来自慕尼黑工业大学等的12个职位， 快来看看吧！", 1);
 //        send2Android(devices.stream()
 //                        .filter(Device::isAndroidDevice)
 //                        .collect(Collectors.toList()),

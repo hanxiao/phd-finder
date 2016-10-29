@@ -1,9 +1,4 @@
-import com.google.common.base.Strings;
-
-import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /**
  * Created by han on 11/25/15.
@@ -15,7 +10,7 @@ public class Device {
     private String[] favTopic;
     private String sysLang = "zh-cn";
     private long timestamp = 0;
-    private boolean enablePush = true;
+    private String enablePush = "";
 
     public long getTimestamp() {
         return timestamp;
@@ -36,7 +31,7 @@ public class Device {
     }
 
     boolean isTimeToPush() {
-        return enablePush;
+        return true;
     }
 
 
