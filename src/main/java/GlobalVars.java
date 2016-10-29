@@ -13,6 +13,7 @@ class GlobalVars {
     static Map<Integer, OpenPosition> allPositions = new ConcurrentHashMap<>();
     static boolean isUpdated = false;
     static MSTranslator msTranslator;
+    static UniNameIndexer searcher = new UniNameIndexer();
     private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
     static long convertStr2Long(String timestamp) throws ParseException {
@@ -53,6 +54,18 @@ class GlobalVars {
         put("工业大学多特蒙德", "多特蒙德工业大学");
         put("学术人员", "研究员");
         put("作为学术的员工", "研究员");
+        put("土伊尔默瑙","伊尔梅瑙理工大学");
+        put("大学莫扎特萨尔茨堡", "奥地利萨尔茨堡大学");
+        put("余隆德国 Technik 与位，des 亦者 （HTW 萨尔）", "萨尔兰工程和经济应用技术大学");
+        put("管理，经济学与视域 GmbH 余隆费森尤斯","欧福应用技术大学-经管与媒体");
     }};
 
+    static String getZhName(String uni_de) {
+        try {
+            return searcher.search(uni_de);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return "";
+    }
 }

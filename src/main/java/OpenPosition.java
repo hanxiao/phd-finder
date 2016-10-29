@@ -109,6 +109,12 @@ class OpenPosition {
             GlobalVars.allPositions.get(positionId).institute_zh = ins_zh;
             GlobalVars.isUpdated = true;
         }
+        String ins_de = GlobalVars.allPositions.get(positionId).institute;
+        String off_zh = GlobalVars.getZhName(ins_de);
+        if (off_zh.length() > 0 && !off_zh.equals(GlobalVars.allPositions.get(positionId).institute_zh)) {
+            GlobalVars.allPositions.get(positionId).institute_zh = off_zh;
+            GlobalVars.isUpdated = true;
+        }
     }
 
     int getIdByGroup() {
