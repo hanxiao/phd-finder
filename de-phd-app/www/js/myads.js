@@ -24,45 +24,48 @@ if (/(android)/i.test(navigator.userAgent)) {
 
 
 function showMyAds(type, force) {
-    if (force || showAds) {
-        if (!AdMob) {
-            alert('admob plugin not ready');
-            return;
-        }
-        switch (type) {
-            case "banner":
-                AdMob.createBanner({
-                    adId: admobid.banner,
-                    isTesting: false,
-                    overlap: false,
-                    offsetTopBar: false,
-                    position: AdMob.AD_POSITION.BOTTOM_CENTER,
-                    bgColor: '#f7f7f8',
-                    autoShow: true
-                });
-                break;
-            case "fullpage":
-                AdMob.prepareInterstitial({
-                    adId: admobid.interstitial,
-                    autoShow: true,
-                    isTesting: false
-                });
-                break;
-            case "rewarded":
-                AdMob.prepareRewardVideoAd({
-                    adId: admobid.rewarded,
-                    autoShow: true,
-                    isTesting: false
-                }, setSuccess, function() {
+    try {
+        if (force || showAds) {
+            if (!AdMob) {
+                alert('admob plugin not ready');
+                return;
+            }
+            switch (type) {
+                case "banner":
+                    AdMob.createBanner({
+                        adId: admobid.banner,
+                        isTesting: false,
+                        overlap: false,
+                        offsetTopBar: false,
+                        position: AdMob.AD_POSITION.BOTTOM_CENTER,
+                        bgColor: '#f7f7f8',
+                        autoShow: true
+                    });
+                    break;
+                case "fullpage":
                     AdMob.prepareInterstitial({
                         adId: admobid.interstitial,
                         autoShow: true,
                         isTesting: false
                     });
-                });
-                break;
+                    break;
+                case "rewarded":
+                    AdMob.prepareRewardVideoAd({
+                        adId: admobid.rewarded,
+                        autoShow: true,
+                        isTesting: false
+                    }, setSuccess, function () {
+                        AdMob.prepareInterstitial({
+                            adId: admobid.interstitial,
+                            autoShow: true,
+                            isTesting: false
+                        });
+                    });
+                    break;
+            }
         }
     }
+    catch (ignored) {}
 }
 
 

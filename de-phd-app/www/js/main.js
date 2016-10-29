@@ -8,6 +8,10 @@ function setupEventListener() {
         $('#detail-content').scrollTop(0);
     });
 
+    $('.popup-news').on('open', function () {
+        $('#detail-news').scrollTop(0);
+    });
+
     $(document).on('click', 'a[href^=http], a[href^=https]', function (e) {
 
         e.preventDefault();
@@ -16,6 +20,13 @@ function setupEventListener() {
 
         window.open($this.attr('href'), target, 'location=no');
     });
+
+    document.addEventListener("backbutton", onBackKeyDown, false);
+}
+
+function onBackKeyDown() {
+    myApp.closeModal('.popup.popup-detail.modal-in');
+    myApp.closeModal('.popup.popup-news.modal-in');
 }
 
 function setupPush() {
@@ -91,7 +102,7 @@ function registerDeviceNotification(pushId, intVal, favTag) {
     $.ajax({
         url: nodejsServer + "/add",
         type: "post",
-        data: JSON.stringify(userInfo),
+        data: userInfo,
         success: function (data) {
             console.log('success');
         },

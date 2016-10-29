@@ -5,6 +5,7 @@ var myApp = new Framework7({
     modalButtonCancel: '取消',
     // If it is webapp, we can enable hash navigation:
     pushState: true,
+    actionsCloseByOutside: false,
     smartSelectBackTemplate: '<div class="left sliding">' +
     '<a href="#" class="back link">' +
     '<i class="fa fa-chevron-left"></i><span></span> 返回</a></div>'
@@ -21,12 +22,51 @@ myApp.addView('#invest-view', {
     dynamicNavbar: true
 });
 
-var settingView = myApp.addView('#profile-view', {
+myApp.addView('#news-view', {
     // Because we use fixed-through navbar we can enable dynamic navbar
     dynamicNavbar: true
 });
 
-var allPositionUrl = 'http://ojins.com/data/phd/database/uncompressed/all.json';
+
+myApp.addView('#chat-view', {
+    // Because we use fixed-through navbar we can enable dynamic navbar
+    dynamicNavbar: true
+});
+
+var settingView = myApp.addView('#profile-view', {
+    // Because we use fixed-through navbar we can enable dynamic navbar
+    dynamicNavbar: true,
+    // Enable Dom Cache so we can use all inline pages
+    domCache: true
+});
+
+
+var locationBtns = [
+    {
+        text: '选择您所在的位置, 将为你选择最稳定的服务器.',
+        label: true
+    },
+    {
+        text: '我在中国大陆',
+        onClick: function () {
+            allPositionUrl = allPositionUrlCN;
+            allNewsUrl = allNewsCN;
+            window.localStorage.setItem('allPositionUrl', allPositionUrl);
+            window.localStorage.setItem('firstSelectUrl', false);
+            renderWhenReady();
+        }
+    },
+    {
+        text: '我在海外',
+        onClick: function () {
+            allPositionUrl = allPositionUrlWO;
+            allNewsUrl = allNewsWO;
+            window.localStorage.setItem('allPositionUrl', allPositionUrl);
+            window.localStorage.setItem('firstSelectUrl', false);
+            renderWhenReady();
+        }
+    }
+];
 
 var curPositions;
 
@@ -167,11 +207,30 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
-        renderWhenReady();
-        setupPush();
+        navigator.splashscreen.hide();
+        if (firstSelectUrl) {
+            myApp.actions(locationBtns);
+        } else {
+            renderWhenReady();
+        }
     }
 };
 
+
+// Conversation flag
+var conversationStarted = false;
+
+
 var nodejsServer = 'http://zdd-push.ojins.com:8080';
+var allPositionUrlCN = 'http://zdd-push.ojins.com:8080/allpos';
+var allPositionUrlWO = 'http://ojins.com/data/phd/database/uncompressed/all.json';
+
+var allNewsCN = 'http://zdd-push.ojins.com:8080/allnews';
+var allNewsWO = 'http://ojins.com/data/phd/database/embassynews.json';
+var allPositionUrl = window.localStorage.getItem('allPositionUrl') || allPositionUrlCN;
+var allNewsUrl = allPositionUrl == allPositionUrlCN? allNewsCN: allNewsWO;
+
 var firstOpenApp = JSON.parse(window.localStorage.getItem('firstOpenApp') || 'true');
+var firstSelectUrl = JSON.parse(window.localStorage.getItem('firstSelectUrl') || 'true');
+var firstTransCN = JSON.parse(window.localStorage.getItem('firstTransCN') || 'true');
 var showAds = JSON.parse(window.localStorage.getItem('showAds') || 'true');

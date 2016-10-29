@@ -1,0 +1,56 @@
+.messagebar {
+    bottom: 50px;
+    height: 70px;
+}
+
+.messages-content {
+    bottom: 100px;
+    top: 0;
+    height: calc(100% - 84px);
+}
+
+.message-sent .message-text {
+    background-color: #56d9b6;
+}
+
+.message-received .message-text {
+    background-color: #6fc7db;
+}
+
+.chat-icon-sizing {
+    font-size: 24px;
+    top: -4px;
+}
+
+.answer-button {
+    border-radius: 20px  !important;
+    border: 1px solid #738ABB  !important;
+    color: #738ABB  !important;
+    background-color: transparent !important;
+    line-height: 27px !important;
+    padding: 0 10px !important;
+    font-size: 17px;
+    -webkit-transition-duration: 400ms;
+    transition-duration: 400ms;
+    margin: 2px 5px !important;
+}
+
+.answer-button.active-state {
+    border: 1px solid #738ABB  !important;
+    background: #738ABB  !important;
+    color: white  !important;
+}
+
+/* always present */
+.expand-transition {
+    transition: all .5s ease;
+    height: 70px;
+    overflow: hidden;
+}
+/* .expand-enter defines the starting state for entering */
+/* .expand-leave defines the ending state for leaving */
+.expand-enter, .expand-leave {
+    height: 0;
+    padding: 0 10px;
+    opacity: 0;
+}

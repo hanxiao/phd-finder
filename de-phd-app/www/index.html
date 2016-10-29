@@ -31,6 +31,7 @@
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/invest.css">
     <link rel="stylesheet" href="css/tutorial.css">
+    <link rel="stylesheet" href="css/chat.css">
 
 </head>
 <body id="all-positions">
@@ -41,7 +42,8 @@
             <div class="tutorial-text tutorial-text-only">
                 在这里切换职位和大学的显示语言. 中文和英文是从德文自动翻译而来.
             </div>
-            <div class="button button-big color-white" onclick="nextTutorial('pull-tutorial')">我知道了 <i class="fa fa-angle-right"></i></div>
+            <div class="button button-big color-white" onclick="nextTutorial('pull-tutorial')">我知道了 <i
+                    class="fa fa-angle-right"></i></div>
         </div>
     </div>
     <div class="tutorial-page pull-tutorial">
@@ -50,7 +52,8 @@
             <div class="tutorial-text tutorial-text-only">
                 向左滑动条目可以将它加入到收藏夹, 再次滑动将移除收藏夹.
             </div>
-            <div class="button button-big color-white" onclick="nextTutorial('search-tutorial')">我知道了 <i class="fa fa-angle-right"></i></div>
+            <div class="button button-big color-white" onclick="nextTutorial('search-tutorial')">我知道了 <i
+                    class="fa fa-angle-right"></i></div>
         </div>
     </div>
     <div class="tutorial-page search-tutorial">
@@ -58,6 +61,15 @@
         <div class="center-block">
             <div class="tutorial-text tutorial-text-only">
                 点击右上角的图标可以按类别筛选职位.
+            </div>
+            <div class="button button-big color-white" onclick="nextTutorial('ads-tutorial')">我知道了</div>
+        </div>
+    </div>
+    <div class="tutorial-page ads-tutorial">
+        <div class="tutorial-arrow tutorial-arrow-ads"></div>
+        <div class="center-block">
+            <div class="tutorial-text tutorial-text-only">
+                到"更多"中分享给你的好友, 就可以去除底部广告!
             </div>
             <div class="button button-big color-white" onclick="closeTutorial()">我都知道了</div>
         </div>
@@ -70,43 +82,45 @@
         <!-- Pages-->
         <div class="navbar top-navbar">
             <div class="navbar-inner">
-                <div class="center sliding">学术职位 (共{{totalSize}}个)</div>
-                <div class="subnavbar">
-                    <div class="buttons-row theme-white" id="langswitch-bar">
-                        <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
-                             onclick="translate2LocalData(curPositions, 'de')">德文
+                <div v-cloak>
+                    <div class="center sliding">学术职位 (共{{totalSize}}个)</div>
+                    <div class="subnavbar">
+                        <div class="buttons-row theme-white" id="langswitch-bar">
+                            <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
+                                 onclick="translate2LocalData(curPositions, 'de')">德文
+                            </div>
+                            <div class="button tab-link" v-bind:class="{active: lang.id=='zh-cn'}"
+                                 onclick="translate2LocalData(curPositions, 'zh-cn')">中文
+                            </div>
+                            <div class="button tab-link" v-bind:class="{active: lang.id=='en-us'}"
+                                 onclick="translate2LocalData(curPositions, 'en-us')">英文
+                            </div>
                         </div>
-                        <div class="button tab-link" v-bind:class="{active: lang.id=='zh-cn'}"
-                             onclick="translate2LocalData(curPositions, 'zh-cn')">中文
-                        </div>
-                        <div class="button tab-link" v-bind:class="{active: lang.id=='en-us'}"
-                             onclick="translate2LocalData(curPositions, 'en-us')">英文
-                        </div>
-                    </div>
-                    <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-close-text="关闭">
-                        <select multiple v-model="curTag" @change="changeFilter">
-                            <optgroup label="按职位过滤">
-                                <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'position' in 'type'">
-                                    {{tag.short}}
-                                </option>
-                            </optgroup>
-                            <optgroup label="按学科过滤">
-                                <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'subject' in 'type'">
-                                    {{tag.short}}
-                                </option>
-                            </optgroup>
-                        </select>
+                        <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-close-text="关闭">
+                            <select multiple v-model="curTag" @change="changeFilter">
+                                <optgroup label="按职位过滤">
+                                    <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'position' in 'type'">
+                                        {{tag.short}}
+                                    </option>
+                                </optgroup>
+                                <optgroup label="按学科过滤">
+                                    <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'subject' in 'type'">
+                                        {{tag.short}}
+                                    </option>
+                                </optgroup>
+                            </select>
 
-                        <div v-if="curTag.length==0" class="button filter-icon"><i class="fa fa-sliders"
-                                                                                   aria-hidden="true"></i></div>
-                        <div v-else class="button filter-icon" v-on:taphold="resetFilter()">
+                            <div v-if="curTag.length==0" class="button filter-icon"><i class="fa fa-sliders"
+                                                                                       aria-hidden="true"></i></div>
+                            <div v-else class="button filter-icon" v-on:taphold="resetFilter()">
                             <span class="fa-stack">
-                              <i class="fa fa-cog subscript fa-spin" aria-hidden="true"></i>
+                              <i class="fa fa-cog subscript fa-spin fa-fw" aria-hidden="true"></i>
                               <i class="fa fa-sliders fa-stack-1x"
                                  aria-hidden="true"></i>
                             </span>
-                        </div>
-                    </a>
+                            </div>
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -119,69 +133,71 @@
 
                     <div class="content-block status-board">
 
-
-                        <div class="list-block order-list media-list">
-                            <ul>
-                                <li data-popup=".popup-detail" class="open-popup swipeout"
-                                    v-for="pos in positions | orderBy 'publishTime' -1"
-                                    v-on:click="focusPosition=pos" track-by="positionId">
-                                    <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
-                                        <a href="#" class="item-content item-link">
-                                            <div class="item-inner">
-                                                <div class="item-title-row">
-                                                    <div class="item-title">{{pos.disTitle}}</div>
-                                                    <div class="item-after">
-                                                        {{renderVal(pos.publishTime,'date')}}
+                        <div v-cloak>
+                            <div class="list-block order-list media-list">
+                                <ul>
+                                    <li data-popup=".popup-detail" class="open-popup swipeout"
+                                        v-for="pos in positions | orderBy 'publishTime' -1"
+                                        v-on:click="focusPosition=pos" track-by="positionId">
+                                        <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
+                                            <a href="#" class="item-content item-link">
+                                                <div class="item-inner">
+                                                    <div class="item-title-row">
+                                                        <div class="item-title">{{pos.disTitle}}</div>
+                                                        <div class="item-after">
+                                                            {{renderVal(pos.publishTime,'date')}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="item-subtitle">
+                                                        {{pos.disInstitute}}
+                                                    </div>
+                                                    <div class="uni-logo"
+                                                         v-bind:style="{backgroundImage: 'url(img/logo/'+ pos.instituteId +'.png)'}">
+                                                        <!--<img :src="'img/logo/'+ pos.instituteId +'.png'"-->
+                                                        <!--style="max-width:100%; max-height:100%;"-->
+                                                        <!--onerror="imgError(this)">-->
+                                                    </div>
+                                                    <div class="item-text more-space">
+                                                        <ul class="tag-cloud">
+                                                            <li class="fav-icon" v-if="pos.isFav"><i
+                                                                    class="fa fa-heart"></i></li>
+                                                            <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
+                                                        </ul>
+                                                        {{pos.summary}}
                                                     </div>
                                                 </div>
-                                                <div class="item-subtitle">
-                                                    {{pos.disInstitute}}
-                                                </div>
-                                                <div class="uni-logo" v-bind:style="{backgroundImage: 'url(img/logo/'+ pos.instituteId +'.png)'}">
-                                                    <!--<img :src="'img/logo/'+ pos.instituteId +'.png'"-->
-                                                         <!--style="max-width:100%; max-height:100%;"-->
-                                                         <!--onerror="imgError(this)">-->
-                                                </div>
-                                                <div class="item-text">
-                                                    <ul class="tag-cloud">
-                                                        <li class="fav-icon" v-if="pos.isFav"><i
-                                                                class="fa fa-heart"></i></li>
-                                                        <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
-                                                    </ul>
-                                                    {{pos.summary}}
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
+                                            </a>
+                                        </div>
 
-                                    <div v-if='pos.isFav' class="swipeout-actions-right">
-                                        <a href="#" class="mark swipe-bg-color-del swipeout-overswipe"
-                                           @click="closeAllSwipe(pos, false);">
-                                            <i class="fa fa-trash-o"></i>&nbsp;删除
-                                        </a>
-                                    </div>
-                                    <div v-else class="swipeout-actions-right">
-                                        <a href="#" class="mark swipe-bg-color swipeout-overswipe"
-                                           @click="closeAllSwipe(pos, true);">
-                                            <i class="fa fa-heart"></i>&nbsp;收藏
-                                        </a>
-                                    </div>
-                                </li>
-                                <infinite-loading :on-infinite="onInfinite" :distance="distance"
-                                                  v-if="positions.length < 500">
-                                </infinite-loading>
-                            </ul>
+                                        <div v-if='pos.isFav' class="swipeout-actions-right">
+                                            <a href="#" class="mark swipe-bg-color-del swipeout-overswipe"
+                                               @click="closeAllSwipe(pos, false);">
+                                                <i class="fa fa-trash-o"></i>&nbsp;删除
+                                            </a>
+                                        </div>
+                                        <div v-else class="swipeout-actions-right">
+                                            <a href="#" class="mark swipe-bg-color swipeout-overswipe"
+                                               @click="closeAllSwipe(pos, true);">
+                                                <i class="fa fa-heart"></i>&nbsp;收藏
+                                            </a>
+                                        </div>
+                                    </li>
+                                    <infinite-loading :on-infinite="onInfinite" :distance="distance"
+                                                      v-if="positions.length < 500">
+                                    </infinite-loading>
+                                </ul>
 
-                        </div>
-                        <div v-else>
-                            <div class="embrass-tip">
-                                <center>
-                                    <i class="fa fa-meh-o" aria-hidden="true"></i>
-                                    近期的职位都看过啦
-                                </center>
+                            </div>
+
+                            <div v-else>
+                                <div class="embrass-tip">
+                                    <center>
+                                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                                        近期的职位都看过啦
+                                    </center>
+                                </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -217,7 +233,7 @@
                                 <div class="list-block order-list media-list">
                                     <ul>
                                         <li data-popup=".popup-detail" class="open-popup swipeout"
-                                            v-on:click="focusPosition=favPositions[$index]"
+                                            v-on:click="focusPosition=pos"
                                             v-for="pos in favPositions | orderBy 'publishTime' -1">
                                             <div class="swipeout-content" v-bind:class="{ favPosition: pos.isFav }">
                                                 <a href="#" class="item-content item-link">
@@ -231,9 +247,10 @@
                                                         <div class="item-subtitle">
                                                             {{pos.disInstitute}}
                                                         </div>
-                                                        <div class="uni-logo" v-bind:style="{backgroundImage: 'url(img/logo/'+ pos.instituteId +'.png)'}">
+                                                        <div class="uni-logo"
+                                                             v-bind:style="{backgroundImage: 'url(img/logo/'+ pos.instituteId +'.png)'}">
                                                         </div>
-                                                        <div class="item-text">
+                                                        <div class="item-text more-space">
                                                             <ul class="tag-cloud">
                                                                 <li class="fav-icon" v-if="pos.isFav"><i
                                                                         class="fa fa-heart"></i></li>
@@ -271,21 +288,117 @@
         </div>
     </div>
 
+    <div id="chat-view" class="view tab">
+        <!-- We can make with view with navigation, let's add Top Navbar-->
+        <div class="pages navbar-fixed toolbar-fixed">
+            <div class="page" style="background: white;">
+                <div class="navbar top-navbar">
+                    <div class="navbar-inner">
+                        <div v-else class="center sliding">咨询</div>
+                    </div>
+                </div>
+
+                <div class="page-content messages-content">
+                    <div class="messages">
+                    </div>
+                </div>
+                <!-- messagebar -->
+                <div v-if="chatState && !isWaitingChat" class="toolbar messagebar">
+                    <div v-if="chatState.answer" class="toolbar-inner">
+                        <ul class="tag-cloud">
+                            <li href="#" v-for="(key, value) in chatState.answer" class="button button-round answer-button"
+                                v-on:click="jumpToFix(key, value)">{{key}}
+                            </li>
+                        </ul>
+                    </div>
+                    <div v-else class="toolbar-inner">
+                        <textarea placeholder="在这里输入回答"></textarea><a href="#" class="link">发送</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="news-view" class="view tab">
+        <div class="navbar top-navbar">
+            <div class="navbar-inner">
+                <div class="center sliding">新闻</div>
+            </div>
+        </div>
+
+        <div class="pages navbar-through">
+            <div data-page="news-page" class="page page-on-center">
+                <div class="page-content smooth-scroll">
+                    <div class="content-block status-board">
+                        <div id="news-list">
+                            <div v-if="newsList.length>0">
+                                <div class="list-block order-list media-list">
+                                    <ul>
+                                        <li data-popup=".popup-news" class="open-popup swipeout"
+                                            v-on:click="focusNews=pos"
+                                            v-for="pos in newsList | orderBy 'timestamp' -1">
+                                            <a href="#" class="item-content item-link">
+                                                <div class="item-inner">
+                                                    <div class="item-title-row">
+                                                        <div class="item-title">{{pos.title}}</div>
+                                                        <div class="item-after">
+                                                            {{renderVal(pos.timestamp,'date')}}
+                                                        </div>
+                                                    </div>
+                                                    <div class="item-text">
+                                                        {{pos.mainContent.trim()}}
+                                                    </div>
+                                                </div>
+                                            </a>
+                                        </li>
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="embrass-tip">
+                                    <center>
+                                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                                        不要老总想搞个大新闻
+                                    </center>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="profile-view" class="view tab">
         <!-- We can make with view with navigation, let's add Top Navbar-->
         <div class="navbar top-navbar">
             <div class="navbar-inner">
                 <div class="center sliding">更多</div>
             </div>
+            <div class="navbar-inner cached" data-page="faqpage">
+                <div class="left"><a href="#" class="back link"><i class="fa fa-chevron-left"></i><span>返回</span></a>
+                </div>
+                <div class="center sliding">常见问题</div>
+            </div>
         </div>
         <div class="pages navbar-through">
-            <div data-page="index-2" class="page">
+            <div data-page="index-2" class="page page-on-center">
                 <div class="page-content smooth-scroll">
                     <div class="content-block-title">
                         <p>设置</p>
                     </div>
+
+
                     <div class="list-block">
                         <ul>
+                            <li>
+                                <a href="#" class="item-link" onclick="myApp.actions(locationBtns)">
+                                    <div class="item-content">
+                                        <div class="item-inner">切换中国/海外服务器</div>
+                                    </div>
+                                </a>
+                            </li>
                             <li>
                                 <a href="#" class="item-link smart-select" data-open-in="picker"
                                    data-picker-close-text="使用它搜索">
@@ -354,7 +467,7 @@
                     <div class="list-block">
                         <ul>
                             <li>
-                                <a href="faq.html" class="item-link">
+                                <a href="#faqpage" class="item-link">
                                     <div class="item-content">
                                         <div class="item-media"><i class="fa fa-question-circle fa-fw"
                                                                    aria-hidden="true"></i></div>
@@ -375,13 +488,25 @@
                             <li v-if="!showAds">
                                 <a href="#" class="item-link" onclick="showMyAds('fullpage', true)">
                                     <div class="item-content">
-                                        <div class="item-media"><i class="fa fa-money fa-w" aria-hidden="true"></i></div>
+                                        <div class="item-media"><i class="fa fa-money fa-w" aria-hidden="true"></i>
+                                        </div>
                                         <div class="item-inner">我要点广告以表支持</div>
                                     </div>
                                 </a>
                             </li>
-                            <li>
-                                <a href="https://itunes.apple.com/us/app/zhao-dao-zui-quan-zui-xin/id1166618336?ls=1&mt=8" class="item-link external">
+                            <li v-if="isIOS">
+                                <a href="https://itunes.apple.com/us/app/zhao-dao-zui-quan-zui-xin/id1166618336?ls=1&mt=8"
+                                   class="item-link external">
+                                    <div class="item-content">
+                                        <div class="item-media"><i class="fa fa-star-half-o fa-fw"
+                                                                   aria-hidden="true"></i></div>
+                                        <div class="item-inner">给App评分</div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li v-else>
+                                <a href="https://play.google.com/store/apps/details?id=de.ojins.phd"
+                                   class="item-link external">
                                     <div class="item-content">
                                         <div class="item-media"><i class="fa fa-star-half-o fa-fw"
                                                                    aria-hidden="true"></i></div>
@@ -401,7 +526,8 @@
                             <li>
                                 <a href="http://ojins.com" class="item-link external" target="_blank">
                                     <div class="item-content">
-                                        <div class="item-media"><i class="fa fa-info-circle fa-fw" aria-hidden="true"></i>
+                                        <div class="item-media"><i class="fa fa-info-circle fa-fw"
+                                                                   aria-hidden="true"></i>
                                         </div>
                                         <div class="item-inner">关于欧金所</div>
                                     </div>
@@ -411,47 +537,102 @@
                     </div>
                 </div>
             </div>
+            <div data-page="faqpage" class="page cached no-toolbar">
+                <div class="page-content">
+                    <div class="content-block-title">这里涵盖的职位有多少?</div>
+                    <div class="content-block">
+                        <p>「找德到」已经覆盖德国近百所学术科研机构的职位. 一方面我们改进算法, 另一方面我们正在探寻和德国大学之间的合作,
+                            力图提供更多更准确的德国教职信息.</p>
+                    </div>
+                    <div class="content-block-title">为什么中文翻译质量较差?</div>
+                    <div class="content-block">
+                        <p>因为这是从德文直接机器自动翻译成中文的. 在机器翻译领域, 翻译的效果取决于两种语言的平行语料的质量和数量.
+                            中文和德文的平行语料相对较少, 因此结果不尽理想. </p>
+                    </div>
+                    <div class="content-block-title">为什么不使用人工翻译?</div>
+                    <div class="content-block">
+                        <p>「找德到」每天从德国各个大学及研究所的网站抓取最新的职位信息, 如果采取人工翻译, 这将是一笔巨大的人力开销.
+                            在没有取得融资或稳定的资金来源前, 「找德到」会继续使用机器自动翻译以减小成本.</p>
+                    </div>
+                    <div class="content-block-title">为什么大部分职位的描述是德语?而没有被机器翻译?</div>
+                    <div class="content-block">
+                        <p>因为这些信息直接来自德国大学. 为确保信息准确传达和描述,「找德到」会直接显示德文原文.
+                            另外, 长篇的机器翻译效果并不理想且极大增加了运营成本. 是的, 即便是使用机器翻译也是有开销的.</p>
+                    </div>
+                    <div class="content-block-title">为什么节假日没有更新?</div>
+                    <div class="content-block">
+                        <p>因为德国节假日中学校和研究所的网站维护人员都在休息,所以职位信息一般不会更新.
+                            工作日里的每天「找德到」会更新四次. </p>
+                    </div>
+                    <div class="content-block-title">为什么会有广告?</div>
+                    <div class="content-block">
+                        <p>除去开发「找德到」所支出的时间精力外, 运维一个app也是需要成本的. 发布「找德到」需要购买资格证书,
+                            保障稳定的信息采集需要购买云服务器. 所有的这些支出, 并不完全能靠广告而弥补的. 但有个广告聊胜于无.</p>
+                    </div>
+                    <div class="content-block-title">我关闭了广告, 你如何盈利?</div>
+                    <div class="content-block">
+                        <p>不盈利. 我们期待由于你的分享和推荐会吸引更多的人来使用「找德到」, 使用的人越多, 「找德到」支持也会越多.</p>
+                    </div>
+                    <div class="content-block-title">这个app的开发团队有多大?</div>
+                    <div class="content-block">
+                        <p>目前1人.</p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
 
     <!-- Bottom Tabbar-->
     <div class="toolbar tabbar tabbar-labels">
-        <div class="toolbar-inner">
-            <a href="#port-view" class="tab-link active">
-                <i class="icon">
-                    <i class="fa fa-graduation-cap"></i>
-                </i>
-                <span class="tabbar-label">职位</span>
-            </a>
-            <a href="#invest-view" class="tab-link">
-                <i class="icon">
-                    <i class="fa fa-heart"></i>
-                    <span v-if="favPositions.length >0" class="badge bg-green">{{favPositions.length}}</span>
-                </i>
+        <div v-cloak>
+            <div class="toolbar-inner">
+                <a href="#port-view" class="tab-link active">
+                    <i class="icon">
+                        <i class="fa fa-graduation-cap"></i>
+                    </i>
+                    <span class="tabbar-label">职位</span>
+                </a>
+                <a href="#invest-view" class="tab-link">
+                    <i class="icon">
+                        <i class="fa fa-heart"></i>
+                        <span v-if="favPositions.length >0" class="badge bg-green">{{favPositions.length}}</span>
+                    </i>
 
-                <span class="tabbar-label">收藏</span>
-            </a>
-            <a href="#profile-view" class="tab-link">
-                <i class="icon">
-                    <i class="fa fa-bars"></i>
-                </i>
-                <span class="tabbar-label">更多</span>
-            </a>
+                    <span class="tabbar-label">收藏</span>
+                </a>
+                <a href="#news-view" class="tab-link">
+                    <i class="icon">
+                        <i class="fa fa-newspaper-o"></i>
+                    </i>
+                    <span class="tabbar-label">新闻</span>
+                </a>
+                <a href="#chat-view" class="tab-link" onclick="vm.chatState=logic['welcome']">
+                    <i class="icon chat-icon-sizing">
+                        <i class="fa fa-comments"></i>
+                    </i>
+                    <span class="tabbar-label">咨询</span>
+                </a>
+                <a href="#profile-view" class="tab-link">
+                    <i class="icon">
+                        <i class="fa fa-bars"></i>
+                    </i>
+                    <span class="tabbar-label">更多</span>
+                </a>
+            </div>
         </div>
     </div>
-
-
 </div>
 
-<div class="popup popup-detail ">
+<div class="popup popup-detail">
     <div v-if="focusPosition" class="page toolbar-fixed navbar-fixed">
         <div class="page-content" id="detail-content">
             <div class="content-block">
                 <p class="detail-title">{{focusPosition.disTitle}}</p>
             </div>
             <div class="content-block">
-                <div class="uni-logo" v-bind:style="{backgroundImage: 'url(img/logo/'+ focusPosition.instituteId +'.png)'}">
+                <div class="uni-logo"
+                     v-bind:style="{backgroundImage: 'url(img/logo/'+ focusPosition.instituteId +'.png)'}">
                 </div>
                 <p class="detail-uni">{{focusPosition.disInstitute}}</p>
                 <ul class="tag-cloud">
@@ -562,14 +743,74 @@
     </div>
 </div>
 
+<div class="popup popup-news">
+    <div v-if="focusNews" class="page toolbar-fixed navbar-fixed">
+        <div class="page-content" id="detail-news">
+            <div class="content-block">
+                <p class="detail-title">{{focusNews.title}}</p>
+            </div>
+            <div class="content-block">
+                <p class="detail-date">
+                    发表于{{renderVal(focusNews.timestamp,'date')}} 在
+                    {{renderVal(focusNews.timestamp,'fulldate')}}</p>
+            </div>
+            <div v-if="focusNews.mainContent.trim().length>0" class="content-block inset">
+                <div class="content-block-inner" style="font-size: 18px">
+                    <p class="detail-main">{{{focusNews.mainContent.trim()}}}</p>
+                </div>
+            </div>
+            <div v-else>
+                <div class="embrass-tip">
+                    <center>
+                        <i class="fa fa-meh-o" aria-hidden="true"></i>
+                        呃...这条新闻神奇的消失了
+                    </center>
+                </div>
+            </div>
+        </div>
+        <div class="toolbar">
+            <div class="toolbar-inner">
+                <a v-if='hasWechat' href="#" class="link open-popover" data-popover=".popover-share-news">
+                    <i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享
+                </a>
+                <a v-else href="#" class="link" @click="shareTo(focusNews)">
+                    <i class="fa fa-share-square-o" aria-hidden="true"></i>&nbsp;分享
+                </a>
+
+                <a href="#" class="link close-popup"><i class="fa fa-times-circle-o" aria-hidden="true"></i>&nbsp;关闭</a>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="popover popover-share">
     <div class="popover-angle"></div>
     <div class="popover-inner">
         <div class="list-block">
             <ul>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, false)">分享给微信好友</a></li>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, true)">分享到微信朋友圈</a></li>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareTo(focusPosition)"><i class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;发送到其它程序</a></li>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, false)">分享给微信好友</a>
+                </li>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, true)">分享到微信朋友圈</a>
+                </li>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareTo(focusPosition)"><i
+                        class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;发送到其它程序</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+<div class="popover popover-share-news">
+    <div class="popover-angle"></div>
+    <div class="popover-inner">
+        <div class="list-block">
+            <ul>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareNewsWechat(focusNews, false)">分享给微信好友</a>
+                </li>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareNewsWechat(focusNews, true)">分享到微信朋友圈</a>
+                </li>
+                <li><a href="#" class="list-button item-link close-popover" @click="shareNewsTo(focusNews)"><i
+                        class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;发送到其它程序</a></li>
             </ul>
         </div>
     </div>
@@ -581,7 +822,6 @@
 <script type="text/javascript" src="lib/js/moment.js"></script>
 <script type="text/javascript" src="lib/js/vue.js"></script>
 <script type="text/javascript" src="lib/js/inobounce.js"></script>
-<script type="text/javascript" src="lib/js/in-view.min.js"></script>
 <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
 <script type="text/javascript" src="lib/js/vue-infinite-loading.js"></script>
 <!-- Path to your app js-->
@@ -591,5 +831,7 @@
 <script type="text/javascript" src="js/utils.js"></script>
 <script type="text/javascript" src="js/main.js"></script>
 <script type="text/javascript" src="js/tutorial.js"></script>
+<script type="text/javascript" src="js/chat.js"></script>
+<script type="text/javascript" src="js/chat-logic.js"></script>
 </body>
 </html>

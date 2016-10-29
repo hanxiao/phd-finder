@@ -92,7 +92,7 @@
     background-color: rgba(86, 217, 182, 0.15) !important;
 }
 
-.list-block .item-text {
+.list-block .item-text.more-space {
     height: 62px;
 }
 
@@ -130,10 +130,10 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
 }
 
 .uni-logo {
-    width: 64px;
+    width: 50px;
+    height: 50px;
     background-size: contain;
     background-repeat: no-repeat;
-    height: 64px;
     position: absolute;
     right: 15px;
     top: 30%;

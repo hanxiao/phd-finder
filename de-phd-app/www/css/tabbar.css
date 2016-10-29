@@ -16,18 +16,7 @@
     color: white;
 }
 
-.popup-detail .toolbar {
-    background: #738ABB;
-    color: white;
-    -webkit-transition-duration: 300ms;
-    transition-duration: 300ms;
-    transition-timing-function: ease-in;
-    -webkit-transition-timing-function: ease-in;
-}
 
-.popup-detail .toolbar a {
-    color: white;
-}
 
 .theme-white >.tab-link {
     color: white !important;

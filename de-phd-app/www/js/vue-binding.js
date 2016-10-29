@@ -27,8 +27,10 @@ function translate2LocalData(json, lang) {
                 x.disTitle = x.title_zh;
                 x.disInstitute = x.institute_zh;
             });
-            if (firstOpenApp) {
-
+            if (firstTransCN) {
+                showApology();
+                firstTransCN = false;
+                window.localStorage.setItem('firstTransCN', false);
             }
             break;
         case "en-us":
@@ -49,7 +51,16 @@ function translate2LocalData(json, lang) {
 }
 
 function loadPositions(positionUrl) {
-    myApp.showIndicator();
+    try {
+        setupPush();
+    } catch (ignore) {
+    }
+
+
+    var container = $('body');
+    if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
+    myApp.showProgressbar(container);
+
     console.log("start loading positions from %s", positionUrl);
 
     $.getJSON(positionUrl, function (json) {
@@ -71,16 +82,21 @@ function loadPositions(positionUrl) {
                 tagMap: translateTags,
                 eIdx: 0,
                 focusPosition: false,
-                hasWechat: false
+                focusNews: false,
+                hasWechat: false,
+                newsList: [],
+                chatState: false,
+                isWaitingChat: false
             },
             ready: function () {
                 this.eIdx = this.populatePosition(20);
+                this.updateNews();
                 this.loadState();
                 this.checkWechat();
                 myApp.hideIndicator();
                 myApp.sizeNavbars('.view-main');
                 try {
-                    navigator.splashscreen.hide();
+                    myApp.hideProgressbar();
                 } catch (ex) {
                     console.error("hide splash screen error");
                 }
@@ -106,9 +122,20 @@ function loadPositions(positionUrl) {
                 'favPositions': function (val, oldVal) {
                     console.log('fav change!');
                     this.saveState();
+                },
+                'chatState': function (val, oldVal) {
+                    console.log('chat state change!');
+                    vm.isWaitingChat = true;
+                    var question = this.chatState.question[Math.floor(Math.random() * this.chatState.question.length)];
+                    addMessage(question, "received", true);
                 }
             },
             methods: {
+                jumpToFix: function (x, y) {
+                    console.log("jumpToFix: " + x + ", " + y);
+                    addMessage(x, "sent", false);
+                    vm.chatState = logic[y];
+                },
                 checkWechat: function () {
                     if (typeof Wechat == "undefined") {
                         this.hasWechat = false;
@@ -119,6 +146,12 @@ function loadPositions(positionUrl) {
                             vm.hasWechat = false;
                         });
                     }
+                },
+                updateNews: function () {
+                    $.getJSON(allNewsUrl, function (newnews) {
+                        console.log("finish loading %s", allNewsUrl);
+                        vm.newsList = newnews;
+                    });
                 },
                 updateData: function () {
                     this.saveState();
@@ -216,11 +249,41 @@ function loadPositions(positionUrl) {
                 },
                 shareTo: function (val) {
                     if (val) {
-                        window.plugins.socialsharing.share("找德到-" + val.disTitle + "来自" + val.disInstitute,
-                            "找德到-新职位!" + val.disInstitute,
+                        window.plugins.socialsharing.share("「找德到」-" + val.disTitle + "来自" + val.disInstitute,
+                            "「找德到」-新职位!" + val.disInstitute,
                             null,
                             'http://phd.ojins.com/position.html?id=' + val.positionId);
                     }
+                },
+                shareNewsTo: function (val) {
+                    if (val) {
+                        window.plugins.socialsharing.share("「找德到」-" + val.title,
+                            val.mainContent,
+                            null,
+                            'http://phd.ojins.com/news.html?id=' + val.title);
+                    }
+                },
+                shareNewsWechat: function (val, circle) {
+                    var myscene = circle ? Wechat.Scene.TIMELINE : Wechat.Scene.SESSION;
+                    Wechat.share({
+                        message: {
+                            title: "「找德到」新闻-" + val.title,
+                            description: val.mainContent,
+                            thumb: "www/img/log128.png",
+                            mediaTagName: "de-phd",
+                            messageExt: "找德到分享",
+                            messageAction: "<action>dotalist</action>",
+                            media: {
+                                type: Wechat.Type.WEBPAGE,
+                                webpageUrl: 'http://phd.ojins.com/news.html?id=' + val.title
+                            }
+                        },
+                        scene: myscene   // share to Timeline
+                    }, function () {
+                        //myApp.alert('分享成功!');
+                    }, function (reason) {
+                        myApp.alert('额...分享失败了');
+                    });
                 },
                 shareWechat: function (val, circle) {
                     var myscene = circle ? Wechat.Scene.TIMELINE : Wechat.Scene.SESSION;
@@ -239,7 +302,7 @@ function loadPositions(positionUrl) {
                         },
                         scene: myscene   // share to Timeline
                     }, function () {
-                        myApp.alert('分享成功!');
+                        //myApp.alert('分享成功!');
                     }, function (reason) {
                         myApp.alert('额...分享失败了');
                     });
@@ -250,6 +313,12 @@ function loadPositions(positionUrl) {
                 }
             },
             computed: {
+                isAndroid: function () {
+                    return myApp.device.android;
+                },
+                isIOS: function () {
+                    return myApp.device.ios;
+                },
                 focusWiki: function () {
                     if (this.focusPosition) {
                         return "https://en.m.wikipedia.org/wiki/" +

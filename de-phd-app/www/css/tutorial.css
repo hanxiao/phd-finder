@@ -66,6 +66,14 @@
     top: 60px;
 }
 
+
+.tutorial-arrow-ads {
+    width: 128px;
+    height: 128px;
+    right: 20px;
+    bottom: 20px;
+}
+
 .tutorial-arrow-star {
     -ms-transform: rotate(260deg);
     -webkit-transform: rotate(260deg);
