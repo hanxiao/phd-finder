@@ -1,0 +1,19 @@
+.panel {
+    width: 200px;
+    display: inline-block;
+    height: 200px;
+    overflow: hidden;
+}
+
+.fast {
+    border:3px solid #aa1a1b;
+    opacity: 1;
+    z-index:1;
+    border-radius:100%;
+    pointer-events:none;
+}
+
+ul.list-group {
+    max-height: 50px;
+    overflow: scroll;
+}

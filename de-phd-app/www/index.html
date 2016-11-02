@@ -110,12 +110,12 @@
                                 </optgroup>
                             </select>
 
-                            <div v-if="curTag.length==0" class="button filter-icon"><i class="fa fa-sliders"
+                            <div v-if="curTag.length==0" class="button filter-icon"><i class="fa fa-search"
                                                                                        aria-hidden="true"></i></div>
                             <div v-else class="button filter-icon" v-on:taphold="resetFilter()">
                             <span class="fa-stack">
                               <i class="fa fa-cog subscript fa-spin fa-fw" aria-hidden="true"></i>
-                              <i class="fa fa-sliders fa-stack-1x"
+                              <i class="fa fa-search fa-stack-1x"
                                  aria-hidden="true"></i>
                             </span>
                             </div>
@@ -294,7 +294,11 @@
             <div class="page" style="background: white;">
                 <div class="navbar top-navbar">
                     <div class="navbar-inner">
-                        <div v-else class="center sliding">咨询</div>
+                        <div class="center sliding">咨询</div>
+                        <div class="right">
+                            <div v-if="messageHistory" class="button clear-icon">
+                                <i class="fa fa-trash" aria-hidden="true" v-on:click="clearMessage"></i></div>
+                        </div>
                     </div>
                 </div>
 
@@ -305,15 +309,19 @@
                 <!-- messagebar -->
                 <div v-if="chatState && !isWaitingChat" class="toolbar messagebar">
                     <div v-if="chatState.answer" class="toolbar-inner">
-                        <ul class="tag-cloud">
-                            <li href="#" v-for="(key, value) in chatState.answer" class="button button-round answer-button"
+                        <ul class="tag-cloud answer-button-row">
+                            <li href="#" v-for="(key, value) in chatState.answer"
+                                class="button button-round answer-button"
                                 v-on:click="jumpToFix(key, value)">{{key}}
                             </li>
                         </ul>
                     </div>
                     <div v-else class="toolbar-inner">
-                        <textarea placeholder="在这里输入回答"></textarea><a href="#" class="link">发送</a>
+                        <textarea placeholder="在这里输入问题或回答"></textarea><a href="#" class="link">发送</a>
                     </div>
+                </div>
+                <div v-else class="waiting-icon">
+                    <img src="img/facebook.svg">
                 </div>
             </div>
         </div>

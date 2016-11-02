@@ -86,7 +86,8 @@ function loadPositions(positionUrl) {
                 hasWechat: false,
                 newsList: [],
                 chatState: false,
-                isWaitingChat: false
+                isWaitingChat: false,
+                messageHistory: ""
             },
             ready: function () {
                 this.eIdx = this.populatePosition(20);
@@ -124,15 +125,37 @@ function loadPositions(positionUrl) {
                     this.saveState();
                 },
                 'chatState': function (val, oldVal) {
-                    console.log('chat state change!');
-                    vm.isWaitingChat = true;
-                    var question = this.chatState.question[Math.floor(Math.random() * this.chatState.question.length)];
-                    addMessage(question, "received", true);
+                    if (val) {
+                        console.log('chat state change!');
+                        vm.isWaitingChat = true;
+                        var question = this.chatState.question[Math.floor(Math.random() * this.chatState.question.length)];
+                        addMessage(question, "received", true);
+                    }
                 }
             },
             methods: {
+                clearMessage: function() {
+                    myApp.confirm('清空所有聊天记录, 只保留最后一条?',
+                        function () {
+                            vm.messageHistory = "";
+                            var oldState = vm.chatState;
+                            vm.chatState = false;
+                            vm.isWaitingChat = false;
+                            myMessages.clean();
+                            conversationStarted = false;
+                            vm.saveState();
+                            vm.chatState = oldState;
+                        },
+                        function () {
+
+                        }
+                    );
+                },
                 jumpToFix: function (x, y) {
                     console.log("jumpToFix: " + x + ", " + y);
+                    if ((Date.now() - lastChatTime) > 60000) {
+                        conversationStarted = false;
+                    }
                     addMessage(x, "sent", false);
                     vm.chatState = logic[y];
                 },
@@ -162,7 +185,7 @@ function loadPositions(positionUrl) {
                         resetFilter();
                     });
                 },
-                saveState: function () {
+                saveState: function (cb) {
                     var favId = {};
                     $.each(this.favPositions, function (idx, x) {
                         favId[x.positionId] = 1;
@@ -171,13 +194,14 @@ function loadPositions(positionUrl) {
                         _pushTag: this.pushTag,
                         _searchEngine: this.searchEngine,
                         _enablePush: this.enablePush,
-                        _favId: favId
+                        _favId: favId,
+                        _msgHistory: this.messageHistory
                     };
                     try {
                         NativeStorage.setItem("curState", state, setSuccess, setError);
                     } catch (ex) {
                     }
-
+                    if (cb) {cb}
                 },
                 loadState: function () {
                     try {
@@ -191,6 +215,7 @@ function loadPositions(positionUrl) {
                                     vm.allPos[idx].isFav = true;
                                 }
                             });
+                            $('.messages').html(val._msgHistory);
                             console.log('load success')
                         }, getError);
                     } catch (ex) {

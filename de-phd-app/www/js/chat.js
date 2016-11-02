@@ -35,11 +35,11 @@ function addMessage(messageText, messageType, simulateTyping) {
         name = '我';
     }
 
-    if (simulateTyping) {
+    if (simulateTyping && messageText.indexOf("http") < 0) {
         var breakText = messageText.match(/[^\.,!\?]+[\.,!\?]*/g);
         var waitTime = [1000];
         for (var i = 1; i < breakText.length; i++) {
-            waitTime[i] = waitTime[i-1] + Math.min(1500, breakText[i-1].length * 150);
+            waitTime[i] = waitTime[i - 1] + Math.min(1500, breakText[i - 1].length * 150);
         }
 
         for (i = 0; i < breakText.length; i++) {
@@ -48,13 +48,18 @@ function addMessage(messageText, messageType, simulateTyping) {
                     addMessageInner(breakText[index], messageType, avatar, name);
                     if ((messageType == "received") && (index == breakText.length - 1)) {
                         vm.isWaitingChat = false;
-
+                        vm.messageHistory = $('.messages').html();
                     }
                 }, waitTime[i]);
             })(i);
         }
     } else {
         addMessageInner(messageText, messageType, avatar, name);
+        if (messageType == "received") {
+            vm.isWaitingChat = false;
+            vm.messageHistory = $('.messages').html();
+            vm.saveState();
+        }
     }
 }
 
@@ -69,9 +74,10 @@ function addMessageInner(messageText, messageType, avatar, name) {
         avatar: avatar,
         name: name,
         // Day
-        day: !conversationStarted ? '今天' : false,
-        time: !conversationStarted ? (new Date()).getHours() + ':' + (new Date()).getMinutes() : false
+        day: !conversationStarted ? moment().format('LL') : false,
+        time: !conversationStarted ? moment().format('LT') : false
     });
     // Update conversation flag
     conversationStarted = true;
+    lastChatTime = Date.now();
 }

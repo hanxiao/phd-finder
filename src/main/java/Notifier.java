@@ -4,6 +4,12 @@ import com.google.android.gcm.server.Sender;
 import com.google.gson.*;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsService;
+import com.relayrides.pushy.apns.ApnsClient;
+import com.relayrides.pushy.apns.ApnsClientBuilder;
+import com.relayrides.pushy.apns.PushNotificationResponse;
+import com.relayrides.pushy.apns.util.ApnsPayloadBuilder;
+import com.relayrides.pushy.apns.util.SimpleApnsPushNotification;
+import com.relayrides.pushy.apns.util.TokenUtil;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -13,11 +19,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.CollectionAdapter;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -58,25 +67,52 @@ public class Notifier {
                                  String title,
                                  String text, int numUpdate) {
 
-        String iosPayload = APNS.newPayload()
-                .badge(numUpdate)
-                .alertBody(text)
-                .alertTitle(title)
-                .shrinkBody("查看详情")
-                .build();
+        try {
+            final ApnsClient apnsClient = new ApnsClientBuilder()
+                    .setClientCredentials(new File("certificate/dev.p12"), "xh0531")
+                    .build();
+            final Future<Void> connectFuture = apnsClient.connect(ApnsClient.DEVELOPMENT_APNS_HOST);
 
-        ApnsService service =
-                APNS.newService()
-                        .withCert("certificate/prod.p12", "xh0531")
-                        .withProductionDestination()
-                        .build();
+            connectFuture.get();
 
-        deviceStream
-                .filter(Device::isAppleDevice)
-                .forEach(p-> {
-                    service.push(p.getDeviceID(), iosPayload);
-                    LOG.info(p.toString());
-                });
+            deviceStream
+                    .filter(Device::isAppleDevice)
+                    .forEach(p-> {
+                        final SimpleApnsPushNotification pushNotification;
+                        {
+                            final ApnsPayloadBuilder payloadBuilder = new ApnsPayloadBuilder();
+                            payloadBuilder.setAlertBody(text);
+                            payloadBuilder.setAlertTitle(title);
+                            payloadBuilder.setBadgeNumber(numUpdate);
+
+
+                            final String payload = payloadBuilder.buildWithDefaultMaximumLength();
+                            final String token = TokenUtil.sanitizeTokenString(p.getDeviceID());
+                            pushNotification = new SimpleApnsPushNotification(token, "de.ojins.phd", payload);
+                        }
+
+                        try {
+                            final PushNotificationResponse<SimpleApnsPushNotification> pushNotificationResponse =
+                                    apnsClient.sendNotification(pushNotification).get();
+                            if (pushNotificationResponse.isAccepted()) {
+                                System.out.println("Push notification accepted by APNs gateway.");
+                            } else {
+                                System.out.println("Notification rejected by the APNs gateway: " +
+                                        pushNotificationResponse.getRejectionReason());
+
+                                if (pushNotificationResponse.getTokenInvalidationTimestamp() != null) {
+                                    System.out.println("\t…and the token is invalid as of " +
+                                            pushNotificationResponse.getTokenInvalidationTimestamp());
+                                }
+                            }
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private static JsonArray parseGoogleJson(String json) {
@@ -134,7 +170,7 @@ public class Notifier {
 
     public static void main(final String[] args) throws IOException {
         List<Device> devices = getDeviceList();
-        send2IOS(devices.stream().distinct(), "又有新教职啦", "新发布了来自慕尼黑工业大学等的12个职位， 快来看看吧！", 1);
+        send2IOS(devices.stream().distinct(), "又有新教职啦", "新发布了来自德国不莱梅大学等的12个博士职位， 快来看看吧！", 1);
 //        send2Android(devices.stream()
 //                        .filter(Device::isAndroidDevice)
 //                        .collect(Collectors.toList()),

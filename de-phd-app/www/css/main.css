@@ -40,6 +40,12 @@
     font-size: 20px;
 }
 
+.clear-icon {
+    border: none;
+    color: white;
+    font-size: 20px;
+}
+
 .filter-icon .fa-stack {
     position: static;
     width: 2em;

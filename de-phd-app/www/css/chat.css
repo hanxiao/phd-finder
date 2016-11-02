@@ -22,10 +22,17 @@
     top: -4px;
 }
 
+.answer-button-row {
+    max-width: 100% !important;
+    width: 100% !important;
+    right: 0 !important;
+    bottom: 0 !important;
+}
+
 .answer-button {
     border-radius: 20px  !important;
-    border: 1px solid #738ABB  !important;
-    color: #738ABB  !important;
+    border: 1px solid #44bb9b !important;
+    color: #3dad8f !important;
     background-color: transparent !important;
     line-height: 27px !important;
     padding: 0 10px !important;
@@ -33,11 +40,12 @@
     -webkit-transition-duration: 400ms;
     transition-duration: 400ms;
     margin: 2px 5px !important;
+    float: right !important;
 }
 
 .answer-button.active-state {
-    border: 1px solid #738ABB  !important;
-    background: #738ABB  !important;
+    border: 1px solid #44bb9b  !important;
+    background: #44bb9b  !important;
     color: white  !important;
 }
 
@@ -53,4 +61,18 @@
     height: 0;
     padding: 0 10px;
     opacity: 0;
+}
+
+.message-text a {
+    color: white;
+    text-decoration: underline;
+}
+
+.waiting-icon {
+    text-align: center;
+    height: 30px;
+}
+
+.waiting-icon img {
+    max-height: 100%;
 }

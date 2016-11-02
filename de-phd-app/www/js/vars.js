@@ -219,7 +219,7 @@ var app = {
 
 // Conversation flag
 var conversationStarted = false;
-
+var lastChatTime = 0;
 
 var nodejsServer = 'http://zdd-push.ojins.com:8080';
 var allPositionUrlCN = 'http://zdd-push.ojins.com:8080/allpos';

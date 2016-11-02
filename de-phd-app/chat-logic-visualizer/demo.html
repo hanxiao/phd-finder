@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Visualization of Chat Logic</title>
+    <link rel="stylesheet" href="lib/css/bootstrap.css">
+    <link rel="stylesheet" href="lib/css/bootstrap-theme.css">
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+<div role="main" id="logic-map">
+    <div v-for="(key, val) in all_logics" class="panel panel-default draggable" id="{{key}}">
+        <div class="panel-heading">
+            <h3 class="panel-title">{{key}}</h3>
+        </div>
+        <div class="panel-body">
+            <ul class="list-group">
+                <li v-for="q in val.question" class="list-group-item">{{q}}</li>
+            </ul>
+            <center>
+                <div v-if="val.answer" class="btn-group" role="group" aria-label="...">
+                    <button v-for="(key_btn, val_btn) in val.answer" type="button" class="btn btn-default btn-sm"
+                    data-link="{{val_btn}}-parent">
+                        {{key_btn}}
+                    </button>
+                </div>
+            </center>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript" src="lib/js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="lib/js/bootstrap.js"></script>
+<script type="text/javascript" src="lib/js/interact.min.js"></script>
+<script type="text/javascript" src="lib/js/jquery.connections.js"></script>
+<script type="text/javascript" src="lib/js/vue.js"></script>
+<script type="text/javascript" src="js/main.js"></script>
+<script type="text/javascript" src="../www/js/chat-logic.js"></script>
+<script type="text/javascript" src="js/vue-binding.js"></script>
+</html>
