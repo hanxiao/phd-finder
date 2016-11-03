@@ -50,6 +50,13 @@ hs_err_pid*
 # mpeltonen/sbt-idea plugin
 .idea_modules/
 
+de-phd-app/.idea
+de-phd-app/apk
+de-phd-app/hooks
+de-phd-app/platforms
+de-phd-app/plugins
+de-phd-app/resources
+
 # JIRA plugin
 atlassian-ide-plugin.xml
 
