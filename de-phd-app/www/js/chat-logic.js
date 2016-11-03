@@ -21,7 +21,10 @@ var logic = {
         answer: {
             "你什么背景啊?": "myself_background",
             "好吧, 我有问题要问你": "introducing"
-        }
+        },
+        keyword: [
+            "你是谁", "作者", "你好"
+        ]
     },
     "myself_background": {
         question: [
@@ -34,7 +37,10 @@ var logic = {
             "你也在互联网行业?": "myself_internet",
             "我有申请方面的问题要问": "introducing",
             "没事了": "goodbye"
-        }
+        },
+        keyword: [
+            "你是谁", "作者"
+        ]
     },
     "myself_internet": {
         question: ["是的, 你可以访问<a href='https://de.linkedin.com/in/hxiao87' " +
@@ -112,7 +118,10 @@ var logic = {
             "我有工作实习经历": "work_experience",
             "我有出国交换经历": "aboard_experience",
             "我暂时什么都没有": "prepare_phd"
-        }
+        },
+        keyword: [
+            "我的成绩", "硕士成绩", "成绩", "GPA", "绩点"
+        ]
     },
     "research_experience": {
         question: ["有研究成果肯定是加分项. 发表的国际会议或期刊的论文, " +
@@ -120,7 +129,10 @@ var logic = {
         answer: {
             "我该什么时候开始申请呢": "apply_time",
             "明白了": "random_ask"
-        }
+        },
+        keyword: [
+            "研究", "论文", "发表", "SCI", "会议", "期刊"
+        ]
     },
     "work_experience": {
         question: ["ok. 有与专业相关的工作经历是加分项. 学生教授一般也喜欢要有一定工作经历的人, " +
@@ -128,7 +140,10 @@ var logic = {
         answer: {
             "我该什么时候开始申请呢": "apply_time",
             "明白了": "random_ask"
-        }
+        },
+        keyword: [
+            "工作", "实习", "经历"
+        ]
     },
     "aboard_experience": {
         question: ["挺好的. 有出国的经历对申请也有帮助."],
@@ -147,7 +162,10 @@ var logic = {
             "可是毕业离开学校后不方便了啊": "optimal_time",
             "申请步骤是怎么样的?": "apply_process",
             "明白了": "random_ask"
-        }
+        },
+        keyword: [
+            "申请", "时间", "时候", "联系", "套磁", "套词"
+        ]
     },
     "optimal_time": {
         question: ["所以我推荐你硕士论文开题前后, 大约离毕业还半年的时间, 开始与教授陶陶瓷. " +
@@ -155,7 +173,10 @@ var logic = {
         answer: {
             "申请步骤是怎么样的?": "apply_process",
             "明白了": "random_ask"
-        }
+        },
+        keyword: [
+            "申请", "时间", "时候", "联系", "套磁", "套词", "开题", "教授"
+        ]
     },
     "already_work": {
         question: [
@@ -165,7 +186,10 @@ var logic = {
         answer: {
             "我快30了, 会不会有点老": "age_problem",
             "我该怎么申请呢": "ask_master_uni"
-        }
+        },
+        keyword: [
+            "工作", "实习", "经历"
+        ]
     },
     "age_problem": {
         question: [
@@ -175,7 +199,10 @@ var logic = {
         ],
         answer: {
             "我知道了": "ask_master_uni"
-        }
+        },
+        keyword: [
+            "年纪", "年龄", "老了", "太老"
+        ]
     },
     "bachelor_in_study": {
         question: [
