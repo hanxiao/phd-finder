@@ -185,7 +185,7 @@ function loadPositions(positionUrl) {
                         resetFilter();
                     });
                 },
-                saveState: function (cb) {
+                saveState: function () {
                     var favId = {};
                     $.each(this.favPositions, function (idx, x) {
                         favId[x.positionId] = 1;
@@ -195,13 +195,12 @@ function loadPositions(positionUrl) {
                         _searchEngine: this.searchEngine,
                         _enablePush: this.enablePush,
                         _favId: favId,
-                        _msgHistory: this.messageHistory
+                        _msgHistory: this.messageHistory,
+                        _chatState: this.chatState
                     };
                     try {
                         NativeStorage.setItem("curState", state, setSuccess, setError);
-                    } catch (ex) {
-                    }
-                    if (cb) {cb}
+                    } catch (ex) {}
                 },
                 loadState: function () {
                     try {
@@ -209,6 +208,7 @@ function loadPositions(positionUrl) {
                             vm.pushTag = val._pushTag;
                             vm.searchEngine = val._searchEngine;
                             vm.enablePush = val._enablePush;
+                            vm.chatState = val._chatState;
                             // load those favid, remap to allpos
                             $.each(vm.allPos, function (idx, x) {
                                 if (x.positionId in val._favId) {
@@ -218,8 +218,7 @@ function loadPositions(positionUrl) {
                             $('.messages').html(val._msgHistory);
                             console.log('load success')
                         }, getError);
-                    } catch (ex) {
-                    }
+                    } catch (ex) {}
                 },
                 populatePosition: function (k) {
                     var i = this.eIdx;
