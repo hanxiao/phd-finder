@@ -69,14 +69,52 @@ var logic = {
             "我已经工作了": "already_work"
         }
     },
+    "doctor_in_study": {
+        question:  ["正在读博啊. 所以你想放弃国内的博士生职位? 重新去德国读博么?"],
+        answer: {
+            "是的": "ask_master_uni",
+            "不是, 我想看看能不能做个短期访问": "short_visit"
+        }
+    },
+    "short_visit": {
+        question: [
+            "国内很多大学都和德国的大学有合作, 所以我建议多利用这些短期访问的机会" +
+            "另外, DAAD官方网站上还提供了一些奖学金资助1到3个月内的学术访问."
+        ],
+        answer: {
+            "我明白了": "random_ask",
+            "我想试试重新申请德国博士": "ask_master_uni"
+        }
+    },
     "ask_master_uni": {
         question: [
             "请问你硕士在哪里读的呢?"
         ],
         answer: {
             "国内985, 211": "ask_master_subject",
+            "英国一年制硕士": "ask_uk_univ",
+            "德国院校": "ask_german_univ",
             "国内其他院校": "ask_master_subject",
             "国外院校": "ask_master_subject"
+        }
+    },
+    "ask_uk_univ": {
+        question: [
+            "我猜你估计会问德国承不承认英国的一年制硕士," +
+            "一般来说德国高校是承认的, 毕竟大家(现在)都是欧盟国家, 教育上还是应该相互认可而不是相互诋毁的." +
+            "我读博时, 身边有一些印度同学就是从英国爱丁堡一年硕士过来的, 在TUM做并行计算方面的博士生." +
+            "所以不用担心."
+        ],
+        answer: {
+            "明白了": "ask_master_subject"
+        }
+    },
+    "ask_german_univ": {
+        question: [
+            "ok, 那你已经比其他申请者有一定优势了. 德国教授对自己国家里的大学还都是知根知底的, 所以评估起来也会更客观."
+        ],
+        answer: {
+            "明白了": "ask_master_subject"
         }
     },
     "ask_master_subject": {
@@ -119,6 +157,7 @@ var logic = {
         "在实验室的研究, 跟着大牌教授干活, 这些都是很好的经历."],
         answer: {
             "我该什么时候开始申请呢": "apply_time",
+            "申请步骤是怎么样的?": "apply_process",
             "明白了": "random_ask"
         }
     },
@@ -127,6 +166,7 @@ var logic = {
         "做事会比较有条理, 起点会略高一些."],
         answer: {
             "我该什么时候开始申请呢": "apply_time",
+            "申请步骤是怎么样的?": "apply_process",
             "明白了": "random_ask"
         }
     },
@@ -134,6 +174,7 @@ var logic = {
         question: ["挺好的. 有出国的经历对申请也有帮助."],
         answer: {
             "我该什么时候开始申请呢": "apply_time",
+            "申请步骤是怎么样的?": "apply_process",
             "明白了": "random_ask"
         }
     },
@@ -163,7 +204,7 @@ var logic = {
             "做事会比较有条理, 起点会略高一些."
         ],
         answer: {
-            "我快30了, 会不会有点老": "age_problem",
+            "我工作很多年了, 教授会不会嫌我老": "age_problem",
             "我该怎么申请呢": "ask_master_uni"
         }
     },
@@ -215,8 +256,9 @@ var logic = {
             "不过由于历史原因, 和教授直接申请仍然占主流."
         ],
         answer: {
-            "我想直接和教授申请": "prof_apply",
-            "我通过研究生院申请": "graduate_apply"
+            "我直接和教授申请": "prof_apply",
+            "我通过研究生院申请": "graduate_apply",
+            "我该什么时候申请啊": "apply_time"
         }
     },
     "prof_apply": {
@@ -255,13 +297,22 @@ var logic = {
     "funding_issue": {
         question: [
             "稳定的资金来源有三种, 一个是德国大学或研究所提供的工作合同, 另一个是DAAD和CSC等学术机构提供的奖学金, " +
-            "最后一种是德国公司给你的" +
-            "工作合同, 你拿着这种合同一周三四天在公司, 一两天在学校, 作External PhD."
+            "最后一种是德国公司给你的, 作External PhD."
         ],
         answer: {
             "我能自费读博么?": "self_funding",
             "CSC奖学金?": "csc_funding",
             "在公司干活?": "external_phd",
+            "明白了": "random_ask"
+        }
+    },
+    "external_phd": {
+        question: [
+            "工作合同, 你拿着这种合同一周三四天在公司, 一两天在学校, 在学校的教授手下注册一下. " +
+            "这种叫做external PhD. 最后获得的学位和其他博士一样, 也是大学颁发教授签字的."
+        ],
+        answer: {
+            "那接下来呢?": "next_step",
             "明白了": "random_ask"
         }
     },
@@ -384,7 +435,7 @@ var logic = {
         ],
         "answer": {
             "明白了": "random_ask",
-            "教授会面试我么?": "interview_problems"
+            "教授会面试我什么?": "interview_problems"
         }
     },
     "english_requirement": {
