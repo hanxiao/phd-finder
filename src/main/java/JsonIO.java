@@ -6,7 +6,6 @@ import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import utils.CollectionAdapter;
-import utils.LZString;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -47,11 +46,18 @@ class JsonIO {
 
         writeToFile(new File("database/uncompressed/" + fn), jsonOutput);
 
-        LOG.info("Compressing...");
-        String jsonCompressed = LZString.compressToEncodedURIComponent(jsonOutput);
+//        LOG.info("Compressing...");
+//        String jsonCompressed = LZString.compressToEncodedURIComponent(jsonOutput);
+//
+//        writeToFile(new File("database/compressed/" + fn + ".lz"), jsonCompressed);
 
-        writeToFile(new File("database/compressed/" + fn + ".lz"), jsonCompressed);
+    }
 
+    static void writeNotificationMsg() {
+        String jsonOutput = gson.toJson(GlobalVars.numUpdate);
+        writeToFile(new File("database/push-numupdate.json"), jsonOutput);
+        jsonOutput = gson.toJson(GlobalVars.updateUniName);
+        writeToFile(new File("database/push-updateUni.json"), jsonOutput);
     }
 
     static void writeTranslator() {

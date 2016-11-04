@@ -40,7 +40,7 @@ public class UniNameIndexer {
     public static void main(final String[] args) throws IOException {
         UniNameIndexer searcher = new UniNameIndexer();
         try {
-            System.out.println(searcher.search("Hochschule München"));
+            System.out.println(searcher.search("Hochschule München (HM)"));
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -49,6 +49,7 @@ public class UniNameIndexer {
 
 
     String search(String querystr) throws IOException, ParseException {
+        querystr = querystr.replaceAll("\\(.*\\)", "");
         Query q = new QueryParser("dename", analyzer).parse("\""+ QueryParser.escape( querystr )+ "\"");
         int hitsPerPage = 1;
         IndexReader reader = DirectoryReader.open(index);

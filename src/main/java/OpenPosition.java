@@ -81,6 +81,8 @@ class OpenPosition {
 
             GlobalVars.allPositions.put(positionId, this);
             GlobalVars.isUpdated = true;
+            GlobalVars.numUpdate += 1;
+            GlobalVars.updateUniName.add(institute_en);
             LOG.info("[{}] create position {}: {} !", source, institute, title);
         } else {
             if (!GlobalVars.allPositions.get(positionId).tags.contains(source)) {

@@ -151,7 +151,7 @@
                 </configuration>
                 <executions>
                     <execution>
-                        <id>build-xiaode</id>
+                        <id>build-finder</id>
                         <configuration>
                             <appendAssemblyId>false</appendAssemblyId>
                             <archive>
@@ -161,6 +161,23 @@
                                 </manifest>
                             </archive>
                             <finalName>phdfinder</finalName>
+                        </configuration>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>build-notifier</id>
+                        <configuration>
+                            <appendAssemblyId>false</appendAssemblyId>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>true</addClasspath>
+                                    <mainClass>Notifier</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>notifier</finalName>
                         </configuration>
                         <phase>package</phase>
                         <goals>

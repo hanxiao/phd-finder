@@ -1,20 +1,22 @@
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ForkJoinPool;
 
 /**
  * Created by han on 11/17/15.
  */
 class GlobalVars {
-    static ForkJoinPool forkJoinPool = new ForkJoinPool(20);
-    static Map<Integer, OpenPosition> allPositions = new ConcurrentHashMap<>();
-    static boolean isUpdated = false;
-    static MSTranslator msTranslator;
-    static UniNameIndexer searcher = new UniNameIndexer();
-    private static SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    static transient Map<Integer, OpenPosition> allPositions = new ConcurrentHashMap<>();
+    static transient boolean isUpdated = false;
+    static int numUpdate = 0;
+    static Set<String> updateUniName = new HashSet<>();
+    static transient MSTranslator msTranslator;
+    private static transient UniNameIndexer searcher = new UniNameIndexer();
+    private static transient SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
 
     static long convertStr2Long(String timestamp) throws ParseException {
         return dateFormat.parse(timestamp).getTime();

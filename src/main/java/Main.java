@@ -79,6 +79,7 @@ public class Main {
             JsonIO.writeAll(GlobalVars.allPositions.values());
             JsonIO.writeAllSegments(GlobalVars.allPositions.values());
             JsonIO.writeTranslator();
+            JsonIO.writeNotificationMsg();
         } else {
             LOG.info("No new position is found!");
         }

@@ -2,8 +2,7 @@ import com.google.android.gcm.server.Message;
 import com.google.android.gcm.server.Result;
 import com.google.android.gcm.server.Sender;
 import com.google.gson.*;
-import com.notnoop.apns.APNS;
-import com.notnoop.apns.ApnsService;
+import com.google.gson.reflect.TypeToken;
 import com.relayrides.pushy.apns.ApnsClient;
 import com.relayrides.pushy.apns.ApnsClientBuilder;
 import com.relayrides.pushy.apns.PushNotificationResponse;
@@ -21,11 +20,8 @@ import utils.CollectionAdapter;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import java.lang.reflect.Type;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -48,7 +44,7 @@ public class Notifier {
                 .addData("title", title)
                 .build();
 
-        Sender sender = new Sender("AIzaSyAoU0dWnHcWk9gIPvb4qo1ec7LxEPg7m8k");
+        Sender sender = new Sender("AIzaSyDV34p8zsr_pnC74VTHCkgjqmIZgHWqoUs");
 
         deviceStream.filter(Device::isAndroidDevice)
                 .forEach(p -> {
@@ -69,9 +65,9 @@ public class Notifier {
 
         try {
             final ApnsClient apnsClient = new ApnsClientBuilder()
-                    .setClientCredentials(new File("certificate/dev.p12"), "xh0531")
+                    .setClientCredentials(new File("certificate/prod.p12"), "xh0531")
                     .build();
-            final Future<Void> connectFuture = apnsClient.connect(ApnsClient.DEVELOPMENT_APNS_HOST);
+            final Future<Void> connectFuture = apnsClient.connect(ApnsClient.PRODUCTION_APNS_HOST);
 
             connectFuture.get();
 
@@ -113,6 +109,7 @@ public class Notifier {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
     }
 
     private static JsonArray parseGoogleJson(String json) {
@@ -169,12 +166,22 @@ public class Notifier {
     }
 
     public static void main(final String[] args) throws IOException {
-        List<Device> devices = getDeviceList();
-        send2IOS(devices.stream().distinct(), "又有新教职啦", "新发布了来自德国不莱梅大学等的12个博士职位， 快来看看吧！", 1);
-//        send2Android(devices.stream()
-//                        .filter(Device::isAndroidDevice)
-//                        .collect(Collectors.toList()),
-//                "测试", "测试两下，看到麻烦微信我", 5);
-    }
+        String content = new Scanner(new File("database/push-updateUni.json")).useDelimiter("\\Z").next();
+        Type setType = new TypeToken<Set<String>>() {}.getType();
+        Set<String> updateUniName = gson.fromJson(content, setType);
+        content = new Scanner(new File("database/push-numupdate.json")).useDelimiter("\\Z").next();
+        int numUpdate = gson.fromJson(content, int.class);
+        if (numUpdate > 0) {
+            ArrayList asList = new ArrayList(updateUniName);
+            Collections.shuffle(asList);
+            String title = String.format("新发布了%d个德国大学新职位！", numUpdate);
+            String text = String.format("来自%s等%d个德国大学及科研机构，快来看看吧！", asList.get(0), updateUniName.size());
+            List<Device> devices = getDeviceList();
+            send2IOS(devices.stream().distinct(), title, text, numUpdate);
+            send2Android(devices.stream().filter(Device::isAndroidDevice).distinct(),
+                    title, text, numUpdate);
+        }
+        System.exit(0);
 
+    }
 }
