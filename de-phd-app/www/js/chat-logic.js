@@ -588,7 +588,10 @@ var logic = {
         "answer": {
             "明白了": "random_ask",
             "接下来呢?": "next_step"
-        }
+        },
+        keyword: [
+            "等多久", "多长时间"
+        ]
     }
 };
 

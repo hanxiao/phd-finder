@@ -113,3 +113,9 @@ function addMessageInner(messageText, messageType, avatar, name) {
     conversationStarted = true;
     lastChatTime = Date.now();
 }
+
+function initChat() {
+    if (!vm.chatState) {
+        vm.chatState=logic['welcome']
+    }
+}
