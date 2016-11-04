@@ -76,3 +76,35 @@
 .waiting-icon img {
     max-height: 100%;
 }
+
+.messagebar a {
+    line-height: inherit !important;
+    display: block !important;
+}
+
+.messagebar textarea {
+    height: initial !important;
+    font-size: 20px !important;
+}
+
+.messagebar .keyboard-btn {
+    left: -31px;
+    top: 5px;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid #44bb9b;
+    color: #44bb9b;
+    padding-top: 13px;
+    padding-left: 32px;
+    font-size: 21px;
+    -webkit-transition-duration: 400ms;
+    transition-duration: 400ms;
+}
+
+.keyboard-btn.active-state {
+    border: 1px solid #44bb9b  !important;
+    background: #44bb9b  !important;
+    color: white  !important;
+}

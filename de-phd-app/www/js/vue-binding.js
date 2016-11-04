@@ -151,13 +151,20 @@ function loadPositions(positionUrl) {
                         }
                     );
                 },
+                switch2RandomAsk: function() {
+                    var switchtopics = ["其实我想问点别的","我想换个话题","我还有其他问题"];
+                    var sent = switchtopics[Math.floor(Math.random() * switchtopics.length)];
+                    vm.jumpToFix(sent, 'random_ask');
+                },
                 jumpToFix: function (x, y) {
                     console.log("jumpToFix: " + x + ", " + y);
                     if ((Date.now() - lastChatTime) > 60000) {
                         conversationStarted = false;
                     }
-                    addMessage(x, "sent", false);
-                    vm.chatState = logic[y];
+                    addMessage(x, "sent", false, function() {
+                        vm.chatState = logic[y];
+                    });
+
                 },
                 checkWechat: function () {
                     if (typeof Wechat == "undefined") {

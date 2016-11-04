@@ -8,10 +8,10 @@ var myMessages = myApp.messages('.messages', {
 });
 
 // Init Messagebar
-var myMessagebar = myApp.messagebar('.messagebar');
 
-// Handle message
-$('.messagebar .link').on('click', function () {
+
+function sendQuery() {
+    var myMessagebar = myApp.messagebar('.messagebar');
     // Message text
     var messageText = myMessagebar.value().trim();
     // Exit if empy message
@@ -21,11 +21,34 @@ $('.messagebar .link').on('click', function () {
     myMessagebar.clear();
 
     // Random message type
-    var messageType = (['sent', 'received'])[Math.round(Math.random())];
+    addMessage(messageText, 'sent', false, function() {
+        var max_score = 0;
+        var max_key = '';
+        Object.keys(logic).forEach(function(key) {
+            if ("keyword" in logic[key]) {
+                var score = 0;
+                logic[key].keyword.forEach(function(kw) {
+                    if (messageText.indexOf(kw) >= 0) {score ++;}
+                });
+                //score /= logic[key].keyword.length;
+                if (score > max_score) {
+                    max_score = score;
+                    max_key = key;
+                }
+            }
+        });
+        if ((Date.now() - lastChatTime) > 60000) {
+            conversationStarted = false;
+        }
+        if (max_key.length > 0) {
+            vm.chatState = logic[max_key];
+        } else {
+            vm.chatState = logic["unknown"];
+        }
+    });
+}
 
-});
-
-function addMessage(messageText, messageType, simulateTyping) {
+function addMessage(messageText, messageType, simulateTyping, cb) {
     // Avatar and name for received message
     var avatar, name;
     if (messageType === 'received') {
@@ -35,7 +58,7 @@ function addMessage(messageText, messageType, simulateTyping) {
         name = '我';
     }
 
-    if (simulateTyping && messageText.indexOf("http") < 0) {
+    if (simulateTyping && messageText.match('<a|<img') == null) {
         var breakText = messageText.match(/[^\.,!\?]+[\.,!\?]*/g);
         var waitTime = [1000];
         for (var i = 1; i < breakText.length; i++) {
@@ -47,20 +70,29 @@ function addMessage(messageText, messageType, simulateTyping) {
                 setTimeout(function () {
                     addMessageInner(breakText[index], messageType, avatar, name);
                     if ((messageType == "received") && (index == breakText.length - 1)) {
-                        vm.isWaitingChat = false;
-                        vm.messageHistory = $('.messages').html();
+                        addMessageDone();
+                        if (cb) {cb();}
                     }
                 }, waitTime[i]);
             })(i);
         }
     } else {
-        addMessageInner(messageText, messageType, avatar, name);
-        if (messageType == "received") {
-            vm.isWaitingChat = false;
-            vm.messageHistory = $('.messages').html();
-            vm.saveState();
-        }
+        setTimeout(function () {
+            addMessageInner(messageText, messageType, avatar, name);
+            if (messageType == "received") {
+                addMessageDone();
+            }
+            if (cb) {
+                cb();
+            }
+        }, messageType == 'sent'? 0: 1000);
     }
+}
+
+function addMessageDone() {
+    vm.isWaitingChat = false;
+    vm.messageHistory = $('.messages').html();
+    vm.saveState();
 }
 
 function addMessageInner(messageText, messageType, avatar, name) {

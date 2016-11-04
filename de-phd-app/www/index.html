@@ -309,15 +309,19 @@
                 <!-- messagebar -->
                 <div v-if="chatState && !isWaitingChat" class="toolbar messagebar">
                     <div v-if="chatState.answer" class="toolbar-inner">
+
                         <ul class="tag-cloud answer-button-row">
                             <li href="#" v-for="(key, value) in chatState.answer"
                                 class="button button-round answer-button"
                                 v-on:click="jumpToFix(key, value)">{{key}}
                             </li>
+                            <li href="#" class="button button-round answer-button"
+                                v-on:click="switch2RandomAsk"><i class="fa fa-keyboard-o" aria-hidden="true"></i>
+                            </li>
                         </ul>
                     </div>
                     <div v-else class="toolbar-inner">
-                        <textarea placeholder="在这里输入问题或回答"></textarea><a href="#" class="link">发送</a>
+                        <textarea placeholder="在这里输入问题或回答"></textarea><a href="#" class="link" onclick="sendQuery()">发送</a>
                     </div>
                 </div>
                 <div v-else class="waiting-icon">

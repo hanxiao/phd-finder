@@ -2,6 +2,40 @@
  * Created by hxiao on 2016/10/27.
  */
 var logic = {
+    "unknown": {
+        question: [
+            "我没太明白你的问题.",
+            "我没太听懂你的问题.",
+            "额, 其实我没太明白你刚才的话."
+        ],
+        answer: {
+            "你是机器人?": "about_myself",
+            "那我换个问题":"random_ask",
+            "我能直接问真人么?": "ask_help"
+        }
+    },
+    "ask_help": {
+        question: [
+            "你可以加我的微信: hxiao1987, 我还提供简历文书优化修改等付费服务." +
+            "具体服务列表你都可以在<a href='http://phd.ojins.com' " +
+            "class='item-link external' target='_blank'><i class='fa fa-external-link' " +
+            "aria-hidden='true'></i>我的网站</a>上找到"
+        ],
+        answer: {
+            "我想直接扫你的二维码": "qr_code",
+            "谢谢": "random_ask"
+        },
+        keyword: ["微信", "付费", "收费", "润色"]
+    },
+    "qr_code": {
+        question: [
+            "<img src='img/qrcode.png'>"
+        ],
+        answer: {
+            "谢谢": "random_ask"
+        },
+        keyword: ["二维码"]
+    },
     "welcome": {
         question: [
             "你好, 有什么关于德国博士申请的问题要问么?",
@@ -20,7 +54,8 @@ var logic = {
         ],
         answer: {
             "你什么背景啊?": "myself_background",
-            "好吧, 我有问题要问你": "introducing"
+            "好吧, 我有问题要问你": "introducing",
+            "你有什么付费服务?": "ask_help"
         },
         keyword: [
             "你是谁", "作者", "你好"
@@ -36,6 +71,7 @@ var logic = {
         answer: {
             "你也在互联网行业?": "myself_internet",
             "我有申请方面的问题要问": "introducing",
+            "你有什么付费服务?": "ask_help",
             "没事了": "goodbye"
         },
         keyword: [
@@ -54,7 +90,7 @@ var logic = {
     "random_ask": {
         question: [
             "你还有什么其他的问题么?",
-            "ok, 那你现在还有啥事儿么?"
+            "你想问我些什么呢?"
         ]
     },
     "goodbye": {
@@ -90,7 +126,10 @@ var logic = {
         answer: {
             "我明白了": "random_ask",
             "我想试试重新申请德国博士": "ask_master_uni"
-        }
+        },
+        keyword: [
+            "短期访问", "交流", "交换"
+        ]
     },
     "ask_master_uni": {
         question: [
@@ -113,7 +152,10 @@ var logic = {
         ],
         answer: {
             "明白了": "ask_master_subject"
-        }
+        },
+        keyword: [
+            "英国", "硕士", "香港", "一年"
+        ]
     },
     "ask_german_univ": {
         question: [
@@ -158,7 +200,7 @@ var logic = {
             "我暂时什么都没有": "prepare_phd"
         },
         keyword: [
-            "我的成绩", "硕士成绩", "成绩", "GPA", "绩点"
+            "我的成绩", "硕士成绩", "成绩", "GPA", "绩点", "平均分"
         ]
     },
     "research_experience": {
@@ -254,7 +296,10 @@ var logic = {
             "好吧": "random_ask",
             "个别项目?": "structured_phd",
             "我想提前规划一下硕士": "prepare_phd"
-        }
+        },
+        keyword: [
+            "本科", "在读", "大一", "大二", "大三", "大四"
+        ]
     },
     "structured_phd": {
         question: [
@@ -265,7 +310,10 @@ var logic = {
         answer: {
             "好吧": "random_ask",
             "这样的项目好申请么?": "structured_phd>difficulty"
-        }
+        },
+        keyword: [
+            "直博", "硕博连读"
+        ]
     },
     "structured_phd>difficulty": {
         question: [
@@ -286,7 +334,10 @@ var logic = {
             "我直接和教授申请": "prof_apply",
             "我通过研究生院申请": "graduate_apply",
             "我该什么时候申请啊": "apply_time"
-        }
+        },
+        keyword: [
+            "申请方式", "博士", "怎么申请"
+        ]
     },
     "prof_apply": {
         question: [
@@ -298,7 +349,10 @@ var logic = {
             "需要哪些材料": "request_material",
             "那接下来呢?": "next_step",
             "稳定的资金来源?": "funding_issue"
-        }
+        },
+        keyword: [
+            "教授", "套磁", "简历", "拒绝", "联系", "流程", "步骤", "申请"
+        ]
     },
     "request_material": {
         question: [
@@ -307,8 +361,11 @@ var logic = {
         answer: {
             "那下一步呢?": "next_step",
             "你能帮我做简历么?": "ask_help",
-            "发完材料多长时间会有回复?": "review_time"
-        }
+            "发完材料多长时间会有回复?": "review_time",
+        },
+        keyword: [
+            "材料", "申请"
+        ]
     },
     "next_step": {
         question: [
@@ -323,7 +380,8 @@ var logic = {
     },
     "funding_issue": {
         question: [
-            "稳定的资金来源有三种, 一个是德国大学或研究所提供的工作合同, 另一个是DAAD和CSC等学术机构提供的奖学金, " +
+            "稳定的资金来源有三种, 一个是德国大学或研究所提供的工作合同, 也就是所谓的wimi. " +
+            "另一个是DAAD和CSC等学术机构提供的奖学金, " +
             "最后一种是德国公司给你的, 作External PhD."
         ],
         answer: {
@@ -331,7 +389,10 @@ var logic = {
             "CSC奖学金?": "csc_funding",
             "在公司干活?": "external_phd",
             "明白了": "random_ask"
-        }
+        },
+        keyword: [
+            "资金", "奖学金", "钱", "申请", "工作合同", "wimi"
+        ]
     },
     "external_phd": {
         question: [
@@ -350,7 +411,10 @@ var logic = {
             "去哪申请啊?": "csc_url",
             "那接下来呢?": "next_step",
             "明白了": "random_ask"
-        }
+        },
+        keyword: [
+            "CSC", "申请", "公派"
+        ]
     },
     "invitation_letter": {
         question: ["实际上CSC不是一个巴掌能拍得响的. CSC那边需要教授要你才给你钱, 教授那边又希望你有钱才能给你offer. 鸡生蛋蛋生鸡." +
@@ -360,7 +424,10 @@ var logic = {
             "去哪申请啊?": "csc_url",
             "那接下来呢?": "next_step",
             "明白了": "random_ask"
-        }
+        },
+        keyword: [
+            "CSC", "申请", "公派", "步骤", "怎么"
+        ]
     },
     "csc_letter": {
         question: ["大体意思就是: 这位同学很优秀, 怎么怎么优秀, 我想要他作我什么方向的博士生, " +
@@ -369,8 +436,12 @@ var logic = {
         answer: {
             "那接下来呢?": "next_step",
             "去哪申请啊?": "csc_url",
-            "明白了": "random_ask"
-        }
+            "明白了": "random_ask",
+            "你有什么付费服务?": "ask_help"
+        },
+        keyword: [
+            "CSC", "推荐信", "申请", "公派", "步骤"
+        ]
     },
     "csc_url": {
         question: ["去<a href='http://www.csc.edu.cn/require/degree.asp'" +
@@ -391,7 +462,10 @@ var logic = {
             "明白了": "random_ask",
             "那下一步呢?": "next_step",
             "我有些积蓄, 这能算稳定的资金来源么": "saving_funding"
-        }
+        },
+        keyword: [
+            "自费", "自己出钱"
+        ]
     },
     "saving_funding": {
         question: [
@@ -412,7 +486,10 @@ var logic = {
             "我明白了": "random_ask",
             "那我需要准备什么材料?": "request_material",
             "那教授还有决定权么?": "prof_decision"
-        }
+        },
+        keyword: [
+            "研究生院"
+        ]
     },
     "prof_decision": {
         question: [
@@ -434,7 +511,10 @@ var logic = {
             "这样啊": "random_ask",
             "那语言方面有没有要求呢?": "language_requirement",
             "那接下来呢?": "next_step"
-        }
+        },
+        keyword: [
+            "录取", "条件", "筛选", "指标", "看什么", "要求", "分数", "成绩"
+        ]
     },
     "language_requirement": {
         question: [
@@ -453,7 +533,10 @@ var logic = {
         answer: {
             "明白了": "random_ask",
             "有没有什么德语测试呢?": "testdaf"
-        }
+        },
+        keyword: [
+            "语言", "要求", "德语", "英语", "德文", "英文"
+        ]
     },
     "testdaf": {
         question: [
@@ -463,7 +546,10 @@ var logic = {
         "answer": {
             "明白了": "random_ask",
             "教授会面试我什么?": "interview_problems"
-        }
+        },
+        keyword: [
+            "语言", "德福", "德语", "德文"
+        ]
     },
     "english_requirement": {
         question: [
@@ -475,7 +561,10 @@ var logic = {
             "明白了": "random_ask",
             "面试都会问些什么呢": "interview_problems",
             "接下来呢?": "next_step"
-        }
+        },
+        keyword: [
+            "语言", "要求", "德语", "英语", "德文", "英文", "分数", "成绩"
+        ]
     },
     "interview_problems": {
         question: [
@@ -486,7 +575,10 @@ var logic = {
             "明白了": "random_ask",
             "面试完多久能有结果?": "review_time",
             "接下来呢?": "next_step"
-        }
+        },
+        keyword: [
+            "面试", "内容", "准备"
+        ]
     },
     "review_time": {
         question: [
