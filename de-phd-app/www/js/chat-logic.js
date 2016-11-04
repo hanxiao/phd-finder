@@ -73,7 +73,6 @@ var logic = {
             "你也在互联网行业?": "myself_internet",
             "我有申请方面的问题要问": "introducing",
             "你有什么付费服务?": "ask_help",
-            "没事了": "goodbye"
         },
         keyword: [
             "你是谁", "作者"
@@ -85,7 +84,7 @@ var logic = {
         "aria-hidden='true'></i> 我的LinkedIn</a> 去看我的详细信息"],
         answer: {
             "好吧, 我有申请方面的问题要问": "introducing",
-            "没事了": "goodbye"
+            "你有微信么": "ask_help"
         },
         keyword: [
             "数据科学家", "data scientist", "linkedin", "你的工作"
@@ -114,7 +113,7 @@ var logic = {
             "我在读博士": "doctor_in_study",
             "我已经工作了": "already_work"
         },
-        keyword: ["咨询"]
+        keyword: ["咨询", "问一下"]
     },
     "doctor_in_study": {
         question:  ["正在读博啊. 所以你想放弃国内的博士生职位? 重新去德国读博么?"],

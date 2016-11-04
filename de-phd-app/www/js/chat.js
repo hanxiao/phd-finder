@@ -15,7 +15,10 @@ function sendQuery(messageText) {
     if (messageText.length === 0) return;
 
     // Empty messagebar
-    myMessagebar.clear();
+    try {
+        myApp.messagebar('.messagebar').clear();
+    } catch (ignored) {}
+
 
     // Random message type
     addMessage(messageText, 'sent', false, function() {
