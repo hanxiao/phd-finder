@@ -118,4 +118,7 @@ function initChat() {
     if (!vm.chatState) {
         vm.chatState=logic['welcome']
     }
+    setTimeout(function(){
+        myMessages.scrollMessages();
+    }, 200);
 }
