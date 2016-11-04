@@ -10,10 +10,7 @@ var myMessages = myApp.messages('.messages', {
 // Init Messagebar
 
 
-function sendQuery() {
-    var myMessagebar = myApp.messagebar('.messagebar');
-    // Message text
-    var messageText = myMessagebar.value().trim();
+function sendQuery(messageText) {
     // Exit if empy message
     if (messageText.length === 0) return;
 
@@ -24,11 +21,12 @@ function sendQuery() {
     addMessage(messageText, 'sent', false, function() {
         var max_score = 0;
         var max_key = '';
+        var low_msg = messageText.toLowerCase();
         Object.keys(logic).forEach(function(key) {
             if ("keyword" in logic[key]) {
                 var score = 0;
                 logic[key].keyword.forEach(function(kw) {
-                    if (messageText.indexOf(kw) >= 0) {score ++;}
+                    if (low_msg.indexOf(kw.toLowerCase()) >= 0) {score ++;}
                 });
                 //score /= logic[key].keyword.length;
                 if (score > max_score) {

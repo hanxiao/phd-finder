@@ -53,13 +53,9 @@ function translate2LocalData(json, lang) {
 function loadPositions(positionUrl) {
     try {
         setupPush();
+        showToast("正在加载最新的教职列表, 请稍后...", "10000");
     } catch (ignore) {
     }
-
-
-    var container = $('body');
-    if (container.children('.progressbar, .progressbar-infinite').length) return; //don't run all this if there is a current progressbar loading
-    myApp.showProgressbar(container);
 
     console.log("start loading positions from %s", positionUrl);
 
@@ -87,7 +83,8 @@ function loadPositions(positionUrl) {
                 newsList: [],
                 chatState: false,
                 isWaitingChat: false,
-                messageHistory: ""
+                messageHistory: "",
+                lastShutdownState: false
             },
             ready: function () {
                 this.eIdx = this.populatePosition(20);
@@ -97,7 +94,7 @@ function loadPositions(positionUrl) {
                 myApp.hideIndicator();
                 myApp.sizeNavbars('.view-main');
                 try {
-                    myApp.hideProgressbar();
+                    window.plugins.toast.hide();
                 } catch (ex) {
                     console.error("hide splash screen error");
                 }
@@ -127,9 +124,13 @@ function loadPositions(positionUrl) {
                 'chatState': function (val, oldVal) {
                     if (val) {
                         console.log('chat state change!');
-                        vm.isWaitingChat = true;
-                        var question = this.chatState.question[Math.floor(Math.random() * this.chatState.question.length)];
-                        addMessage(question, "received", true);
+                        if (vm.lastShutdownState && vm.lastShutdownState == vm.chatState) {
+                            // do not send a new message, as html is loaded already
+                        } else {
+                            vm.isWaitingChat = true;
+                            var question = this.chatState.question[Math.floor(Math.random() * this.chatState.question.length)];
+                            addMessage(question, "received", true);
+                        }
                     }
                 }
             },
@@ -145,6 +146,14 @@ function loadPositions(positionUrl) {
                             conversationStarted = false;
                             vm.saveState();
                             vm.chatState = oldState;
+                            window.plugins.toast.showWithOptions({
+                                message: "聊天信息已经清空",
+                                duration: "short", // 2000 ms
+                                position: "bottom",
+                                styling: {
+                                    backgroundColor: '#738abb' // make sure you use #RRGGBB. Default #333333
+                                }
+                            });
                         },
                         function () {
 
@@ -215,6 +224,8 @@ function loadPositions(positionUrl) {
                             vm.pushTag = val._pushTag;
                             vm.searchEngine = val._searchEngine;
                             vm.enablePush = val._enablePush;
+                            vm.lastShutdownState = val._chatState;
+                            vm.messageHistory = val._msgHistory;
                             vm.chatState = val._chatState;
                             // load those favid, remap to allpos
                             $.each(vm.allPos, function (idx, x) {
@@ -222,7 +233,7 @@ function loadPositions(positionUrl) {
                                     vm.allPos[idx].isFav = true;
                                 }
                             });
-                            $('.messages').html(val._msgHistory);
+                            $('.messages').html(vm.messageHistory);
                             console.log('load success')
                         }, getError);
                     } catch (ex) {}
@@ -311,9 +322,9 @@ function loadPositions(positionUrl) {
                         },
                         scene: myscene   // share to Timeline
                     }, function () {
-                        //myApp.alert('分享成功!');
+                        showToast("微信分享成功");
                     }, function (reason) {
-                        myApp.alert('额...分享失败了');
+                        showToast("额, 分享失败了");
                     });
                 },
                 shareWechat: function (val, circle) {
@@ -333,9 +344,9 @@ function loadPositions(positionUrl) {
                         },
                         scene: myscene   // share to Timeline
                     }, function () {
-                        //myApp.alert('分享成功!');
+                        showToast("微信分享成功");
                     }, function (reason) {
-                        myApp.alert('额...分享失败了');
+                        showToast("额, 分享失败了");
                     });
                 },
                 registerPush: function (val) {

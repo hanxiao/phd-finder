@@ -21,6 +21,9 @@ function setupEventListener() {
         window.open($this.attr('href'), target, 'location=no');
     });
 
+    $('#chat-view').on('show', function () {
+        initChat();
+    });
     document.addEventListener("backbutton", onBackKeyDown, false);
 }
 
@@ -113,23 +116,9 @@ function registerDeviceNotification(pushId, intVal, favTag) {
 }
 
 function showHan() {
-    var modal = myApp.modal({
-        title: '我来为你的答疑解惑',
-        text: '请截屏保存下面的二维码, 然后在微信中使用扫一扫添加我',
-        afterText:  '<img id="myqr" src="img/qrcode.png" width="60%">',
-        buttons: [
-            {
-                text: '你是谁?',
-                onClick: function () {
-                    window.open('http://phd.ojins.com', '_blank');
-                }
-            },
-            {
-                text: '我已截屏',
-                bold: true
-            }
-        ]
-    });
+    onBackKeyDown();
+    myApp.showTab('#chat-view');
+    sendQuery("我想咨询一下申请的问题");
 }
 
 function tellFriend() {
@@ -151,15 +140,15 @@ function tellFriend() {
         }, function () {
             myApp.confirm('十分感谢你的推荐! 不过在未融到资前, 广告是支持此app发展的唯一经济来源, 你是否确定要关闭广告呢?',
                 function () {
-                    myApp.alert('下次启动时将不再显示广告');
+                    showToast("下次启动时将不再显示广告");
                     window.localStorage.setItem('showAds', false);
                 },
                 function () {
-                    myApp.alert('十分感谢你的推荐继续支持, 我们会加倍努力!');
+                    showToast("非常感谢您的支持! 我们会加倍努力");
                 }
             );
         }, function (reason) {
-            myApp.alert('额...分享失败了');
+            showToast("额, 分享失败了");
         });
     } else {
         window.plugins.socialsharing.share("给想去德国深造的亲们推荐这个app, 「找德到」让德国教职找到你",

@@ -86,3 +86,15 @@ function checkIntersect(x, y) {
     }
     return result;
 }
+
+
+function showToast(x, y) {
+    window.plugins.toast.showWithOptions({
+        message: x,
+        duration: y ? y : 'short', // 2000 ms
+        position: "bottom",
+        styling: {
+            backgroundColor: '#55678c' // make sure you use #RRGGBB. Default #333333
+        }
+    });
+}

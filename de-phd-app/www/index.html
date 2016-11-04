@@ -321,7 +321,8 @@
                         </ul>
                     </div>
                     <div v-else class="toolbar-inner">
-                        <textarea placeholder="在这里输入问题或回答"></textarea><a href="#" class="link" onclick="sendQuery()">发送</a>
+                        <textarea placeholder="请在这里输入"></textarea>
+                        <a href="#" class="link" onclick="sendQuery(myApp.messagebar('.messagebar').value().trim())">发送</a>
                     </div>
                 </div>
                 <div v-else class="waiting-icon">
@@ -619,7 +620,7 @@
                     </i>
                     <span class="tabbar-label">新闻</span>
                 </a>
-                <a href="#chat-view" class="tab-link" onclick="initChat()">
+                <a href="#chat-view" class="tab-link">
                     <i class="icon chat-icon-sizing">
                         <i class="fa fa-comments"></i>
                     </i>

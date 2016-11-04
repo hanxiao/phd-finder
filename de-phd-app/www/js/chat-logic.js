@@ -4,9 +4,9 @@
 var logic = {
     "unknown": {
         question: [
-            "我没太明白你的问题.",
-            "我没太听懂你的问题.",
-            "额, 其实我没太明白你刚才的话."
+            "&#128517 我没太明白你的问题.",
+            "&#128517 我没太听懂你的问题.",
+            "&#128517 额, 其实我没太明白你刚才的话."
         ],
         answer: {
             "你是机器人?": "about_myself",
@@ -16,8 +16,8 @@ var logic = {
     },
     "ask_help": {
         question: [
-            "你可以加我的微信: hxiao1987, 我还提供简历文书优化修改等付费服务." +
-            "具体服务列表你都可以在<a href='http://phd.ojins.com' " +
+            "你可以加我的微信: hxiao1987, 我提供两种规格的简历文书优化修改付费服务." +
+            "具体收费列表你都可以在<a href='http://phd.ojins.com' " +
             "class='item-link external' target='_blank'><i class='fa fa-external-link' " +
             "aria-hidden='true'></i>我的网站</a>上找到"
         ],
@@ -25,7 +25,7 @@ var logic = {
             "我想直接扫你的二维码": "qr_code",
             "谢谢": "random_ask"
         },
-        keyword: ["微信", "付费", "收费", "润色"]
+        keyword: ["微信", "付费", "收费", "润色", "服务"]
     },
     "qr_code": {
         question: [
@@ -38,18 +38,19 @@ var logic = {
     },
     "welcome": {
         question: [
-            "你好, 有什么关于德国博士申请的问题要问么?",
-            "最近怎么样啊? 关于德国的博士申请有什么问题么?"
+            "你好&#128515, 有什么关于德国博士申请的问题要问么?",
+            "今天过得怎么样&#128515? 关于德国的博士申请有什么问题么?"
         ],
         answer: {
             "你是谁啊?": "about_myself",
             "有啊, 一堆问题": "introducing",
             "暂时还没有": "goodbye"
-        }
+        },
+        keyword: ["你好"]
     },
     "about_myself": {
         question: [
-            "我是肖涵, 是这个app的作者. 我曾在知乎上回答关于德国博士申请的问题, 获得很多人的好评." +
+            "我是肖涵, 是这个app的作者&#128591. 我曾在知乎上回答关于德国博士申请的问题, 获得很多人的好评." +
             "后来我建立了自己的咨询服务, 在微信中为150多位同学提供了一对一的免费咨询."
         ],
         answer: {
@@ -58,7 +59,7 @@ var logic = {
             "你有什么付费服务?": "ask_help"
         },
         keyword: [
-            "你是谁", "作者", "你好"
+            "你是谁", "作者"
         ]
     },
     "myself_background": {
@@ -79,13 +80,16 @@ var logic = {
         ]
     },
     "myself_internet": {
-        question: ["是的, 你可以访问<a href='https://de.linkedin.com/in/hxiao87' " +
+        question: ["我现在在柏林担任数据科学家, 你可以访问<a href='https://de.linkedin.com/in/hxiao87' " +
         "class='item-link external' target='_blank'><i class='fa fa-external-link' " +
         "aria-hidden='true'></i> 我的LinkedIn</a> 去看我的详细信息"],
         answer: {
             "好吧, 我有申请方面的问题要问": "introducing",
             "没事了": "goodbye"
-        }
+        },
+        keyword: [
+            "数据科学家", "data scientist", "linkedin", "你的工作"
+        ]
     },
     "random_ask": {
         question: [
@@ -95,21 +99,22 @@ var logic = {
     },
     "goodbye": {
         question: [
-            "ok, 有事儿再找我昂",
-            "好的, 想到什么问题再问我"
+            "ok, 有事儿再找我昂 &#128583",
+            "好的, 想到什么问题再问我 &#128583"
         ]
     },
     "introducing": {
         question: [
-            "你能先简单介绍一下自己么? 你现在正读研呢么?",
-            "ok, 你可以先介绍一下自己, 你现在读研么还是?"
+            "你能先简单介绍一下自己么&#128522? 你现在正读研呢么?",
+            "ok, 你可以先介绍一下自己&#128522, 你现在读研么还是?"
         ],
         answer: {
             "对啊": "ask_master_uni",
             "我还在读本科": "bachelor_in_study",
             "我在读博士": "doctor_in_study",
             "我已经工作了": "already_work"
-        }
+        },
+        keyword: ["咨询"]
     },
     "doctor_in_study": {
         question:  ["正在读博啊. 所以你想放弃国内的博士生职位? 重新去德国读博么?"],
@@ -278,7 +283,7 @@ var logic = {
         question: [
             "不会的. 德国大学里平均年龄都比中国大学里要大. 服兵役, 旅游, 出国交换, 生孩子." +
             "我在慕尼黑工大的时候, 教授手下的博士生都比我大不少. 博士生在德国除了研究, 生活更重要." +
-            "德国人懂这点, 所以完全不会在意你年龄的大小的. 况且, 中国人本来面相就显年轻. 不用担心"
+            "德国人懂这点, 所以完全不会在意你年龄的大小的. 况且, 中国人本来面相就显年轻. 不用担心&#128522"
         ],
         answer: {
             "我知道了": "ask_master_uni"
@@ -341,7 +346,8 @@ var logic = {
     },
     "prof_apply": {
         question: [
-            "首先是和教授套磁, 发一封简短的信, 附上CV. 如果教授对你感兴趣, 可能会有一轮面试. 最后会有三种情况, 一种是教授决定要你并且给你工作合同, 一种是" +
+            "首先是和教授套磁, 发一封简短的信, 附上CV. 如果教授对你感兴趣, 可能会有一轮面试. 最后会有三种情况, " +
+            "一种是教授决定要你并且给你工作合同, 一种是" +
             "教授同意你拿到稳定的资金来源后录取你, 第三种就是婉拒, 说组里没职位."
         ],
         answer: {
@@ -361,7 +367,7 @@ var logic = {
         answer: {
             "那下一步呢?": "next_step",
             "你能帮我做简历么?": "ask_help",
-            "发完材料多长时间会有回复?": "review_time",
+            "发完材料多长时间会有回复?": "review_time"
         },
         keyword: [
             "材料", "申请"
