@@ -14,6 +14,8 @@ function sendQuery(messageText) {
     // Exit if empy message
     if (messageText.length === 0) return;
 
+    trackAction('sendQuery', messageText);
+
     // Empty messagebar
     try {
         myApp.messagebar('.messagebar').clear();
@@ -45,6 +47,28 @@ function sendQuery(messageText) {
             vm.chatState = logic[max_key];
         } else {
             vm.chatState = logic["unknown"];
+        }
+    });
+}
+
+function trackAction(act, msg) {
+    var userInfo = {
+        uuid: UUID,
+        action: act,
+        state: vm.chatState.id,
+        message: msg || 'EMPTY',
+        timestamp: Date.now()
+    };
+
+    $.ajax({
+        url: nodejsServer + "/msg",
+        type: "post",
+        data: userInfo,
+        success: function (data) {
+            //console.log('success send tracking to aws');
+        },
+        error: function (data) {
+            console.log('can not connect to aws');
         }
     });
 }

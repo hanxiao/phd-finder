@@ -121,6 +121,7 @@ function loadPositions(positionUrl) {
                     this.saveState();
                 },
                 'chatState': function (val, oldVal) {
+                    trackAction('chatStateChanged', oldVal.id);
                     if (val) {
                         console.log('chat state change!');
                         if (vm.lastShutdownState && vm.lastShutdownState == vm.chatState) {
@@ -162,6 +163,7 @@ function loadPositions(positionUrl) {
                     vm.jumpToFix(sent, 'random_ask');
                 },
                 jumpToFix: function (x, y) {
+                    trackAction('jumpToFix', x);
                     console.log("jumpToFix: " + x + ", " + y);
                     if ((Date.now() - lastChatTime) > 60000) {
                         conversationStarted = false;

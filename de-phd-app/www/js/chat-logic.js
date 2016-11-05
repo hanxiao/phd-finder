@@ -606,6 +606,6 @@ var logic = {
 };
 
 
-function freeTextQA(x, y) {
-
-}
+Object.keys(logic).forEach(function (x) {
+    logic[x].id=x;
+});

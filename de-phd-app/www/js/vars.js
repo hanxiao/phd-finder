@@ -200,6 +200,8 @@ var allPositionUrlWO = 'http://ojins.com/data/phd/database/uncompressed/all.json
 var allNewsCN = 'http://zdd-push.ojins.com:8080/allnews';
 var allNewsWO = 'http://ojins.com/data/phd/database/embassynews.json';
 var allPositionUrl = window.localStorage.getItem('allPositionUrl') || allPositionUrlCN;
+var UUID = window.localStorage.getItem('UUID') || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
+window.localStorage.setItem('UUID', UUID);
 var allNewsUrl = allPositionUrl == allPositionUrlCN? allNewsCN: allNewsWO;
 
 var firstOpenApp = JSON.parse(window.localStorage.getItem('firstOpenApp') || 'true');
