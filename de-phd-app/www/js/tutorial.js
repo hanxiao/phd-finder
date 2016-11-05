@@ -6,7 +6,6 @@ function closeTutorial() {
     $(".tutorial-overlay").fadeOut();
     firstOpenApp = false;
     window.localStorage.setItem('firstOpenApp', false);
-    showMyAds('banner', false);
 }
 
 function nextTutorial(param) {

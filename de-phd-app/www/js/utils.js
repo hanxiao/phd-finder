@@ -94,7 +94,9 @@ function showToast(x, y) {
         duration: y ? y : 'short', // 2000 ms
         position: "bottom",
         styling: {
-            backgroundColor: '#55678c' // make sure you use #RRGGBB. Default #333333
+            opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
+            textColor: '#FFFFFF', // Ditto. Default #FFFFFF
+            backgroundColor: '#554D8C' // make sure you use #RRGGBB. Default #333333
         }
     });
 }
@@ -148,7 +150,7 @@ function openRoutingSheet(canCancel) {
         buttonLabels: ['我在中国大陆', '我在海外'],
         androidEnableCancelButton: canCancel, // default false
         winphoneEnableCancelButton: canCancel, // default false
-        addCancelButtonWithLabel: canCancel ? '取消' : null
+        addCancelButtonWithLabel: canCancel ? '取消' : undefined
     };
     // Depending on the buttonIndex, you can now call shareViaFacebook or shareViaTwitter
     // of the SocialSharing plugin (https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin)
@@ -159,8 +161,8 @@ function openRoutingSheet(canCancel) {
             window.localStorage.setItem('allPositionUrl', allPositionUrl);
             window.localStorage.setItem('firstSelectUrl', false);
             if (canCancel) {
-                vm.updateData();
-                vm.updateNews();
+                navigator.splashscreen.show();
+                location.reload();
             } else {
                 renderWhenReady();
             }

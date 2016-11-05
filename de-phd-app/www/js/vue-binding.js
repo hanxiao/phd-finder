@@ -101,8 +101,6 @@ function loadPositions(positionUrl) {
                 }
                 if (firstOpenApp) {
                     nextTutorial("bars-tutorial");
-                } else {
-                    showMyAds('banner', false);
                 }
             },
             watch: {
