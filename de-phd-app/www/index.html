@@ -663,7 +663,7 @@
                 <div class="card-content">
                     <div class="list-block">
                         <ul>
-                            <li v-for="link in focusLinks">
+                            <li v-for="link in focusLinks" v-on:taphold="copyLinkToCB(removeMailto(link))">
                                 <a v-bind:href="link" target="_blank" class="item-link item-content external">
                                     <div class="item-media">
                                         <i v-if="link.indexOf('mailto') !== -1" class="fa fa-envelope-o fa-fw"

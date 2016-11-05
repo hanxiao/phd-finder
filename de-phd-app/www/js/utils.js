@@ -158,11 +158,16 @@ function openRoutingSheet(canCancel) {
             allNewsUrl = idx == 1 ? allNewsCN : allNewsWO;
             window.localStorage.setItem('allPositionUrl', allPositionUrl);
             window.localStorage.setItem('firstSelectUrl', false);
-            renderWhenReady();
+            if (canCancel) {
+                vm.updateData();
+                vm.updateNews();
+            } else {
+                renderWhenReady();
+            }
         }
     });
 }
 
-function rendSent(sents) {
+function randSent(sents) {
     return sents[Math.floor(Math.random() * sents.length)]
 }

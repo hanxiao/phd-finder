@@ -10,7 +10,7 @@ var logic = {
         ],
         answer: {
             "你是机器人?": "about_myself",
-            "那我换个问题":"random_ask",
+            "那我换个问题": "random_ask",
             "我能直接问真人么?": "ask_help"
         }
     },
@@ -116,7 +116,7 @@ var logic = {
         keyword: ["咨询", "问一下"]
     },
     "doctor_in_study": {
-        question:  ["正在读博啊. 所以你想放弃国内的博士生职位? 重新去德国读博么?"],
+        question: ["正在读博啊. 所以你想放弃国内的博士生职位? 重新去德国读博么?"],
         answer: {
             "是的": "ask_master_uni",
             "不是, 我想看看能不能做个短期访问": "short_visit"
@@ -410,10 +410,24 @@ var logic = {
             "什么邀请函啊?": "invitation_letter",
             "去哪申请啊?": "csc_url",
             "那接下来呢?": "next_step",
-            "明白了": "random_ask"
+            "CSC钱够么?": "csc_enough"
         },
         keyword: [
             "CSC", "申请", "公派"
+        ]
+    },
+    "csc_enough": {
+        question: ["在德国的公派生每月CSC在1300欧左右," +
+        "你作为学生住学生宿舍一个人房租生活消费700到900欧." +
+        "学校的耗材每学期大概在几百欧,绝对是够的." +
+        "钱这个东西多少都不算多,有人抱怨钱不够也很自然."]
+        ,
+        answer: {
+            "去哪申请啊?": "csc_url",
+            "那接下来呢?": "next_step",
+        },
+        keyword: [
+            "CSC", "多少钱", "够么", "不够"
         ]
     },
     "invitation_letter": {

@@ -12,7 +12,7 @@ function showApology() {
             '这个过程不是一蹴而就的. 请您保持耐心, 我们的翻译质量会逐步提高.', // message
             function(idx) {
                 if (idx==1) {
-                    showToast(rendSent(["都是我不好,没花钱请人帮你翻译", "都是我的错,拦着你不让你学德语"]));
+                    showToast(randSent(["都是我不好,没花钱请人帮你翻译", "都是我的错,拦着你不让你学德语"]));
                 }
             },            // callback to invoke with index of button pressed
             '当你读到蹩脚的中文时, 请您理解它们是由德文通过机器翻译生成的',           // title
@@ -136,6 +136,11 @@ function loadPositions(positionUrl) {
                 }
             },
             methods: {
+                copyLinkToCB: function(x) {
+                    cordova.plugins.clipboard.copy(x, function() {
+                        showToast("已经复制到剪贴板");
+                    });
+                },
                 clearMessage: function() {
                     navigator.notification.confirm(
                         '并重新开始第一次咨询', // message
@@ -155,7 +160,7 @@ function loadPositions(positionUrl) {
                     );
                 },
                 switch2RandomAsk: function() {
-                    var sent = rendSent(["其实我想问点别的","我想换个话题","我还有其他问题"]);
+                    var sent = randSent(["其实我想问点别的","我想换个话题","我还有其他问题"]);
                     vm.jumpToFix(sent, 'random_ask');
                 },
                 jumpToFix: function (x, y) {

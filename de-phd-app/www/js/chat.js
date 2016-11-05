@@ -68,8 +68,8 @@ function addMessage(messageText, messageType, simulateTyping, cb) {
         var waitTime = [getWaitTime(breakText[0].length, 100, 1000)];
         for (var i = 1; i < breakText.length; i++) {
             waitTime[i] = waitTime[i - 1]
-                + getWaitTime(breakText[i-1].length, 150, 1500)
-                + getWaitTime(breakText[i].length, 50, 1500);
+                + (getWaitTime(breakText[i-1].length, 150, 1500)
+                + getWaitTime(breakText[i].length, 50, 1500))/2;
         }
 
         for (i = 0; i < breakText.length; i++) {
