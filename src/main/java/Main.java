@@ -79,10 +79,10 @@ public class Main {
             JsonIO.writeAll(GlobalVars.allPositions.values());
             JsonIO.writeAllSegments(GlobalVars.allPositions.values());
             JsonIO.writeTranslator();
-            JsonIO.writeNotificationMsg();
         } else {
             LOG.info("No new position is found!");
         }
+        JsonIO.writeNotificationMsg();
         try (Writer writer = new BufferedWriter(new OutputStreamWriter(
                 new FileOutputStream("database/is_update.status"), "utf-8"))) {
             writer.write(GlobalVars.isUpdated? "1":"0");

@@ -19,10 +19,14 @@ import org.slf4j.LoggerFactory;
 import utils.CollectionAdapter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -141,8 +145,19 @@ public class Notifier {
         return jsonArray;
     }
 
+    private static List<Device> getDeviceListFromJson() {
+        List<Device> knownDevices = new ArrayList<>();
+        try {
+            String content = new Scanner(new File("database/devices.json")).useDelimiter("\\Z").next();
+            Type setType = new TypeToken<List<Device>>() {}.getType();
+            knownDevices = gson.fromJson(content, setType);
+        } catch (FileNotFoundException ex) {
+            LOG.error("Device list is empty!");
+        }
+        return knownDevices;
+    }
 
-    private static List<Device> getDeviceList() {
+    private static List<Device> getDeviceListFromServer() {
         String deviceServerNodeJS = "http://zdd-push.ojins.com:8080/getallusers";
         HttpGet postDeviceId2 = new HttpGet(deviceServerNodeJS);
         HttpClient httpClient  = new DefaultHttpClient();
@@ -165,20 +180,45 @@ public class Notifier {
         return deviceIdList;
     }
 
+    private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {
+        Map<Object,Boolean> seen = new ConcurrentHashMap<>();
+        return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
+    }
+
     public static void main(final String[] args) throws IOException {
-        String content = new Scanner(new File("database/push-updateUni.json")).useDelimiter("\\Z").next();
-        Type setType = new TypeToken<Set<String>>() {}.getType();
-        Set<String> updateUniName = gson.fromJson(content, setType);
-        content = new Scanner(new File("database/push-numupdate.json")).useDelimiter("\\Z").next();
+        String content = new Scanner(new File("database/push-numupdate.json")).useDelimiter("\\Z").next();
         int numUpdate = gson.fromJson(content, int.class);
+
+        List<Device> localDevices = getDeviceListFromJson();
+        List<Device> serverDevices = getDeviceListFromServer();
+
+        if (serverDevices.size() > localDevices.size()) {
+            LOG.info("New registered devices");
+        }
+
+        localDevices.addAll(serverDevices);
+
+        localDevices = localDevices.stream().filter(
+                distinctByKey(p -> p.getDeviceID())).collect(Collectors.toList());
+
+        String jsonOutput = gson.toJson(localDevices);
+        JsonIO.writeToFile(new File("database/devices.json"), jsonOutput);
+
+        LOG.info(String.format("Number of registered devices: %d", localDevices.size()));
+
+
         if (numUpdate > 0) {
+            content  = new Scanner(new File("database/push-updateUni.json")).useDelimiter("\\Z").next();
+            Type setType = new TypeToken<Set<String>>() {}.getType();
+            Set<String> updateUniName = gson.fromJson(content, setType);
+
             ArrayList asList = new ArrayList(updateUniName);
             Collections.shuffle(asList);
             String title = String.format("新发布了%d个德国大学新职位！", numUpdate);
             String text = String.format("来自%s等%d个德国大学及科研机构，快来看看吧！", asList.get(0), updateUniName.size());
-            List<Device> devices = getDeviceList();
-            send2IOS(devices.stream().distinct(), title, text, numUpdate);
-            send2Android(devices.stream().filter(Device::isAndroidDevice).distinct(),
+
+            send2IOS(localDevices.stream().distinct(), title, text, numUpdate);
+            send2Android(localDevices.stream().filter(Device::isAndroidDevice).distinct(),
                     title, text, numUpdate);
         }
         System.exit(0);
