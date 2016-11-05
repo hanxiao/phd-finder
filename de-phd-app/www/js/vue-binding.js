@@ -4,20 +4,21 @@
 
 
 function showApology() {
-    var modal = myApp.modal({
-        title: '当你读到蹩脚的中文时, 请您理解它们是由德文通过机器翻译生成的',
-        text: '由于我们每天需要从近百所德国科研机构采集最新的职位信息, 目前没有人力和财力资源对每个职位进行人工翻译. ' +
-        '我们能做的是利用算法对机器翻译结果进行修正, 这个过程是日积月累而不是一蹴而就的. 请您保持耐心, 我们的翻译质量会逐步提高.',
-        buttons: [
-            {
-                text: '甭说没用的!'
-            },
-            {
-                text: '我能理解',
-                bold: true
-            }
-        ]
-    })
+    try {
+        navigator.notification.confirm(
+            '由于我们每天需要从百所德国科研机构采集最新的职位信息,' +
+            '没有人力和财力对每个职位进行人工翻译.' +
+            '我们能做的是利用算法对机器翻译结果进行修正, ' +
+            '这个过程不是一蹴而就的. 请您保持耐心, 我们的翻译质量会逐步提高.', // message
+            function(idx) {
+                if (idx==1) {
+                    showToast(rendSent(["都是我不好,没花钱请人帮你翻译", "都是我的错,拦着你不让你学德语"]));
+                }
+            },            // callback to invoke with index of button pressed
+            '当你读到蹩脚的中文时, 请您理解它们是由德文通过机器翻译生成的',           // title
+            ['我看不懂就是你的错!', '我能理解']     // buttonLabels
+        );
+    } catch (ignored) {}
 }
 
 function translate2LocalData(json, lang) {
@@ -128,7 +129,7 @@ function loadPositions(positionUrl) {
                             // do not send a new message, as html is loaded already
                         } else {
                             vm.isWaitingChat = true;
-                            var question = this.chatState.question[Math.floor(Math.random() * this.chatState.question.length)];
+                            var question = randSent(this.chatState.question);
                             addMessage(question, "received", true);
                         }
                     }
@@ -136,33 +137,25 @@ function loadPositions(positionUrl) {
             },
             methods: {
                 clearMessage: function() {
-                    myApp.confirm('清空所有聊天记录, 只保留最后一条?',
-                        function () {
-                            vm.messageHistory = "";
-                            var oldState = vm.chatState;
-                            vm.chatState = false;
-                            vm.isWaitingChat = false;
-                            myMessages.clean();
-                            conversationStarted = false;
-                            vm.saveState();
-                            vm.chatState = oldState;
-                            window.plugins.toast.showWithOptions({
-                                message: "聊天信息已经清空",
-                                duration: "short", // 2000 ms
-                                position: "bottom",
-                                styling: {
-                                    backgroundColor: '#738abb' // make sure you use #RRGGBB. Default #333333
-                                }
-                            });
-                        },
-                        function () {
-
-                        }
+                    navigator.notification.confirm(
+                        '并重新开始第一次咨询', // message
+                        function(idx) {
+                            if (idx == 2) {
+                                vm.messageHistory = "";
+                                vm.chatState = false;
+                                vm.isWaitingChat = false;
+                                myMessages.clean();
+                                conversationStarted = false;
+                                vm.chatState = logic['welcome'];
+                                showToast("聊天信息已经清空", "short")
+                            }
+                        },            // callback to invoke with index of button pressed
+                        '确定清空所有聊天记录吗?',           // title
+                        ['算了','是']     // buttonLabels
                     );
                 },
                 switch2RandomAsk: function() {
-                    var switchtopics = ["其实我想问点别的","我想换个话题","我还有其他问题"];
-                    var sent = switchtopics[Math.floor(Math.random() * switchtopics.length)];
+                    var sent = rendSent(["其实我想问点别的","我想换个话题","我还有其他问题"]);
                     vm.jumpToFix(sent, 'random_ask');
                 },
                 jumpToFix: function (x, y) {

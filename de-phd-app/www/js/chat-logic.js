@@ -104,7 +104,7 @@ var logic = {
     },
     "introducing": {
         question: [
-            "你能先简单介绍一下自己么&#128522? 你现在正读研呢么?",
+            "好的&#128522, 你能先简单介绍一下自己么? 你现在正读研呢么?",
             "ok, 你可以先介绍一下自己&#128522, 你现在读研么还是?"
         ],
         answer: {
@@ -140,11 +140,11 @@ var logic = {
             "请问你硕士在哪里读的呢?"
         ],
         answer: {
-            "国内985, 211": "ask_master_subject",
-            "英国一年制硕士": "ask_uk_univ",
-            "德国院校": "ask_german_univ",
-            "国内其他院校": "ask_master_subject",
-            "国外院校": "ask_master_subject"
+            "国内985/211": "ask_master_subject",
+            "英国": "ask_uk_univ",
+            "德国": "ask_german_univ",
+            "国内": "ask_master_subject",
+            "国外": "ask_master_subject"
         }
     },
     "ask_uk_univ": {
@@ -199,9 +199,9 @@ var logic = {
         "也不会有太丰富的研究经验. 唯一能够客观衡量你潜在学术水平的. 就是你的硕士成绩."],
         answer: {
             "我有研究经历": "research_experience",
-            "我有工作实习经历": "work_experience",
-            "我有出国交换经历": "aboard_experience",
-            "我暂时什么都没有": "prepare_phd"
+            "我工作实习过": "work_experience",
+            "我出国交换过": "aboard_experience",
+            "我什么都没有": "prepare_phd"
         },
         keyword: [
             "我的成绩", "硕士成绩", "成绩", "GPA", "绩点", "平均分"
@@ -213,7 +213,6 @@ var logic = {
         answer: {
             "我该什么时候开始申请呢": "apply_time",
             "申请步骤是怎么样的?": "apply_process",
-            "明白了": "random_ask"
         },
         keyword: [
             "研究", "论文", "发表", "SCI", "会议", "期刊"
@@ -225,7 +224,6 @@ var logic = {
         answer: {
             "我该什么时候开始申请呢": "apply_time",
             "申请步骤是怎么样的?": "apply_process",
-            "明白了": "random_ask"
         },
         keyword: [
             "工作", "实习", "经历"
@@ -236,7 +234,6 @@ var logic = {
         answer: {
             "我该什么时候开始申请呢": "apply_time",
             "申请步骤是怎么样的?": "apply_process",
-            "明白了": "random_ask"
         }
     },
     "apply_time": {
@@ -248,7 +245,6 @@ var logic = {
         answer: {
             "可是毕业离开学校后不方便了啊": "optimal_time",
             "申请步骤是怎么样的?": "apply_process",
-            "明白了": "random_ask"
         },
         keyword: [
             "申请", "时间", "时候", "联系", "套磁", "套词"
@@ -259,7 +255,7 @@ var logic = {
         "这样也能保证你硕士论文和未来教授的方向接轨."],
         answer: {
             "申请步骤是怎么样的?": "apply_process",
-            "明白了": "random_ask"
+            "我怎么申请奖学金?": "funding_issue"
         },
         keyword: [
             "申请", "时间", "时候", "联系", "套磁", "套词", "开题", "教授"
@@ -297,7 +293,6 @@ var logic = {
             "不过有些大学和研究所会有个别项目允许硕博连读. 这样的项目非常非常少."
         ],
         answer: {
-            "好吧": "random_ask",
             "个别项目?": "structured_phd",
             "我想提前规划一下硕士": "prepare_phd"
         },
@@ -428,7 +423,6 @@ var logic = {
             "这封信得包含什么内容啊?": "csc_letter",
             "去哪申请啊?": "csc_url",
             "那接下来呢?": "next_step",
-            "明白了": "random_ask"
         },
         keyword: [
             "CSC", "申请", "公派", "步骤", "怎么"
@@ -441,7 +435,6 @@ var logic = {
         answer: {
             "那接下来呢?": "next_step",
             "去哪申请啊?": "csc_url",
-            "明白了": "random_ask",
             "你有什么付费服务?": "ask_help"
         },
         keyword: [
@@ -563,7 +556,6 @@ var logic = {
             "到时候你的语言能力的好坏很容易就能看出来了."
         ],
         "answer": {
-            "明白了": "random_ask",
             "面试都会问些什么呢": "interview_problems",
             "接下来呢?": "next_step"
         },
@@ -591,7 +583,6 @@ var logic = {
             "所以他一般也不需要等学校的手续. 当然赶上8月9月德国的休假旺季, 教授肯定以休假优先."
         ],
         "answer": {
-            "明白了": "random_ask",
             "接下来呢?": "next_step"
         },
         keyword: [

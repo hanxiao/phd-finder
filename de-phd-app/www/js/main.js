@@ -138,15 +138,8 @@ function tellFriend() {
             },
             scene: Wechat.Scene.TIMELINE   // share to Timeline
         }, function () {
-            myApp.confirm('十分感谢你的推荐! 不过在未融到资前, 广告是支持此app发展的唯一经济来源, 你是否确定要关闭广告呢?',
-                function () {
-                    showToast("下次启动时将不再显示广告");
-                    window.localStorage.setItem('showAds', false);
-                },
-                function () {
-                    showToast("非常感谢您的支持! 我们会加倍努力");
-                }
-            );
+            showToast("感谢你的支持, 相信你的朋友也会喜欢的");
+            window.localStorage.setItem('showAds', false);
         }, function (reason) {
             showToast("额, 分享失败了");
         });

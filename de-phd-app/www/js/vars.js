@@ -40,34 +40,6 @@ var settingView = myApp.addView('#profile-view', {
     domCache: true
 });
 
-
-var locationBtns = [
-    {
-        text: '选择您所在的位置, 将为你选择最稳定的服务器.',
-        label: true
-    },
-    {
-        text: '我在中国大陆',
-        onClick: function () {
-            allPositionUrl = allPositionUrlCN;
-            allNewsUrl = allNewsCN;
-            window.localStorage.setItem('allPositionUrl', allPositionUrl);
-            window.localStorage.setItem('firstSelectUrl', false);
-            renderWhenReady();
-        }
-    },
-    {
-        text: '我在海外',
-        onClick: function () {
-            allPositionUrl = allPositionUrlWO;
-            allNewsUrl = allNewsWO;
-            window.localStorage.setItem('allPositionUrl', allPositionUrl);
-            window.localStorage.setItem('firstSelectUrl', false);
-            renderWhenReady();
-        }
-    }
-];
-
 var curPositions;
 
 var localeData = {id: 'de'};
@@ -209,7 +181,7 @@ var app = {
     receivedEvent: function(id) {
         navigator.splashscreen.hide();
         if (firstSelectUrl) {
-            myApp.actions(locationBtns);
+            openRoutingSheet(false)
         } else {
             renderWhenReady();
         }

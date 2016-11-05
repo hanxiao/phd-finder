@@ -406,7 +406,7 @@
                     <div class="list-block">
                         <ul>
                             <li>
-                                <a href="#" class="item-link" onclick="myApp.actions(locationBtns)">
+                                <a href="#" class="item-link" onclick="openRoutingSheet(true)">
                                     <div class="item-content">
                                         <div class="item-inner">切换中国/海外服务器</div>
                                     </div>
@@ -738,7 +738,7 @@
         </div>
         <div class="toolbar" v-bind:class="[focusPosition.isFav? 'fav-toolbar' : '']">
             <div class="toolbar-inner">
-                <a v-if='hasWechat' href="#" class="link open-popover" data-popover=".popover-share">
+                <a v-if='hasWechat' href="#" class="link" onclick="openShareSheet(true)">
                     <i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享
                 </a>
                 <a v-else href="#" class="link" @click="shareTo(focusPosition)">
@@ -783,7 +783,7 @@
         </div>
         <div class="toolbar">
             <div class="toolbar-inner">
-                <a v-if='hasWechat' href="#" class="link open-popover" data-popover=".popover-share-news">
+                <a v-if='hasWechat' href="#" class="link" onclick="openShareSheet(false)">
                     <i class="fa fa-weixin" aria-hidden="true"></i>&nbsp;分享
                 </a>
                 <a v-else href="#" class="link" @click="shareTo(focusNews)">
@@ -792,39 +792,6 @@
 
                 <a href="#" class="link close-popup"><i class="fa fa-times-circle-o" aria-hidden="true"></i>&nbsp;关闭</a>
             </div>
-        </div>
-    </div>
-</div>
-
-<div class="popover popover-share">
-    <div class="popover-angle"></div>
-    <div class="popover-inner">
-        <div class="list-block">
-            <ul>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, false)">分享给微信好友</a>
-                </li>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareWechat(focusPosition, true)">分享到微信朋友圈</a>
-                </li>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareTo(focusPosition)"><i
-                        class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;发送到其它程序</a></li>
-            </ul>
-        </div>
-    </div>
-</div>
-
-
-<div class="popover popover-share-news">
-    <div class="popover-angle"></div>
-    <div class="popover-inner">
-        <div class="list-block">
-            <ul>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareNewsWechat(focusNews, false)">分享给微信好友</a>
-                </li>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareNewsWechat(focusNews, true)">分享到微信朋友圈</a>
-                </li>
-                <li><a href="#" class="list-button item-link close-popover" @click="shareNewsTo(focusNews)"><i
-                        class="fa fa-paper-plane" aria-hidden="true"></i>&nbsp;发送到其它程序</a></li>
-            </ul>
         </div>
     </div>
 </div>

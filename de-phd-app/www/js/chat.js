@@ -49,6 +49,10 @@ function sendQuery(messageText) {
     });
 }
 
+function getWaitTime(len, factor, maxwait) {
+    return Math.min(maxwait, len * factor)
+}
+
 function addMessage(messageText, messageType, simulateTyping, cb) {
     // Avatar and name for received message
     var avatar, name;
@@ -61,9 +65,11 @@ function addMessage(messageText, messageType, simulateTyping, cb) {
 
     if (simulateTyping && messageText.match('<a|<img') == null) {
         var breakText = messageText.match(/[^\.,!\?]+[\.,!\?]*/g);
-        var waitTime = [1000];
+        var waitTime = [getWaitTime(breakText[0].length, 100, 1000)];
         for (var i = 1; i < breakText.length; i++) {
-            waitTime[i] = waitTime[i - 1] + Math.min(1500, breakText[i - 1].length * 150);
+            waitTime[i] = waitTime[i - 1]
+                + getWaitTime(breakText[i-1].length, 150, 1500)
+                + getWaitTime(breakText[i].length, 50, 1500);
         }
 
         for (i = 0; i < breakText.length; i++) {
@@ -86,7 +92,7 @@ function addMessage(messageText, messageType, simulateTyping, cb) {
             if (cb) {
                 cb();
             }
-        }, messageType == 'sent'? 0: 1000);
+        }, messageType == 'sent'? 0:  getWaitTime(messageText.length, 150, 1500));
     }
 }
 
