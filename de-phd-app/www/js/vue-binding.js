@@ -10,15 +10,16 @@ function showApology() {
             '没有人力和财力对每个职位进行人工翻译.' +
             '我们能做的是利用算法对机器翻译结果进行修正, ' +
             '这个过程不是一蹴而就的. 请您保持耐心, 我们的翻译质量会逐步提高.', // message
-            function(idx) {
-                if (idx==1) {
+            function (idx) {
+                if (idx == 1) {
                     showToast(randSent(["都是我不好,没花钱请人帮你翻译", "都是我的错,拦着你不让你学德语"]));
                 }
             },            // callback to invoke with index of button pressed
             '当你读到蹩脚的中文时, 请您理解它们是由德文通过机器翻译生成的',           // title
             ['我看不懂就是你的错!', '我能理解']     // buttonLabels
         );
-    } catch (ignored) {}
+    } catch (ignored) {
+    }
 }
 
 function translate2LocalData(json, lang) {
@@ -63,14 +64,25 @@ function loadPositions(positionUrl) {
     $.getJSON(positionUrl, function (json) {
         console.log("finish loading %s", positionUrl);
 
+        json.forEach(function(x){
+            x['isFav'] = false;
+            x['filterShow'] = true;
+        });
+
+        var tmp_filter = {};
+        Object.keys(translateTags).forEach(function(x){
+           tmp_filter[x] = false;
+        });
+
         curPositions = translate2LocalData(json, localeData.id);
 
         vm = new Vue({
             el: '#all-positions',
             data: {
-                curTag: [],
+                focusTag: false,
+                filterTags: tmp_filter,
                 pushTag: [],
-                searchEngine: "google",
+                searchEngine: "bing",
                 lang: localeData,
                 enablePush: true,
                 allPos: curPositions,
@@ -85,10 +97,10 @@ function loadPositions(positionUrl) {
                 chatState: false,
                 isWaitingChat: false,
                 messageHistory: "",
-                lastShutdownState: false
+                lastShutdownState: false,
+                totalSize: curPositions.length
             },
             ready: function () {
-                this.eIdx = this.populatePosition(20);
                 this.updateNews();
                 this.loadState();
                 this.checkWechat();
@@ -96,6 +108,12 @@ function loadPositions(positionUrl) {
                 myApp.sizeNavbars('.view-main');
                 try {
                     window.plugins.toast.hide();
+                    setTimeout(function(){
+                        if (!vm.filterisEmpty) {
+                            showToast("职位列表已经按照你的选择过滤", 5000);
+                            vm.applyFilterToList();
+                        }
+                    }, 1000);
                 } catch (ex) {
                     console.error("hide splash screen error");
                 }
@@ -104,6 +122,14 @@ function loadPositions(positionUrl) {
                 }
             },
             watch: {
+                'filterTags': {
+                    handler: function(val, oldVal) {
+                        console.log('filter change!');
+                        this.updateFilteredPos();
+                        this.saveState()
+                    },
+                    deep: true
+                },
                 'pushTag': function (val, oldVal) {
                     console.log('push setting changed!');
                     this.saveState()
@@ -135,15 +161,43 @@ function loadPositions(positionUrl) {
                 }
             },
             methods: {
-                copyLinkToCB: function(x) {
-                    cordova.plugins.clipboard.copy(x, function() {
+                updateFilteredPos: function () {
+                    var pi = 0;
+                    if (vm.filterisEmpty) {
+                        $.each(vm.allPos, function (idx, pos) {
+                            vm.allPos[idx]['filterShow'] = true;
+                        });
+                        pi = vm.allPos.length;
+                    } else {
+                        $.each(vm.allPos, function (idx, pos) {
+                            var shouldAdd = false;
+                            pos.tags.forEach(function(x) {
+                               if (vm.filterTags[x]) {
+                                   shouldAdd = true;
+                                   return;
+                               }
+                            });
+                            vm.allPos[idx]['filterShow'] = shouldAdd;
+                            pi += shouldAdd ? 1: 0;
+                        });
+                    }
+                    vm.totalSize = pi;
+                    return pi;
+                },
+                addRemoveTag: function (y) {
+                    var x = y.key;
+                    this.filterTags[x] = !this.filterTags[x];
+                    this.focusTag = y;
+                },
+                copyLinkToCB: function (x) {
+                    cordova.plugins.clipboard.copy(x, function () {
                         showToast("已经复制到剪贴板");
                     });
                 },
-                clearMessage: function() {
+                clearMessage: function () {
                     navigator.notification.confirm(
                         '并重新开始第一次咨询', // message
-                        function(idx) {
+                        function (idx) {
                             if (idx == 2) {
                                 vm.messageHistory = "";
                                 vm.chatState = false;
@@ -155,11 +209,11 @@ function loadPositions(positionUrl) {
                             }
                         },            // callback to invoke with index of button pressed
                         '确定清空所有聊天记录吗?',           // title
-                        ['算了','是']     // buttonLabels
+                        ['算了', '是']     // buttonLabels
                     );
                 },
-                switch2RandomAsk: function() {
-                    var sent = randSent(["其实我想问点别的","我想换个话题","我还有其他问题"]);
+                switch2RandomAsk: function () {
+                    var sent = randSent(["其实我想问点别的", "我想换个话题", "我还有其他问题"]);
                     vm.jumpToFix(sent, 'random_ask');
                 },
                 jumpToFix: function (x, y) {
@@ -168,7 +222,7 @@ function loadPositions(positionUrl) {
                     if ((Date.now() - lastChatTime) > 60000) {
                         conversationStarted = false;
                     }
-                    addMessage(x, "sent", false, function() {
+                    addMessage(x, "sent", false, function () {
                         vm.chatState = logic[y];
                     });
 
@@ -205,6 +259,7 @@ function loadPositions(positionUrl) {
                         favId[x.positionId] = 1;
                     });
                     var state = {
+                        _filterTags: this.filterTags,
                         _pushTag: this.pushTag,
                         _searchEngine: this.searchEngine,
                         _enablePush: this.enablePush,
@@ -214,41 +269,43 @@ function loadPositions(positionUrl) {
                     };
                     try {
                         NativeStorage.setItem("curState", state, setSuccess, setError);
-                    } catch (ex) {}
+                    } catch (ex) {
+                    }
                 },
                 loadState: function () {
                     try {
                         NativeStorage.getItem("curState", function (val) {
-                            vm.pushTag = val._pushTag;
-                            vm.searchEngine = val._searchEngine;
-                            vm.enablePush = val._enablePush;
-                            vm.lastShutdownState = val._chatState;
-                            vm.messageHistory = val._msgHistory;
-                            vm.chatState = val._chatState;
+                            vm.pushTag = val._pushTag || [];
+                            vm.searchEngine = val._searchEngine || 'bing';
+                            vm.enablePush = val._enablePush || true;
+                            var favId = val._favId || {};
                             // load those favid, remap to allpos
-                            $.each(vm.allPos, function (idx, x) {
-                                if (x.positionId in val._favId) {
-                                    vm.allPos[idx].isFav = true;
-                                }
+                            vm.allPos.forEach(function(x){
+                                x.filterShow = true;
+                                x.isFav = x.positionId in favId;
                             });
-                            $('.messages').html(vm.messageHistory);
+                            vm.lastShutdownState = val._chatState || false;
+                            vm.messageHistory = val._msgHistory || "";
+                            vm.chatState = val._chatState || false;
+                            vm.filterTags = val._filterTags || tmp_filter;
+
+                            if (vm.messageHistory.length > 0) {
+                                $('.messages').html(vm.messageHistory);
+                            }
+
+                            vm.eIdx = vm.populatePosition(20);
                             console.log('load success')
-                        }, getError);
-                    } catch (ex) {}
+                        }, function() {
+                            console.log('something wrong when loading the state');
+                        });
+                    } catch (ex) {
+                    }
                 },
                 populatePosition: function (k) {
                     var i = this.eIdx;
                     var pi = 0;
                     while (pi < k && i < this.allPos.length) {
-                        var arr2 = this.curTag;
-                        var shouldAdd = true;
-
-                        if (arr2.length > 0) {
-                            var arr1 = this.allPos[i].tags;
-                            shouldAdd = checkIntersect(arr1, arr2);
-                        }
-
-                        if (shouldAdd) {
+                        if (this.allPos[i]['filterShow'] || this.allPos[i]['isFav']) {
                             this.positions.push(this.allPos[i]);
                             pi++;
                         }
@@ -272,14 +329,10 @@ function loadPositions(positionUrl) {
                         this.$broadcast('$InfiniteLoading:loaded');
                     }.bind(this), 200);
                 },
-                changeFilter: function () {
+                applyFilterToList: function () {
                     this.positions = [];
                     this.eIdx = 0;
                     this.$broadcast('$InfiniteLoading:reset');
-                },
-                resetFilter: function () {
-                    this.curTag = [];
-                    this.changeFilter();
                 },
                 transTag: function (val) {
                     return translateTags[val].short;
@@ -353,6 +406,15 @@ function loadPositions(positionUrl) {
                 }
             },
             computed: {
+                filterisEmpty: function() {
+                    var tmp = Object.keys(this.filterTags);
+                    for (var i=0; i<tmp.length; i++) {
+                        if (this.filterTags[tmp[i]]) {
+                            return false;
+                        }
+                    }
+                    return true;
+                },
                 isAndroid: function () {
                     return myApp.device.android;
                 },
@@ -421,28 +483,10 @@ function loadPositions(positionUrl) {
                     for (var key in this.tagMap) {
                         var tmp = this.tagMap[key];
                         tmp["key"] = key;
+                        tmp["isFiltered"] = false;
                         translateTagsList.push(tmp);
                     }
                     return translateTagsList;
-                },
-                totalSize: function () {
-                    var i = 0;
-                    var pi = 0;
-                    while (i < this.allPos.length) {
-                        var arr2 = this.curTag;
-                        var shouldAdd = true;
-
-                        if (arr2.length > 0) {
-                            var arr1 = this.allPos[i].tags;
-                            shouldAdd = checkIntersect(arr1, arr2);
-                        }
-
-                        if (shouldAdd) {
-                            pi++;
-                        }
-                        i++;
-                    }
-                    return pi;
                 }
             }
         });

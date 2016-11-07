@@ -34,7 +34,7 @@ var logic = {
         answer: {
             "谢谢": "random_ask"
         },
-        keyword: ["二维码"]
+        keyword: ["二维码", "微信"]
     },
     "welcome": {
         question: [

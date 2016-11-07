@@ -149,10 +149,13 @@ label.label-checkbox input[type=checkbox]:checked+.item-media i.icon-form-checkb
     border-radius: 10px;
 }
 
-.bg-green {
+.bg-mygreen {
     background: #56d9b6;
 }
 
+.mygreen {
+    background: #56d9b6 !important;
+}
 
 .status-board {
     position: relative;

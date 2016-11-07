@@ -1,0 +1,56 @@
+.login-screen-content {
+    background: #738abb;
+    color: white;
+}
+
+.fluid-center {
+    top: inherit;
+    bottom: inherit;
+    width: inherit;
+    height: inherit;
+    position: relative;
+}
+
+.larger-label {
+    font-size: 4.5vw;
+    max-width: inherit;
+}
+
+.larger-label li {
+    padding: 6px;
+    margin: 1vw;
+    border-radius: 10px;
+    float: inherit;
+    border-color: white;
+    background-color: inherit;
+    -webkit-transition: all 0.3s ease-in-out;
+    -moz-transition: all 0.3s ease-in-out;
+    -ms-transition: all 0.3s ease-in-out;
+    -o-transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
+}
+
+.larger-label li:active {
+    background: #56d9b6;
+}
+
+.button-responsive {
+    height: 6vh !important;
+    line-height: 6vh !important;
+}
+
+.login-screen-title {
+    font-size: 7vw;
+}
+
+.info-bar {
+    white-space: normal;
+    line-height: 1.5;
+    height: 40px;
+}
+
+.info-bar-content {
+    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+}

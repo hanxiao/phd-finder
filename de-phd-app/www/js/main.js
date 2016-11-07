@@ -12,6 +12,10 @@ function setupEventListener() {
         $('#detail-news').scrollTop(0);
     });
 
+    $(document).on('click', '.message-avatar', function (e) {
+        myApp.popover('.popover-about', $(this))
+    });
+
     $(document).on('click', 'a[href^=http], a[href^=https]', function (e) {
 
         e.preventDefault();

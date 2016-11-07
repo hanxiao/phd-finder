@@ -32,6 +32,7 @@
     <link rel="stylesheet" href="css/invest.css">
     <link rel="stylesheet" href="css/tutorial.css">
     <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/loginscreen.css">
 
 </head>
 <body id="all-positions">
@@ -69,7 +70,7 @@
         <div class="tutorial-arrow tutorial-arrow-ads"></div>
         <div class="center-block">
             <div class="tutorial-text tutorial-text-only">
-                到"更多"中分享给你的好友, 就可以去除底部广告!
+                到"更多"中分享给你的好友, 就可以去除广告!
             </div>
             <div class="button button-big color-white" onclick="closeTutorial()">我都知道了</div>
         </div>
@@ -83,7 +84,7 @@
         <div class="navbar top-navbar">
             <div class="navbar-inner">
                 <div v-cloak>
-                    <div class="center sliding">学术职位 (共{{totalSize}}个)</div>
+                    <div class="center sliding">{{filterisEmpty ? '':'过滤了'}}{{totalSize}}个教职</div>
                     <div class="subnavbar">
                         <div class="buttons-row theme-white" id="langswitch-bar">
                             <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
@@ -96,30 +97,12 @@
                                  onclick="translate2LocalData(curPositions, 'en-us')">英文
                             </div>
                         </div>
-                        <a href="#" class="item-link smart-select" data-open-in="picker" data-picker-close-text="关闭">
-                            <select multiple v-model="curTag" @change="changeFilter">
-                                <optgroup label="按职位过滤">
-                                    <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'position' in 'type'">
-                                        {{tag.short}}
-                                    </option>
-                                </optgroup>
-                                <optgroup label="按学科过滤">
-                                    <option value="{{tag.key}}" v-for="tag in tagList | filterBy 'subject' in 'type'">
-                                        {{tag.short}}
-                                    </option>
-                                </optgroup>
-                            </select>
-
-                            <div v-if="curTag.length==0" class="button filter-icon"><i class="fa fa-search"
-                                                                                       aria-hidden="true"></i></div>
-                            <div v-else class="button filter-icon" v-on:taphold="resetFilter()">
-                            <span class="fa-stack">
-                              <i class="fa fa-cog subscript fa-spin fa-fw" aria-hidden="true"></i>
-                              <i class="fa fa-search fa-stack-1x"
-                                 aria-hidden="true"></i>
-                            </span>
-                            </div>
-                        </a>
+                        <div v-if="filterisEmpty" class="button filter-icon open-login-screen">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                        </div>
+                        <div v-else class="button filter-icon open-login-screen">
+                            <i class="fa fa-search-plus" aria-hidden="true"></i>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -321,8 +304,9 @@
                         </ul>
                     </div>
                     <div v-else class="toolbar-inner">
-                        <textarea placeholder="请在这里输入"></textarea>
-                        <a href="#" class="link" onclick="sendQuery(myApp.messagebar('.messagebar').value().trim())">发送</a>
+                        <textarea placeholder="请在这里输入" maxlength="100"></textarea>
+                        <a href="#" class="link"
+                           onclick="sendQuery(myApp.messagebar('.messagebar').value().trim())">发送</a>
                     </div>
                 </div>
                 <div v-else class="waiting-icon">
@@ -609,7 +593,7 @@
                 <a href="#invest-view" class="tab-link">
                     <i class="icon">
                         <i class="fa fa-heart"></i>
-                        <span v-if="favPositions.length >0" class="badge bg-green">{{favPositions.length}}</span>
+                        <span v-if="favPositions.length >0" class="badge bg-mygreen">{{favPositions.length}}</span>
                     </i>
 
                     <span class="tabbar-label">收藏</span>
@@ -792,6 +776,66 @@
 
                 <a href="#" class="link close-popup"><i class="fa fa-times-circle-o" aria-hidden="true"></i>&nbsp;关闭</a>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="login-screen">
+    <!-- Default view-page layout -->
+    <div class="view">
+        <div class="page">
+            <!-- page-content has additional login-screen content -->
+            <div class="page-content login-screen-content">
+                <div class="login-screen-title">选择你感兴趣的职位</div>
+                <div class="content-block">
+                    <div class="center-block fluid-center">
+                        <img src="img/notebook.svg" width="35%">
+                    </div>
+                </div>
+                <div class="content-block-title color-white info-bar">
+                    <div class="info-bar-content" v-show="focusTag && focusTag.long">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>&nbsp; {{focusTag.short}}: {{focusTag.long}}
+                    </div>
+                </div>
+                <div class="content-block" style="text-align: center;">
+                    <div class="tag-cloud larger-label">
+                        <li v-for="tag in tagList"
+                            v-bind:class="{mygreen: filterTags[tag.key]}"
+                            v-on:click="addRemoveTag(tag)" id="filter-{{tag.key}}">{{tag.short}}
+                        </li>
+                    </div>
+                </div>
+
+                <div class="content-block">
+                    <p><a href="#" class="button button-round color-white button-big
+                                bg-mygreen button-responsive close-login-screen" v-on:click="applyFilterToList">
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;查看{{filterisEmpty? '全部':totalSize+'个'}}职位</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="popover popover-about">
+    <div class="popover-angle"></div>
+    <div class="popover-inner">
+        <div class="content-block">
+            <div onclick="myApp.closeModal('.popover-about'); sendQuery('我想要你的微信二维码')">
+                <div class="round-img"></div>
+                &nbsp;&nbsp;
+                <b>关于我: 肖涵</b>
+                <i class="fa fa-qrcode" aria-hidden="true"></i>
+            </div>
+            <p>我曾于2009-14年在德国慕尼黑工业大学计算机系先后获得了硕士和博士学位。
+                我将自己与一百多位的同学咨询样本使用机器学习方法训练后，构造了这个正在与你对话的人工智能。</p>
+
+            <p>你也可以直接与我联系，使用我的付费服务:</p>
+            <ul class="tag-cloud tagcloud-about"
+                onclick="myApp.closeModal('.popover-about'); window.open('http://phd.ojins.com', '_target', 'location=no')">
+                <li>付费咨询</li>
+                <li>申请优化</li>
+                <li>微信群</li>
+            </ul>
         </div>
     </div>
 </div>

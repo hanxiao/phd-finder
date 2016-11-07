@@ -108,3 +108,25 @@
     background: #44bb9b  !important;
     color: white  !important;
 }
+
+.round-img {
+    vertical-align:middle;
+    background-image: url(../img/chat-avatar.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.tagcloud-about {
+    padding: 2px !important;
+    max-width: 100%;
+}
+
+.tagcloud-about li {
+    color: #738ABB;
+    background-color: transparent;
+}
