@@ -248,7 +248,8 @@ function loadPositions(positionUrl) {
                         console.log("finish loading %s", allPositionUrl);
                         vm.allPos = translate2LocalData(newjson, localeData.id);
                         vm.loadState();
-                        resetFilter();
+                        myApp.pullToRefreshDone();
+                        showToast("职位列表已经更新");
                     });
                 },
                 saveState: function () {

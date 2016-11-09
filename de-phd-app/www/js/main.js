@@ -28,6 +28,15 @@ function setupEventListener() {
     $('#chat-view').on('show', function () {
         initChat();
     });
+
+    // Pull to refresh content
+    var ptrContent = $('.pull-to-refresh-content');
+
+    ptrContent.on('refresh', function (e) {
+        setTimeout(function () {
+            vm.updateData();
+        }, 1000);
+    });
     document.addEventListener("backbutton", onBackKeyDown, false);
 }
 

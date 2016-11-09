@@ -112,10 +112,13 @@
             <!-- Page, data-page contains page name-->
             <div data-page="index-1" class="page with-subnavbar">
                 <!-- Scrollable page content-->
-                <div class="page-content" id="my-portfolio">
-
-                    <div class="content-block status-board">
-
+                <div class="page-content pull-to-refresh-content" id="my-portfolio">
+                    <div class="pull-to-refresh-layer">
+                        <div class="infinite-loading-container" _v-34e13b62="">
+                            <div _v-34e13b62=""><i _v-34e13b62="" class="loading-wave-dots"></i></div>
+                        </div>
+                    </div>
+                    <div class="content-block status-board ">
                         <div v-cloak>
                             <div class="list-block order-list media-list">
                                 <ul>
@@ -809,7 +812,9 @@
                 <div class="content-block">
                     <p v-if="totalSize"><a href="#" class="button button-round color-white button-big
                                 bg-mygreen button-responsive close-login-screen" v-on:click="applyFilterToList">
-                        <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;查看{{numFilters? totalSize+'个': '全部'}}职位</a></p>
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;查看{{numFilters? totalSize+'个':
+                        '全部'}}职位</a></p>
+
                     <p v-else>
                         <a href="#" class="button button-round color-white button-big
                                  button-responsive disabled">
