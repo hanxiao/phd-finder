@@ -64,14 +64,14 @@ function loadPositions(positionUrl) {
     $.getJSON(positionUrl, function (json) {
         console.log("finish loading %s", positionUrl);
 
-        json.forEach(function(x){
+        json.forEach(function (x) {
             x['isFav'] = false;
             x['filterShow'] = true;
         });
 
         var tmp_filter = {};
-        Object.keys(translateTags).forEach(function(x){
-           tmp_filter[x] = false;
+        Object.keys(translateTags).forEach(function (x) {
+            tmp_filter[x] = false;
         });
 
         curPositions = translate2LocalData(json, localeData.id);
@@ -108,8 +108,8 @@ function loadPositions(positionUrl) {
                 myApp.sizeNavbars('.view-main');
                 try {
                     window.plugins.toast.hide();
-                    setTimeout(function(){
-                        if (!vm.filterisEmpty) {
+                    setTimeout(function () {
+                        if (numFilters) {
                             showToast("职位列表已经按照你的选择过滤", 5000);
                             vm.applyFilterToList();
                         }
@@ -123,7 +123,7 @@ function loadPositions(positionUrl) {
             },
             watch: {
                 'filterTags': {
-                    handler: function(val, oldVal) {
+                    handler: function (val, oldVal) {
                         console.log('filter change!');
                         this.updateFilteredPos();
                         this.saveState()
@@ -163,22 +163,20 @@ function loadPositions(positionUrl) {
             methods: {
                 updateFilteredPos: function () {
                     var pi = 0;
-                    if (vm.filterisEmpty) {
+                    if (vm.numFilters == 0) {
                         $.each(vm.allPos, function (idx, pos) {
                             vm.allPos[idx]['filterShow'] = true;
                         });
                         pi = vm.allPos.length;
                     } else {
                         $.each(vm.allPos, function (idx, pos) {
-                            var shouldAdd = false;
-                            pos.tags.forEach(function(x) {
-                               if (vm.filterTags[x]) {
-                                   shouldAdd = true;
-                                   return;
-                               }
+                            var match = 0;
+                            pos.tags.forEach(function (x) {
+                                match += vm.filterTags[x] ? 1 : 0;
                             });
+                            var shouldAdd = match == vm.numFilters;
                             vm.allPos[idx]['filterShow'] = shouldAdd;
-                            pi += shouldAdd ? 1: 0;
+                            pi += shouldAdd ? 1 : 0;
                         });
                     }
                     vm.totalSize = pi;
@@ -280,7 +278,7 @@ function loadPositions(positionUrl) {
                             vm.enablePush = val._enablePush || true;
                             var favId = val._favId || {};
                             // load those favid, remap to allpos
-                            vm.allPos.forEach(function(x){
+                            vm.allPos.forEach(function (x) {
                                 x.filterShow = true;
                                 x.isFav = x.positionId in favId;
                             });
@@ -295,7 +293,7 @@ function loadPositions(positionUrl) {
 
                             vm.eIdx = vm.populatePosition(20);
                             console.log('load success')
-                        }, function() {
+                        }, function () {
                             console.log('something wrong when loading the state');
                         });
                     } catch (ex) {
@@ -406,14 +404,15 @@ function loadPositions(positionUrl) {
                 }
             },
             computed: {
-                filterisEmpty: function() {
+                numFilters: function () {
+                    var n = 0;
                     var tmp = Object.keys(this.filterTags);
-                    for (var i=0; i<tmp.length; i++) {
+                    for (var i = 0; i < tmp.length; i++) {
                         if (this.filterTags[tmp[i]]) {
-                            return false;
+                            n++;
                         }
                     }
-                    return true;
+                    return n;
                 },
                 isAndroid: function () {
                     return myApp.device.android;

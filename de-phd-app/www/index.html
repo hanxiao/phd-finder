@@ -84,7 +84,7 @@
         <div class="navbar top-navbar">
             <div class="navbar-inner">
                 <div v-cloak>
-                    <div class="center sliding">{{filterisEmpty ? '':'过滤了'}}{{totalSize}}个教职</div>
+                    <div class="center sliding">{{numFilters ? '过滤了':''}}{{totalSize}}个教职</div>
                     <div class="subnavbar">
                         <div class="buttons-row theme-white" id="langswitch-bar">
                             <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
@@ -97,11 +97,11 @@
                                  onclick="translate2LocalData(curPositions, 'en-us')">英文
                             </div>
                         </div>
-                        <div v-if="filterisEmpty" class="button filter-icon open-login-screen">
-                            <i class="fa fa-search" aria-hidden="true"></i>
+                        <div v-if="numFilters" class="button filter-icon open-login-screen">
+                            <i class="fa fa-search-plus" aria-hidden="true"></i>
                         </div>
                         <div v-else class="button filter-icon open-login-screen">
-                            <i class="fa fa-search-plus" aria-hidden="true"></i>
+                            <i class="fa fa-search" aria-hidden="true"></i>
                         </div>
                     </div>
                 </div>
@@ -807,9 +807,14 @@
                 </div>
 
                 <div class="content-block">
-                    <p><a href="#" class="button button-round color-white button-big
+                    <p v-if="totalSize"><a href="#" class="button button-round color-white button-big
                                 bg-mygreen button-responsive close-login-screen" v-on:click="applyFilterToList">
-                        <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;查看{{filterisEmpty? '全部':totalSize+'个'}}职位</a></p>
+                        <i class="fa fa-check-circle" aria-hidden="true"></i>&nbsp;查看{{numFilters? totalSize+'个': '全部'}}职位</a></p>
+                    <p v-else>
+                        <a href="#" class="button button-round color-white button-big
+                                 button-responsive disabled">
+                            没有相关职位,试着减少一些条件</a>
+                    </p>
                 </div>
             </div>
         </div>
