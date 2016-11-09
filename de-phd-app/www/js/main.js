@@ -35,7 +35,11 @@ function setupEventListener() {
     ptrContent.on('refresh', function (e) {
         setTimeout(function () {
             vm.updateData();
-        }, 1000);
+        }, 100);
+    });
+
+    ptrContent.on('pullstart', function(e) {
+       showToast("下拉以刷新职位信息");
     });
     document.addEventListener("backbutton", onBackKeyDown, false);
 }

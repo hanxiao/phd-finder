@@ -4,9 +4,10 @@
 var logic = {
     "unknown": {
         question: [
-            "&#128517 我没太明白你的问题.",
-            "&#128517 我没太听懂你的问题.",
-            "&#128517 额, 其实我没太明白你刚才的话."
+            "&#128517 我没太明白你的问题. 我现在只能回答德国申博的问题",
+            "&#128517 我没太听懂. 我现在只能回答德国申博的问题",
+            "&#128517 额, 我现在只能回答德国申博的问题.",
+            "&#128517 闲聊还是算了吧, 我多回答一些博士申请方面的问题吧."
         ],
         answer: {
             "你是机器人?": "about_myself",
@@ -115,12 +116,32 @@ var logic = {
         },
         keyword: ["咨询", "问一下"]
     },
+    "master_graduate": {
+        question: [
+            "如果你硕士毕业了, 这也不耽误申请. 因为德国的博士职位一般明确要求有硕士学历. 拿到硕士学位证,有凭有据的联系教授,恰恰是比较可取的."
+        ],
+        answer: {
+            "申请材料都要哪些?": "request_material",
+            "我需要学德语吗?": "german_requirement"
+        },
+        keyword: ["硕士毕业", "研究生毕业"]
+    },
     "doctor_in_study": {
         question: ["正在读博啊. 所以你想放弃国内的博士生职位? 重新去德国读博么?"],
         answer: {
             "是的": "ask_master_uni",
             "不是, 我想看看能不能做个短期访问": "short_visit"
         }
+    },
+    "marriage": {
+        question: ["我结婚了, 不要调戏我&#128585"],
+        answer: {
+            "我还是问点其它的吧": "randon_ask",
+            "申请步骤是怎么样的?": "apply_process"
+        },
+        keyword: [
+            "你喜欢", "你结婚", "你女友", "你女朋友", "你爱", "我爱你", "我喜欢你", "我想你"
+        ]
     },
     "short_visit": {
         question: [
@@ -179,6 +200,19 @@ var logic = {
             "文科": "ask_master_record",
             "商科": "ask_master_record",
             "医学": "ask_master_record"
+        }
+    },
+    "phd_time": {
+        keywords: ["博士几年", "几年毕业", "读几年", "读多长"],
+        question: ["主要三个因素决定你毕业的时间, " +
+        "1是因人而异. 2是视与学校签的工作合同长短, " +
+        "或CSC资金资助时间成端而定. 当你的奖学金资金来源没了," +
+        "外管局也就不让你在德国呆了,自然你就没法读博了" +
+        "3则是硬性规定,在大学里做wimi最多6年."],
+        answer: {
+            "资金来源都哪些啊?": "funding_issue",
+            "CSC是什么啊?": "csc_funding",
+            "我能自费读博么?": "self_funding",
         }
     },
     "ask_master_record": {
@@ -574,7 +608,7 @@ var logic = {
             "接下来呢?": "next_step"
         },
         keyword: [
-            "语言", "要求", "德语", "英语", "德文", "英文", "分数", "成绩"
+            "语言", "要求", "英语", "英文", "分数", "成绩"
         ]
     },
     "interview_problems": {
@@ -607,5 +641,5 @@ var logic = {
 
 
 Object.keys(logic).forEach(function (x) {
-    logic[x].id=x;
+    logic[x].id = x;
 });
