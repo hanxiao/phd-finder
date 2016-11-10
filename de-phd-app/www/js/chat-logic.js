@@ -215,6 +215,13 @@ var logic = {
             "我能自费读博么?": "self_funding",
         }
     },
+    "weather": {
+        keyword: ["冷么", "天气", "冷不冷", "冷", "热", "冬天", "夏天", "春天", "秋天"],
+        question: ["还好, 冬天雪比较多. 德国南部靠阿尔卑斯山的地区冬天比较冷."],
+        answer: {
+            "我还是问问申请的问题吧": "apply_process",
+        }
+    },
     "ask_master_record": {
         question: [
             "那你硕士期间成绩怎么样呢?"

@@ -45,8 +45,15 @@ function setupEventListener() {
 }
 
 function onBackKeyDown() {
-    myApp.closeModal('.popup.popup-detail.modal-in');
-    myApp.closeModal('.popup.popup-news.modal-in');
+    if ($('.popup.popup-detail.modal-in').length) {
+        myApp.closeModal('.popup.popup-detail.modal-in');
+    } else if ($('.popup.popup-news.modal-in').length) {
+        myApp.closeModal('.popup.popup-news.modal-in');
+    } else if ($('.page-on-center[data-page="faqpage"]')) {
+        settingView.router.back()
+    } else {
+        navigator.app.exitApp();
+    }
 }
 
 function setupPush() {
