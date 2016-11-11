@@ -41,6 +41,7 @@ function setupEventListener() {
     ptrContent.on('pullstart', function(e) {
        showToast("下拉以刷新职位信息");
     });
+
     document.addEventListener("backbutton", onBackKeyDown, false);
 }
 
@@ -53,6 +54,15 @@ function onBackKeyDown() {
         settingView.router.back()
     } else {
         navigator.app.exitApp();
+        navigator.Backbutton.goBack(function() {
+            console.log('success back to previous app');
+        }, function() {
+            navigator.Backbutton.goHome(function() {
+                console.log('success');
+            }, function() {
+                console.log('fail to go home');
+            });
+        });
     }
 }
 

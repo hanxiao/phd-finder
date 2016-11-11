@@ -173,12 +173,12 @@ var app = {
     bindEvents: function () {
         document.addEventListener('deviceready', this.onDeviceReady, false);
     },
-    onDeviceReady: function() {
+    onDeviceReady: function () {
         window.open = cordova.InAppBrowser.open;
         app.receivedEvent('deviceready');
     },
     // Update DOM on a Received Event
-    receivedEvent: function(id) {
+    receivedEvent: function (id) {
         navigator.splashscreen.hide();
         if (/(android)/i.test(navigator.userAgent)) {
             statusbarTransparent.enable();
@@ -196,16 +196,20 @@ var app = {
 var conversationStarted = false;
 var lastChatTime = 0;
 
-var nodejsServer = 'http://zdd-push.ojins.com:8080';
-var allPositionUrlCN = 'http://zdd-push.ojins.com:8080/allpos';
+var nodejsServer = 'http://123.207.172.173:8080/';
+var allPositionUrlCN = nodejsServer + 'allpos';
 var allPositionUrlWO = 'http://ojins.com/data/phd/database/uncompressed/all.json';
 
-var allNewsCN = 'http://zdd-push.ojins.com:8080/allnews';
+var allNewsCN = nodejsServer + 'allnews';
 var allNewsWO = 'http://ojins.com/data/phd/database/embassynews.json';
 var allPositionUrl = window.localStorage.getItem('allPositionUrl') || allPositionUrlCN;
-var UUID = window.localStorage.getItem('UUID') || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
+var allNewsUrl = allPositionUrl == allPositionUrlCN ? allNewsCN : allNewsWO;
+var UUID = window.localStorage.getItem('UUID') || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8;
+        return v.toString(16);
+    });
 window.localStorage.setItem('UUID', UUID);
-var allNewsUrl = allPositionUrl == allPositionUrlCN? allNewsCN: allNewsWO;
+
 
 var firstOpenApp = JSON.parse(window.localStorage.getItem('firstOpenApp') || 'true');
 var firstSelectUrl = JSON.parse(window.localStorage.getItem('firstSelectUrl') || 'true');
