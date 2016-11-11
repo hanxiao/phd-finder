@@ -61,7 +61,7 @@ function trackAction(act, msg) {
     };
 
     $.ajax({
-        url: nodejsServer + "/msg",
+        url: nodejsServer + "msg",
         type: "post",
         data: userInfo,
         success: function (data) {

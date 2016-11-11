@@ -143,19 +143,19 @@ function openShareSheet(isPos) {
     window.plugins.actionsheet.show(options, isPos ? cbPos : cbNews);
 }
 
-function openRoutingSheet(canCancel) {
+function openRoutingSheet(canCancel, retry) {
     var options = {
-        title: '选择您所在的位置, 使用距离最近的服务器',
+        title: !retry? '根据您所在的位置, 选择距离最近的服务器': '访问速度过慢, 换个其他服务器试试?',
         subtitle: '中国大陆用户如果选择在海外可能会无法载入职位列表', // supported on iOS only
         buttonLabels: ['我在中国大陆', '我在海外'],
         androidEnableCancelButton: canCancel, // default false
         winphoneEnableCancelButton: canCancel, // default false
-        addCancelButtonWithLabel: canCancel ? '取消' : undefined
+        addCancelButtonWithLabel: canCancel ? (retry? '继续等待': '取消')  : undefined
     };
     // Depending on the buttonIndex, you can now call shareViaFacebook or shareViaTwitter
     // of the SocialSharing plugin (https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin)
     window.plugins.actionsheet.show(options, function (idx) {
-        if (idx <= 2) {
+        if (idx ==1 || idx == 2) {
             allPositionUrl = idx == 1 ? allPositionUrlCN : allPositionUrlWO;
             allNewsUrl = idx == 1 ? allNewsCN : allNewsWO;
             window.localStorage.setItem('allPositionUrl', allPositionUrl);
@@ -166,6 +166,8 @@ function openRoutingSheet(canCancel) {
             } else {
                 renderWhenReady();
             }
+        } else if (idx==3 && retry) {
+            waitUntilTimeout();
         }
     });
 }

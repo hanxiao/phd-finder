@@ -193,6 +193,7 @@ var app = {
 
 
 // Conversation flag
+var fetchTimeout = 2000;
 var conversationStarted = false;
 var lastChatTime = 0;
 

@@ -389,7 +389,6 @@
                         <p>设置</p>
                     </div>
 
-
                     <div class="list-block">
                         <ul>
                             <li>
@@ -470,7 +469,7 @@
                                 <a href="#faqpage" class="item-link">
                                     <div class="item-content">
                                         <div class="item-media">
-                                            <i class="fa fa-id-card-o" aria-hidden="true"></i></div>
+                                            <i class="fa fa-id-card-o fa-fw" aria-hidden="true"></i></div>
                                         <div class="item-inner">关于作者</div>
                                     </div>
                                 </a>
@@ -478,7 +477,7 @@
                             <li>
                                 <a href="http://www.abcdv.net/" class="item-link external">
                                     <div class="item-content">
-                                        <div class="item-media"><i class="fa fa-globe" aria-hidden="true"></i></div>
+                                        <div class="item-media"><i class="fa fa-globe fa-fw" aria-hidden="true"></i></div>
                                         <div class="item-inner">ABCDV网站</div>
                                     </div>
                                 </a>
@@ -532,6 +531,9 @@
                                 </a>
                             </li>
                         </ul>
+                    </div>
+                    <div v-if="appVersion" class="content-block" style="text-align: center">
+                        软件版本: {{appVersion}}
                     </div>
                 </div>
             </div>

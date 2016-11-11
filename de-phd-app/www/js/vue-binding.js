@@ -52,6 +52,14 @@ function translate2LocalData(json, lang) {
     return json;
 }
 
+function waitUntilTimeout() {
+    setTimeout(function () {
+        if (!curPositions) {
+            openRoutingSheet(true, true);
+        }
+    }, fetchTimeout);
+}
+
 function loadPositions(positionUrl) {
     try {
         setupPush();
@@ -61,8 +69,13 @@ function loadPositions(positionUrl) {
 
     console.log("start loading positions from %s", positionUrl);
 
+    waitUntilTimeout();
+
     $.getJSON(positionUrl, function (json) {
         console.log("finish loading %s", positionUrl);
+        try {
+            window.plugins.actionsheet.hide();
+        } catch (ignored) {}
 
         json.forEach(function (x) {
             x['isFav'] = false;
@@ -98,7 +111,8 @@ function loadPositions(positionUrl) {
                 isWaitingChat: false,
                 messageHistory: "",
                 lastShutdownState: false,
-                totalSize: curPositions.length
+                totalSize: curPositions.length,
+                appVersion: false
             },
             ready: function () {
                 this.updateNews();
@@ -108,8 +122,11 @@ function loadPositions(positionUrl) {
                 myApp.sizeNavbars('.view-main');
                 try {
                     window.plugins.toast.hide();
+                    cordova.getAppVersion.getVersionNumber().then(function (version) {
+                        vm.appVersion = version;
+                    });
                     setTimeout(function () {
-                        if (numFilters) {
+                        if (vm.numFilters) {
                             showToast("职位列表已经按照你的选择过滤", 5000);
                             vm.applyFilterToList();
                         }
