@@ -137,7 +137,7 @@ function registerDeviceNotification(pushId, intVal, favTag) {
     //});
 
     $.ajax({
-        url: nodejsServer + "/add",
+        url: nodejsServer + "add",
         type: "post",
         data: userInfo,
         success: function (data) {

@@ -118,7 +118,6 @@ function loadPositions(positionUrl) {
                 this.updateNews();
                 this.loadState();
                 this.checkWechat();
-                myApp.hideIndicator();
                 myApp.sizeNavbars('.view-main');
                 try {
                     window.plugins.toast.hide();

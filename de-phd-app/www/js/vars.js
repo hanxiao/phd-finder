@@ -179,7 +179,7 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function (id) {
-        navigator.splashscreen.hide();
+        //navigator.splashscreen.hide();
         if (/(android)/i.test(navigator.userAgent)) {
             statusbarTransparent.enable();
         }
@@ -193,7 +193,7 @@ var app = {
 
 
 // Conversation flag
-var fetchTimeout = 2000;
+var fetchTimeout = 8000;
 var conversationStarted = false;
 var lastChatTime = 0;
 

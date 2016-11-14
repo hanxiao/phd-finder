@@ -47,6 +47,7 @@ function sendQuery(messageText) {
             vm.chatState = logic[max_key];
         } else {
             vm.chatState = logic["unknown"];
+            trackAction("unsolvedQuestion", messageText);
         }
     });
 }
