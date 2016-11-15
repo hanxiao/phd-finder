@@ -84,6 +84,15 @@ class JsonIO {
         writeLastNDays("all.json", tmpStoriesUnique.stream(), 300);
     }
 
+    static void writeBipart(Collection<OpenPosition> tmpStoriesUnique) {
+        writeLastNDays("delta.json",
+                tmpStoriesUnique.stream().filter(p-> p.publishTime > GlobalVars.appReleaseTime),
+                300);
+        writeLastNDays("inapp.json",
+                tmpStoriesUnique.stream().filter(p-> p.publishTime <= GlobalVars.appReleaseTime),
+                300);
+    }
+
     static void writeAllSegments(Collection<OpenPosition> tmpStoriesUnique) {
         Map<Integer, List<OpenPosition>> storyGroup =
                 tmpStoriesUnique.stream().collect(Collectors.groupingBy(OpenPosition::getIdByGroup));

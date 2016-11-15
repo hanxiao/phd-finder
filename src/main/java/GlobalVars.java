@@ -1,9 +1,7 @@
+import java.text.Format;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -17,9 +15,19 @@ class GlobalVars {
     static transient MSTranslator msTranslator;
     private static transient UniNameIndexer searcher = new UniNameIndexer();
     private static transient SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm:ss");
+    static long appReleaseTime = 1479208562980L;
 
     static long convertStr2Long(String timestamp) throws ParseException {
         return dateFormat.parse(timestamp).getTime();
+    }
+
+    static void showReleaseTime() {
+        Date date = new Date(appReleaseTime);
+        Format format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.out.println("!!!!!!!!!!!!!!!!!!");
+        System.out.println(String.format("Last app release: %s", format.format(date)));
+        System.out.println("JSON data will be divided into before and after that date");
+        System.out.println("!!!!!!!!!!!!!!!!!!");
     }
 
     private static String[] junkImageUrl = new String[] {

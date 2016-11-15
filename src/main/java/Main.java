@@ -17,6 +17,8 @@ public class Main {
     public static void main(final String[] args) throws IOException {
         Main runner = new Main();
 
+        GlobalVars.showReleaseTime();
+
         runner.loadAll();
         runner.updateAll(runner);
         runner.saveAll();
@@ -77,6 +79,7 @@ public class Main {
         if (GlobalVars.isUpdated) {
             JsonIO.downloadLogos(GlobalVars.allPositions.values());
             JsonIO.writeAll(GlobalVars.allPositions.values());
+            JsonIO.writeBipart(GlobalVars.allPositions.values());
             JsonIO.writeAllSegments(GlobalVars.allPositions.values());
             JsonIO.writeTranslator();
         } else {

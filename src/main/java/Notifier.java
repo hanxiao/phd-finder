@@ -158,7 +158,7 @@ public class Notifier {
     }
 
     private static List<Device> getDeviceListFromServer() {
-        String deviceServerNodeJS = "http://zdd-push.ojins.com:8080/getallusers";
+        String deviceServerNodeJS = "http://123.207.172.173:8080/getallusers";
         HttpGet postDeviceId2 = new HttpGet(deviceServerNodeJS);
         HttpClient httpClient  = new DefaultHttpClient();
         List<Device> deviceIdList = new ArrayList<>();
