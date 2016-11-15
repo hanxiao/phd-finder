@@ -261,6 +261,10 @@ function loadPositions(positionUrl) {
                 updateData: function () {
                     this.saveState();
                     $.getJSON(allPositionUrl, function (newjson) {
+                        newjson.forEach(function (x) {
+                            x['isFav'] = false;
+                            x['filterShow'] = true;
+                        });
                         console.log("finish loading %s", allPositionUrl);
                         vm.allPos = translate2LocalData(newjson, localeData.id);
                         vm.loadState();
