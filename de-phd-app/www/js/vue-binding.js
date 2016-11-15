@@ -112,12 +112,6 @@ function loadPositions(positionUrl) {
                 cordova.getAppVersion.getVersionNumber().then(function (version) {
                     vm.appVersion = version;
                 });
-                setTimeout(function () {
-                    if (vm.numFilters) {
-                        showToast("职位列表已经按照你的选择过滤", 5000);
-                        vm.applyFilterToList();
-                    }
-                }, 1000);
             } catch (ex) {
                 console.error("hide splash screen error");
             }
@@ -262,6 +256,13 @@ function loadPositions(positionUrl) {
                     vm.loadState();
                     myApp.pullToRefreshDone();
                     myApp.sizeNavbars('.view-main');
+                    // update filter accordingly
+                    setTimeout(function () {
+                        if (vm.numFilters) {
+                            vm.applyFilterToList();
+                            showToast("职位列表已经按照你的选择过滤了");
+                        }
+                    }, 1000);
                 });
             },
             saveState: function () {
