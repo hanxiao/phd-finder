@@ -156,15 +156,24 @@ function openRoutingSheet(canCancel, retry) {
     // of the SocialSharing plugin (https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin)
     window.plugins.actionsheet.show(options, function (idx) {
         if (idx ==1 || idx == 2) {
-            allPositionUrl = idx == 1 ? allPositionUrlCN : allPositionUrlWO;
-            allNewsUrl = idx == 1 ? allNewsCN : allNewsWO;
-            window.localStorage.setItem('allPositionUrl', allPositionUrl);
-            window.localStorage.setItem('firstSelectUrl', false);
-            if (canCancel) {
-                navigator.splashscreen.show();
-                location.reload();
+            var oldUrl = allPositionUrl;
+            var newUrl = idx == 1 ? allPositionUrlCN : allPositionUrlWO;
+
+            if (oldUrl != newUrl) {
+                console.log('switch to a new server');
+                allNewsUrl = idx == 1 ? allNewsCN : allNewsWO;
+
+                window.localStorage.setItem('allPositionUrl', allPositionUrl);
+                window.localStorage.setItem('firstSelectUrl', false);
+                if (canCancel) {
+                    navigator.splashscreen.show();
+                    location.reload();
+                } else {
+                    showToast("再努把力，请耐心等待……");
+                    renderWhenReady();
+                }
             } else {
-                renderWhenReady();
+                waitUntilTimeout();
             }
         } else if (idx==3 && retry) {
             waitUntilTimeout();
