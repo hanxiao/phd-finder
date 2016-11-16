@@ -88,7 +88,7 @@ function checkIntersect(x, y) {
 }
 
 
-function showToast(x, y) {
+function showToast(x, y, warning) {
     try {
         window.plugins.toast.showWithOptions({
             message: x,
@@ -97,10 +97,11 @@ function showToast(x, y) {
             styling: {
                 opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
                 textColor: '#FFFFFF', // Ditto. Default #FFFFFF
-                backgroundColor: '#554D8C' // make sure you use #RRGGBB. Default #333333
+                backgroundColor: warning? '#990000': '#554D8C' // make sure you use #RRGGBB. Default #333333
             }
         });
-    } catch (ignored) {}
+    } catch (ignored) {
+    }
 }
 
 function openShareSheet(isPos) {
@@ -147,39 +148,39 @@ function openShareSheet(isPos) {
 
 function openRoutingSheet(canCancel, retry) {
     var options = {
-        title: !retry? '根据您所在的位置, 选择距离最近的服务器': '访问速度过慢, 换个其他服务器试试?',
-        subtitle: '中国大陆用户如果选择在海外可能会无法载入职位列表', // supported on iOS only
-        buttonLabels: ['北京服务器', '东京服务器', '海外CDN（推荐非大陆地区用户）'],
+        title: !retry ? '根据您所在的位置, 选择距离最近的服务器' : '访问速度过慢, 换个其他服务器试试?',
+        subtitle: '中国大陆用户请多试几次不同的服务器', // supported on iOS only
+        buttonLabels: ['北京服务器', '东京服务器', '海外服务器（推荐非大陆用户）'],
         androidEnableCancelButton: canCancel, // default false
         winphoneEnableCancelButton: canCancel, // default false
-        addCancelButtonWithLabel: canCancel ? (retry? '继续等待': '取消')  : undefined
+        addCancelButtonWithLabel: canCancel ? (retry ? '继续等待' : '取消') : undefined
     };
     // Depending on the buttonIndex, you can now call shareViaFacebook or shareViaTwitter
     // of the SocialSharing plugin (https://github.com/EddyVerbruggen/SocialSharing-PhoneGap-Plugin)
     window.plugins.actionsheet.show(options, function (idx) {
-        if (idx ==1 || idx == 2) {
-            var oldUrl = allPositionUrl;
-            var newUrl = idx == 1 ? allPositionUrlCN : allPositionUrlWO;
-
-            if (oldUrl != newUrl) {
-                console.log('switch to a new server');
-                allPositionUrl = newUrl;
-                allNewsUrl = idx == 1 ? allNewsCN : allNewsWO;
-
-                window.localStorage.setItem('allPositionUrl', allPositionUrl);
-                window.localStorage.setItem('firstSelectUrl', false);
-                if (canCancel) {
-                    navigator.splashscreen.show();
-                    location.reload();
-                } else {
-                    showToast("再努把力，请耐心等待……");
-                    renderWhenReady();
+        var newServerName;
+        switch (idx) {
+            case 1:
+                newServerName = 'beijing';
+                break;
+            case 2:
+                newServerName = 'tokyo';
+                break;
+            case 3:
+                newServerName = 'github';
+                break;
+            default:
+                if (!retry) {
+                    return;
                 }
-            } else {
-                waitUntilTimeout();
-            }
-        } else if (idx==3 && retry) {
+        }
+        if (serverName == newServerName || (retry && idx==4)) {
             waitUntilTimeout();
+        } else if (idx != 4) {
+            console.log('switch to a new server');
+            serverName = newServerName;
+            window.localStorage.setItem('serverName', serverName);
+            location.reload();
         }
     });
 }

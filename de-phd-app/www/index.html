@@ -88,13 +88,13 @@
                     <div class="subnavbar">
                         <div class="buttons-row theme-white" id="langswitch-bar">
                             <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
-                                 onclick="translate2LocalData(curPositions, 'de')">德文
+                                 onclick="translate2LocalData(vm.allPos, 'de')">德文
                             </div>
                             <div class="button tab-link" v-bind:class="{active: lang.id=='zh-cn'}"
-                                 onclick="translate2LocalData(curPositions, 'zh-cn')">中文
+                                 onclick="translate2LocalData(vm.allPos, 'zh-cn')">中文
                             </div>
                             <div class="button tab-link" v-bind:class="{active: lang.id=='en-us'}"
-                                 onclick="translate2LocalData(curPositions, 'en-us')">英文
+                                 onclick="translate2LocalData(vm.allPos, 'en-us')">英文
                             </div>
                         </div>
                         <div v-if="numFilters" class="button filter-icon open-login-screen">
@@ -879,7 +879,7 @@
 <script type="text/javascript" src="lib/framework7/js/framework7.min.js"></script>
 <script type="text/javascript" src="lib/js/vue-infinite-loading.js"></script>
 <!-- Path to your app js-->
-<script type="text/javascript" src="js/local-data.js"></script>
+<script type="text/javascript" src="data/inapp-data.js"></script>
 <script type="text/javascript" src="js/myads.js"></script>
 <script type="text/javascript" src="js/vars.js"></script>
 <script type="text/javascript" src="js/chat-logic.js"></script>
