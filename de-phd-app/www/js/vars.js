@@ -183,7 +183,7 @@ var app = {
         if (/(android)/i.test(navigator.userAgent)) {
             statusbarTransparent.enable();
         }
-        renderWhenReady();
+        renderWhenReady(setupEventListener);
     }
 };
 
@@ -192,6 +192,7 @@ var app = {
 var fetchTimeout = 8000;
 var conversationStarted = false;
 var lastChatTime = 0;
+var localPos;
 
 var nodejsServer = 'http://123.207.172.173:8080/';
 var allPositionUrlCN = nodejsServer + 'delta';
@@ -212,3 +213,4 @@ var firstOpenApp = JSON.parse(window.localStorage.getItem('firstOpenApp') || 'tr
 var firstSelectUrl = JSON.parse(window.localStorage.getItem('firstSelectUrl') || 'true');
 var firstTransCN = JSON.parse(window.localStorage.getItem('firstTransCN') || 'true');
 var showAds = JSON.parse(window.localStorage.getItem('showAds') || 'true');
+

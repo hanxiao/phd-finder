@@ -1,6 +1,11 @@
-function renderWhenReady() {
-    loadPositions(allPositionUrl);
-    setupEventListener();
+function renderWhenReady(cb) {
+    $.getJSON('data/inapp.json', function(json) {
+        localPos = json;
+        loadPositions();
+        if (cb) {
+            cb();
+        }
+    });
 }
 
 function setupEventListener() {

@@ -60,7 +60,7 @@ function waitUntilTimeout() {
     }, fetchTimeout);
 }
 
-function loadPositions(positionUrl) {
+function loadPositions() {
     try {setupPush();} catch (ignore) {}
 
     localPos.forEach(function (x) {
@@ -73,7 +73,7 @@ function loadPositions(positionUrl) {
         tmp_filter[x] = false;
     });
 
-    curPositions = translate2LocalData(localPos, localeData.id);
+    translate2LocalData(localPos, localeData.id);
 
     vm = new Vue({
         el: '#all-positions',
@@ -84,7 +84,7 @@ function loadPositions(positionUrl) {
             searchEngine: "bing",
             lang: localeData,
             enablePush: true,
-            allPos: curPositions,
+            allPos: localPos,
             distance: 100,
             positions: [],
             tagMap: translateTags,
@@ -97,7 +97,7 @@ function loadPositions(positionUrl) {
             isWaitingChat: false,
             messageHistory: "",
             lastShutdownState: false,
-            totalSize: curPositions.length,
+            totalSize: localPos.length,
             appVersion: false
         },
         ready: function () {
@@ -247,14 +247,21 @@ function loadPositions(positionUrl) {
                         x['isFav'] = false;
                         x['filterShow'] = true;
                     });
-                    console.log("finish loading %s", allPositionUrl);
-                    var tmpNew = translate2LocalData(newjson, localeData.id);
-                    if (tmpNew[tmpNew.length - 1].publishTime > vm.allPos[0].publishTime) {
-                        tmpNew.forEach(function (x) {
+                    console.log("finish updating from %s", allPositionUrl);
+                    translate2LocalData(newjson, localeData.id);
+                    if (newjson[newjson.length - 1].publishTime > vm.allPos[0].publishTime) {
+                        newjson.forEach(function (x) {
                             vm.allPos.unshift(x);
                         });
                         vm.totalSize = vm.allPos.length;
                         showToast("职位列表已经更新");
+
+                        vm.loadState();
+                        // update filter accordingly
+                        setTimeout(function () {
+                            vm.applyFilterToList();
+                            showToast("职位列表已经按照你的选择过滤了");
+                        }, 100);
                     } else {
                         console.log('already latest!');
                         showToast("你的职位列表已经是最新的了");
@@ -262,16 +269,8 @@ function loadPositions(positionUrl) {
                 }).fail(function() {
                     showToast("下载新职位失败！请检查网络连接");
                 }).always(function() {
-                    vm.loadState();
                     myApp.pullToRefreshDone();
                     myApp.sizeNavbars('.view-main');
-                    // update filter accordingly
-                    setTimeout(function () {
-                        if (vm.numFilters) {
-                            vm.applyFilterToList();
-                            showToast("职位列表已经按照你的选择过滤了");
-                        }
-                    }, 1000);
                 });
             },
             saveState: function () {
@@ -313,14 +312,12 @@ function loadPositions(positionUrl) {
                         if (vm.messageHistory.length > 0) {
                             $('.messages').html(vm.messageHistory);
                         }
-
-                        vm.eIdx = vm.populatePosition(20);
+                        vm.applyFilterToList();
                         console.log('load success')
                     }, function () {
                         console.log('something wrong when loading the state');
                     });
-                } catch (ex) {
-                }
+                } catch (ex) {}
             },
             populatePosition: function (k) {
                 var i = this.eIdx;
