@@ -112,9 +112,7 @@ function loadPositions() {
                 cordova.getAppVersion.getVersionNumber().then(function (version) {
                     vm.appVersion = version;
                 });
-            } catch (ex) {
-                console.error("hide splash screen error");
-            }
+            } catch (ex) {}
             if (firstOpenApp) {
                 nextTutorial("bars-tutorial");
             }

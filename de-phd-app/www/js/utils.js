@@ -149,7 +149,7 @@ function openRoutingSheet(canCancel, retry) {
     var options = {
         title: !retry? '根据您所在的位置, 选择距离最近的服务器': '访问速度过慢, 换个其他服务器试试?',
         subtitle: '中国大陆用户如果选择在海外可能会无法载入职位列表', // supported on iOS only
-        buttonLabels: ['我在中国大陆', '我在海外'],
+        buttonLabels: ['北京服务器', '东京服务器', '海外CDN（推荐非大陆地区用户）'],
         androidEnableCancelButton: canCancel, // default false
         winphoneEnableCancelButton: canCancel, // default false
         addCancelButtonWithLabel: canCancel ? (retry? '继续等待': '取消')  : undefined
