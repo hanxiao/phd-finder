@@ -248,8 +248,17 @@ function loadPositions(positionUrl) {
                         x['filterShow'] = true;
                     });
                     console.log("finish loading %s", allPositionUrl);
-                    vm.allPos = translate2LocalData(newjson, localeData.id);
-                    showToast("职位列表已经更新");
+                    var tmpNew = translate2LocalData(newjson, localeData.id);
+                    if (tmpNew[tmpNew.length - 1].publishTime > vm.allPos[0].publishTime) {
+                        tmpNew.forEach(function (x) {
+                            vm.allPos.unshift(x);
+                        });
+                        vm.totalSize = vm.allPos.length;
+                        showToast("职位列表已经更新");
+                    } else {
+                        console.log('already latest!');
+                        showToast("你的职位列表已经是最新的了");
+                    }
                 }).fail(function() {
                     showToast("下载新职位失败！请检查网络连接");
                 }).always(function() {
@@ -548,4 +557,3 @@ function renderValue(x, type) {
             return x;
     }
 }
-

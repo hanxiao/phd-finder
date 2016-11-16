@@ -183,11 +183,7 @@ var app = {
         if (/(android)/i.test(navigator.userAgent)) {
             statusbarTransparent.enable();
         }
-        if (firstSelectUrl) {
-            openRoutingSheet(false)
-        } else {
-            renderWhenReady();
-        }
+        renderWhenReady();
     }
 };
 
@@ -198,12 +194,12 @@ var conversationStarted = false;
 var lastChatTime = 0;
 
 var nodejsServer = 'http://123.207.172.173:8080/';
-var allPositionUrlCN = nodejsServer + 'allpos';
-var allPositionUrlWO = 'http://ojins.com/data/phd/database/uncompressed/all.json';
+var allPositionUrlCN = nodejsServer + 'delta';
+var allPositionUrlWO = 'http://ojins.com/data/phd/database/uncompressed/delta.json';
 
 var allNewsCN = nodejsServer + 'allnews';
 var allNewsWO = 'http://ojins.com/data/phd/database/embassynews.json';
-var allPositionUrl = window.localStorage.getItem('allPositionUrl') || allPositionUrlCN;
+var allPositionUrl = window.localStorage.getItem('allPositionUrl') || allPositionUrlWO;
 var allNewsUrl = allPositionUrl == allPositionUrlCN ? allNewsCN : allNewsWO;
 var UUID = window.localStorage.getItem('UUID') || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8;

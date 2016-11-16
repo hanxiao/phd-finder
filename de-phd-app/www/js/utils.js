@@ -89,16 +89,18 @@ function checkIntersect(x, y) {
 
 
 function showToast(x, y) {
-    window.plugins.toast.showWithOptions({
-        message: x,
-        duration: y ? y : 'short', // 2000 ms
-        position: "bottom",
-        styling: {
-            opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
-            textColor: '#FFFFFF', // Ditto. Default #FFFFFF
-            backgroundColor: '#554D8C' // make sure you use #RRGGBB. Default #333333
-        }
-    });
+    try {
+        window.plugins.toast.showWithOptions({
+            message: x,
+            duration: y ? y : 'short', // 2000 ms
+            position: "bottom",
+            styling: {
+                opacity: 1.0, // 0.0 (transparent) to 1.0 (opaque). Default 0.8
+                textColor: '#FFFFFF', // Ditto. Default #FFFFFF
+                backgroundColor: '#554D8C' // make sure you use #RRGGBB. Default #333333
+            }
+        });
+    } catch (ignored) {}
 }
 
 function openShareSheet(isPos) {
@@ -161,6 +163,7 @@ function openRoutingSheet(canCancel, retry) {
 
             if (oldUrl != newUrl) {
                 console.log('switch to a new server');
+                allPositionUrl = newUrl;
                 allNewsUrl = idx == 1 ? allNewsCN : allNewsWO;
 
                 window.localStorage.setItem('allPositionUrl', allPositionUrl);
