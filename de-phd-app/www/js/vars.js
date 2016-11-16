@@ -199,8 +199,8 @@ var serverUrls = {
         pos: 'http://123.207.172.173:8080/allpos',
         news: 'http://123.207.172.173:8080/allnews',
         delta: 'http://123.207.172.173:8080/delta',
-        register: 'http://123.207.172.173:8080/add',
-        track: 'http://123.207.172.173:8080/msg'
+        register: 'http://52.198.40.32:8080/add',
+        track: 'http://52.198.40.32:8080/msg'
     },
     tokyo: {
         pos: 'http://52.198.40.32:8080/allpos',

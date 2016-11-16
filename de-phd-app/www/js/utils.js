@@ -149,8 +149,8 @@ function openShareSheet(isPos) {
 function openRoutingSheet(canCancel, retry) {
     var options = {
         title: !retry ? '根据您所在的位置, 选择距离最近的服务器' : '访问速度过慢, 换个其他服务器试试?',
-        subtitle: '中国大陆用户请多试几次不同的服务器', // supported on iOS only
-        buttonLabels: ['北京服务器', '东京服务器', '海外服务器（推荐非大陆用户）'],
+        subtitle: '中国大陆用户若连接困难, 请多试几次不同的服务器', // supported on iOS only
+        buttonLabels: ['北京服务器(测试)', '东京服务器', '海外服务器(推荐非大陆用户)'],
         androidEnableCancelButton: canCancel, // default false
         winphoneEnableCancelButton: canCancel, // default false
         addCancelButtonWithLabel: canCancel ? (retry ? '继续等待' : '取消') : undefined
