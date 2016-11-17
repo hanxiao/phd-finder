@@ -169,14 +169,16 @@ function openRoutingSheet(canCancel, retry) {
             case 3:
                 newServerName = 'github';
                 break;
-            default:
-                if (!retry) {
-                    return;
+            case 4:
+                if (retry) {
+                    waitUntilTimeout();
                 }
+                return
         }
-        if (serverName == newServerName || (retry && idx==4)) {
+
+        if (serverName == newServerName) {
             waitUntilTimeout();
-        } else if (idx != 4) {
+        } else {
             console.log('switch to a new server');
             serverName = newServerName;
             window.localStorage.setItem('serverName', serverName);
