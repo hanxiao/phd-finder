@@ -1,11 +1,6 @@
 function renderWhenReady(cb) {
-    $.getJSON('data/inapp.json', function(json) {
-        localPos = json;
-        loadPositions();
-        if (cb) {
-            cb();
-        }
-    });
+    loadPositions();
+    if (cb) {cb();}
 }
 
 function setupEventListener() {
@@ -43,8 +38,8 @@ function setupEventListener() {
         }, 100);
     });
 
-    ptrContent.on('pullstart', function(e) {
-       showToast("下拉以刷新职位信息");
+    ptrContent.on('pullstart', function (e) {
+        showToast("下拉以刷新职位信息");
     });
 
     document.addEventListener("backbutton", onBackKeyDown, false);
@@ -59,12 +54,12 @@ function onBackKeyDown() {
         settingView.router.back()
     } else {
         navigator.app.exitApp();
-        navigator.Backbutton.goBack(function() {
+        navigator.Backbutton.goBack(function () {
             console.log('success back to previous app');
-        }, function() {
-            navigator.Backbutton.goHome(function() {
+        }, function () {
+            navigator.Backbutton.goHome(function () {
                 console.log('success');
-            }, function() {
+            }, function () {
                 console.log('fail to go home');
             });
         });
@@ -142,7 +137,7 @@ function registerDeviceNotification(pushId, intVal, favTag) {
     //});
 
     $.ajax({
-        url: nodejsServer + "add",
+        url: serverUrls[serverName].register,
         type: "post",
         data: userInfo,
         success: function (data) {
@@ -180,7 +175,7 @@ function tellFriend() {
             showToast("感谢你的支持, 相信你的朋友也会喜欢的");
             window.localStorage.setItem('showAds', false);
         }, function (reason) {
-            showToast("额, 分享失败了");
+            showToast("额, 分享失败了", 5000, true);
         });
     } else {
         window.plugins.socialsharing.share("给想去德国深造的亲们推荐这个app, 「找德到」让德国教职找到你",

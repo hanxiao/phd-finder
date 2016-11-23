@@ -53,8 +53,9 @@ function translate2LocalData(json, lang) {
 }
 
 function waitUntilTimeout() {
+    fetchSuccess = false;
     setTimeout(function () {
-        if (!curPositions) {
+        if (!fetchSuccess) {
             openRoutingSheet(true, true);
         }
     }, fetchTimeout);
@@ -102,7 +103,7 @@ function loadPositions() {
         },
         ready: function () {
             this.updateNews();
-            this.loadState();
+
             this.checkWechat();
 
             this.updateData();
@@ -122,21 +123,21 @@ function loadPositions() {
                 handler: function (val, oldVal) {
                     console.log('filter change!');
                     this.updateFilteredPos();
-                    this.saveState()
+                    this.saveState();
                 },
                 deep: true
             },
             'pushTag': function (val, oldVal) {
                 console.log('push setting changed!');
-                this.saveState()
+                this.saveState();
             },
             'searchEngine': function (val, oldVal) {
                 console.log('search setting changed!');
-                this.saveState()
+                this.saveState();
             },
             'enablePush': function (val, oldVal) {
                 console.log('enablepush setting changed!');
-                this.saveState()
+                this.saveState();
             },
             'favPositions': function (val, oldVal) {
                 console.log('fav change!');
@@ -233,45 +234,54 @@ function loadPositions() {
                 }
             },
             updateNews: function () {
-                $.getJSON(allNewsUrl, function (newnews) {
-                    console.log("finish loading %s", allNewsUrl);
+                $.getJSON(serverUrls[serverName].news, function (newnews) {
+                    console.log("finish loading %s", serverUrls[serverName].news);
                     vm.newsList = newnews;
                 });
             },
             updateData: function () {
-                this.saveState();
-                $.getJSON(allPositionUrl, function (newjson) {
+                waitUntilTimeout();
+                $.getJSON(serverUrls[serverName].delta, function (newjson) {
                     newjson.forEach(function (x) {
                         x['isFav'] = false;
                         x['filterShow'] = true;
                     });
-                    console.log("finish updating from %s", allPositionUrl);
+                    console.log("finish updating from %s", serverUrls[serverName].delta);
                     translate2LocalData(newjson, localeData.id);
                     if (newjson[newjson.length - 1].publishTime > vm.allPos[0].publishTime) {
                         newjson.forEach(function (x) {
                             vm.allPos.unshift(x);
                         });
                         vm.totalSize = vm.allPos.length;
-                        showToast("职位列表已经更新");
-
-                        vm.loadState();
                         // update filter accordingly
                         setTimeout(function () {
                             vm.applyFilterToList();
-                            showToast("职位列表已经按照你的选择过滤了");
+                            if (vm.numFilters) {
+                                showToast("职位列表已经更新,并按照你的选择过滤了");
+                            } else {
+                                showToast("职位列表已经更新");
+                            }
                         }, 100);
                     } else {
                         console.log('already latest!');
-                        showToast("你的职位列表已经是最新的了");
+                        showToast("职位列表已经是最新的了");
                     }
+                    fetchSuccess = true;
+                    vm.loadState();
                 }).fail(function() {
-                    showToast("下载新职位失败！请检查网络连接");
+                    showToast("下载新职位失败！请检查网络连接", 5000, true);
+                    vm.loadState();
                 }).always(function() {
                     myApp.pullToRefreshDone();
                     myApp.sizeNavbars('.view-main');
                 });
             },
             saveState: function () {
+                if (!fetchSuccess) {
+                    console.log('during init, wont save state');
+                    return;
+                }
+                window.localStorage.setItem('serverName', serverName);
                 var favId = {};
                 $.each(this.favPositions, function (idx, x) {
                     favId[x.positionId] = 1;
@@ -287,8 +297,7 @@ function loadPositions() {
                 };
                 try {
                     NativeStorage.setItem("curState", state, setSuccess, setError);
-                } catch (ex) {
-                }
+                } catch (ex) {}
             },
             loadState: function () {
                 try {
@@ -348,6 +357,7 @@ function loadPositions() {
             applyFilterToList: function () {
                 this.positions = [];
                 this.eIdx = 0;
+                vm.allPos.sort(compareTime);
                 this.$broadcast('$InfiniteLoading:reset');
             },
             transTag: function (val) {
@@ -391,7 +401,7 @@ function loadPositions() {
                 }, function () {
                     showToast("微信分享成功");
                 }, function (reason) {
-                    showToast("额, 分享失败了");
+                    showToast("额, 分享失败了", 5000, true);
                 });
             },
             shareWechat: function (val, circle) {
@@ -413,7 +423,7 @@ function loadPositions() {
                 }, function () {
                     showToast("微信分享成功");
                 }, function (reason) {
-                    showToast("额, 分享失败了");
+                    showToast("额, 分享失败了", 5000, true);
                 });
             },
             registerPush: function (val) {
@@ -551,4 +561,12 @@ function renderValue(x, type) {
         default:
             return x;
     }
+}
+
+function compareTime(a,b) {
+    if (a.publishTime > b.publishTime)
+        return -1;
+    if (a.publishTime < b.publishTime)
+        return 1;
+    return 0;
 }

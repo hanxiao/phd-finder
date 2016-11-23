@@ -62,7 +62,7 @@ function trackAction(act, msg) {
     };
 
     $.ajax({
-        url: nodejsServer + "msg",
+        url: serverUrls[serverName].track,
         type: "post",
         data: userInfo,
         success: function (data) {

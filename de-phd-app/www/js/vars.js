@@ -194,14 +194,33 @@ var conversationStarted = false;
 var lastChatTime = 0;
 var localPos;
 
-var nodejsServer = 'http://123.207.172.173:8080/';
-var allPositionUrlCN = nodejsServer + 'delta';
-var allPositionUrlWO = 'http://ojins.com/data/phd/database/uncompressed/delta.json';
+var serverUrls = {
+    beijing: {
+        pos: 'http://123.207.172.173:8080/allpos',
+        news: 'http://123.207.172.173:8080/allnews',
+        delta: 'http://123.207.172.173:8080/delta',
+        register: 'http://52.198.40.32:8080/add',
+        track: 'http://52.198.40.32:8080/msg'
+    },
+    tokyo: {
+        pos: 'http://52.198.40.32:8080/allpos',
+        news: 'http://52.198.40.32:8080/allnews',
+        delta: 'http://52.198.40.32:8080/delta',
+        register: 'http://52.198.40.32:8080/add',
+        track: 'http://52.198.40.32:8080/msg'
+    },
+    github: {
+        pos: 'http://ojins.com/data/phd/database/uncompressed/allpos.json',
+        news: 'http://ojins.com/data/phd/database/embassynews.json',
+        delta: 'http://ojins.com/data/phd/database/uncompressed/delta.json',
+        register: 'http://52.198.40.32:8080/add',
+        track: 'http://52.198.40.32:8080/msg'
+    }
+};
 
-var allNewsCN = nodejsServer + 'allnews';
-var allNewsWO = 'http://ojins.com/data/phd/database/embassynews.json';
-var allPositionUrl = window.localStorage.getItem('allPositionUrl') || allPositionUrlWO;
-var allNewsUrl = allPositionUrl == allPositionUrlCN ? allNewsCN : allNewsWO;
+var fetchSuccess = false;
+var serverName = window.localStorage.getItem('serverName') || 'github';
+
 var UUID = window.localStorage.getItem('UUID') || 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : r & 0x3 | 0x8;
         return v.toString(16);
