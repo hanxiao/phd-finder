@@ -21,23 +21,17 @@ class OpenPosition {
     private static transient final Logger LOG = LoggerFactory.getLogger(OpenPosition.class);
 
     int positionId, instituteId;
-    String institute;
-    String title;
+
+    String institute, institute_en, institute_zh;
+    String title, title_zh, title_en;
+    String summary, summary_en, summary_zh;
+    String mainContent, mainContent_zh, mainContent_en;
+
     transient String pageURL;
     transient String logoURL;
     long publishTime;
     long fetchTime;
     String source;
-    String mainContent;
-
-    String mainContent_zh;
-    String title_zh;
-    String institute_zh;
-    String mainContent_en;
-    String title_en;
-    String institute_en;
-
-    String summary;
 
     boolean isFav = false;
     boolean isPushed = false;
@@ -72,12 +66,13 @@ class OpenPosition {
             // do the translation
             title_zh = GlobalVars.msTranslator.getTranslate(title, Language.CHINESE_SIMPLIFIED);
             institute_zh = GlobalVars.msTranslator.getTranslate(institute, Language.CHINESE_SIMPLIFIED);
-            //mainContent_zh = GlobalVars.msTranslator.getTranslate(mainContent, Language.CHINESE_SIMPLIFIED);
+            mainContent_zh = GlobalVars.msTranslator.getTranslate(mainContent, Language.CHINESE_SIMPLIFIED);
+            summary_zh = GlobalVars.msTranslator.getTranslate(summary, Language.CHINESE_SIMPLIFIED);
 
             title_en = GlobalVars.msTranslator.getTranslate(title, Language.ENGLISH);
             institute_en = GlobalVars.msTranslator.getTranslate(institute, Language.ENGLISH);
-            //mainContent_en = GlobalVars.msTranslator.getTranslate(mainContent, Language.ENGLISH);
-
+            mainContent_en = GlobalVars.msTranslator.getTranslate(mainContent, Language.ENGLISH);
+            summary_en = GlobalVars.msTranslator.getTranslate(summary, Language.ENGLISH);
 
             GlobalVars.allPositions.put(positionId, this);
             GlobalVars.isUpdated = true;
