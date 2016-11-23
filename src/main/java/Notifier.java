@@ -157,8 +157,8 @@ public class Notifier {
         return knownDevices;
     }
 
-    private static List<Device> getDeviceListFromServer() {
-        String deviceServerNodeJS = "http://123.207.172.173:8080/getallusers";
+    private static List<Device> getDeviceListFromServer(String serverIP) {
+        String deviceServerNodeJS = "http://"+ serverIP + ":8080/getallusers";
         HttpGet postDeviceId2 = new HttpGet(deviceServerNodeJS);
         HttpClient httpClient  = new DefaultHttpClient();
         List<Device> deviceIdList = new ArrayList<>();
@@ -190,13 +190,9 @@ public class Notifier {
         int numUpdate = gson.fromJson(content, int.class);
 
         List<Device> localDevices = getDeviceListFromJson();
-        List<Device> serverDevices = getDeviceListFromServer();
 
-        if (serverDevices.size() > localDevices.size()) {
-            LOG.info("New registered devices");
-        }
-
-        localDevices.addAll(serverDevices);
+        localDevices.addAll(getDeviceListFromServer("123.207.172.173"));
+        localDevices.addAll(getDeviceListFromServer("52.198.40.32"));
 
         localDevices = localDevices.stream().filter(
                 distinctByKey(p -> p.getDeviceID())).collect(Collectors.toList());
