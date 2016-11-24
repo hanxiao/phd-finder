@@ -28,6 +28,12 @@ function translate2LocalData(json, lang) {
             $.each(json, function (_, x) {
                 x.disTitle = x.title_zh;
                 x.disInstitute = x.institute_zh;
+                x.disSummary = x.summary_zh || x.summary;
+                if (x.mainContent_zh && x.mainContent_zh.indexOf("TranslateApiException") < 0) {
+                    x.disMainContent = x.mainContent_zh
+                } else {
+                    x.disMainContent = x.mainContent
+                }
             });
             if (firstTransCN) {
                 showApology();
@@ -39,12 +45,25 @@ function translate2LocalData(json, lang) {
             $.each(json, function (_, x) {
                 x.disTitle = x.title_en;
                 x.disInstitute = x.institute_en;
+                x.disSummary = x.summary_en || x.summary;
+                if (x.mainContent_en && x.mainContent_en.indexOf("TranslateApiException") < 0) {
+                    x.disMainContent = x.mainContent_en
+                } else {
+                    x.disMainContent = x.mainContent
+                }
             });
             break;
         case "de":
             $.each(json, function (_, x) {
                 x.disTitle = x.title;
                 x.disInstitute = x.institute;
+                x.disSummary = x.summary_de || x.summary;
+                x.disMainContent = x.mainContent_de || x.mainContent;
+                if (x.mainContent_de && x.mainContent_de.indexOf("TranslateApiException") < 0) {
+                    x.disMainContent = x.mainContent_de;
+                } else {
+                    x.disMainContent = x.mainContent
+                }
             });
             break;
     }
@@ -53,6 +72,7 @@ function translate2LocalData(json, lang) {
 }
 
 function waitUntilTimeout() {
+    showToast("正在更新职位列表");
     fetchSuccess = false;
     setTimeout(function () {
         if (!fetchSuccess) {
@@ -470,7 +490,7 @@ function loadPositions() {
             focusHtml: function () {
                 var doc = "";
                 if (this.focusPosition) {
-                    doc = this.focusPosition.mainContent;
+                    doc = this.focusPosition.disMainContent;
                     doc = $('<p>').html(doc).find('img').remove().end().html();
                 }
                 return doc;

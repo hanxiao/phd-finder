@@ -149,7 +149,7 @@
                                                                     class="fa fa-heart"></i></li>
                                                             <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
                                                         </ul>
-                                                        {{pos.summary}}
+                                                        {{pos.disSummary}}
                                                     </div>
                                                 </div>
                                             </a>
@@ -242,7 +242,7 @@
                                                                         class="fa fa-heart"></i></li>
                                                                 <li v-for="tag in pos.tags">{{transTag(tag)}}</li>
                                                             </ul>
-                                                            {{pos.summary}}
+                                                            {{pos.disSummary}}
                                                         </div>
                                                     </div>
                                                 </a>
@@ -618,7 +618,6 @@
                         <i class="fa fa-heart"></i>
                         <span v-if="favPositions.length >0" class="badge bg-mygreen">{{favPositions.length}}</span>
                     </i>
-
                     <span class="tabbar-label">收藏</span>
                 </a>
                 <a href="#news-view" class="tab-link">
