@@ -334,7 +334,7 @@
                             <div v-if="newsList.length>0">
                                 <div class="list-block order-list media-list">
                                     <ul>
-                                        <li data-popup=".popup-news" class="open-popup swipeout"
+                                        <li v-if="pos.mainContent" data-popup=".popup-news" class="open-popup swipeout"
                                             v-on:click="focusNews=pos"
                                             v-for="pos in newsList | orderBy 'timestamp' -1">
                                             <a href="#" class="item-content item-link">
