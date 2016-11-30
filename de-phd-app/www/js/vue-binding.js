@@ -82,30 +82,28 @@ function waitUntilTimeout() {
 }
 
 function loadPositions() {
-    try {setupPush();} catch (ignore) {}
+    try {
+        setupPush();
+    } catch (ignore) {
+    }
 
-    localPos.forEach(function (x) {
-        x['isFav'] = false;
-        x['filterShow'] = true;
-    });
 
     var tmp_filter = {};
     Object.keys(translateTags).forEach(function (x) {
         tmp_filter[x] = false;
     });
 
-    translate2LocalData(localPos, localeData.id);
-
     vm = new Vue({
         el: '#all-positions',
         data: {
+            waitingServer: false,
             focusTag: false,
             filterTags: tmp_filter,
             pushTag: [],
             searchEngine: "bing",
             lang: localeData,
             enablePush: true,
-            allPos: localPos,
+            allPos: [],
             distance: 100,
             positions: [],
             tagMap: translateTags,
@@ -118,7 +116,7 @@ function loadPositions() {
             isWaitingChat: false,
             messageHistory: "",
             lastShutdownState: false,
-            totalSize: localPos.length,
+            totalSize: 0,
             appVersion: false
         },
         ready: function () {
@@ -126,14 +124,13 @@ function loadPositions() {
 
             this.checkWechat();
 
-            this.updateData();
-
             try {
                 window.plugins.toast.hide();
                 cordova.getAppVersion.getVersionNumber().then(function (version) {
                     vm.appVersion = version;
                 });
-            } catch (ex) {}
+            } catch (ex) {
+            }
             if (firstOpenApp) {
                 nextTutorial("bars-tutorial");
             }
@@ -142,7 +139,7 @@ function loadPositions() {
             'filterTags': {
                 handler: function (val, oldVal) {
                     console.log('filter change!');
-                    this.updateFilteredPos();
+                    this.applyFilterToList();
                     this.saveState();
                 },
                 deep: true
@@ -178,27 +175,6 @@ function loadPositions() {
             }
         },
         methods: {
-            updateFilteredPos: function () {
-                var pi = 0;
-                if (vm.numFilters == 0) {
-                    $.each(vm.allPos, function (idx, pos) {
-                        vm.allPos[idx]['filterShow'] = true;
-                    });
-                    pi = vm.allPos.length;
-                } else {
-                    $.each(vm.allPos, function (idx, pos) {
-                        var match = 0;
-                        pos.tags.forEach(function (x) {
-                            match += vm.filterTags[x] ? 1 : 0;
-                        });
-                        var shouldAdd = match == vm.numFilters;
-                        vm.allPos[idx]['filterShow'] = shouldAdd;
-                        pi += shouldAdd ? 1 : 0;
-                    });
-                }
-                vm.totalSize = pi;
-                return pi;
-            },
             addRemoveTag: function (y) {
                 var x = y.key;
                 this.filterTags[x] = !this.filterTags[x];
@@ -256,45 +232,48 @@ function loadPositions() {
             updateNews: function () {
                 $.getJSON(serverUrls[serverName].news, function (newnews) {
                     console.log("finish loading %s", serverUrls[serverName].news);
-                    vm.newsList = newnews;
+                    //vm.newsList = newnews;
                 });
             },
             updateData: function () {
                 waitUntilTimeout();
-                $.getJSON(serverUrls[serverName].delta, function (newjson) {
-                    newjson.forEach(function (x) {
-                        x['isFav'] = false;
-                        x['filterShow'] = true;
-                    });
-                    console.log("finish updating from %s", serverUrls[serverName].delta);
-                    translate2LocalData(newjson, localeData.id);
-                    if (newjson[newjson.length - 1].publishTime > vm.allPos[0].publishTime) {
+                $.ajax({
+                        type: 'post',
+                        url: serverUrls[serverName].delta,
+                        data: JSON.stringify({
+                            startIdx: 0,
+                            length: numLoadsPerTime,
+                            filter: this.filterTags
+                        }),
+                        contentType: 'application/json'
+                    })
+                    .done(function (newjson) {
                         newjson.forEach(function (x) {
-                            vm.allPos.unshift(x);
+                            x['isFav'] = false;
                         });
-                        vm.totalSize = vm.allPos.length;
-                        // update filter accordingly
-                        setTimeout(function () {
-                            vm.applyFilterToList();
-                            if (vm.numFilters) {
-                                showToast("职位列表已经更新,并按照你的选择过滤了");
-                            } else {
-                                showToast("职位列表已经更新");
-                            }
-                        }, 100);
-                    } else {
-                        console.log('already latest!');
-                        showToast("职位列表已经是最新的了");
-                    }
-                    fetchSuccess = true;
-                    vm.loadState();
-                }).fail(function() {
-                    showToast("下载新职位失败！请检查网络连接", 5000, true);
-                    vm.loadState();
-                }).always(function() {
-                    myApp.pullToRefreshDone();
-                    myApp.sizeNavbars('.view-main');
-                });
+                        console.log("finish updating from %s", serverUrls[serverName].delta);
+                        translate2LocalData(newjson, localeData.id);
+                        if (vm.allPos.length == 0 ||
+                            (newjson[newjson.length - 1].publishTime > vm.allPos[0].publishTime)) {
+                            newjson.forEach(function (x) {
+                                vm.allPos.unshift(x);
+                            });
+                            vm.totalSize = vm.allPos.length;
+                        } else {
+                            console.log('already latest!');
+                            showToast("职位列表已经是最新的了");
+                        }
+                        fetchSuccess = true;
+                    })
+                    .fail(function () {
+                        console.error("fail to connect to server!");
+                        showToast("下载新职位失败！请检查网络连接", 5000, true);
+                    })
+                    .always(function () {
+                        vm.loadState();
+                        myApp.pullToRefreshDone();
+                        myApp.sizeNavbars('.view-main');
+                    });
             },
             saveState: function () {
                 if (!fetchSuccess) {
@@ -317,7 +296,8 @@ function loadPositions() {
                 };
                 try {
                     NativeStorage.setItem("curState", state, setSuccess, setError);
-                } catch (ex) {}
+                } catch (ex) {
+                }
             },
             loadState: function () {
                 try {
@@ -328,7 +308,6 @@ function loadPositions() {
                         var favId = val._favId || {};
                         // load those favid, remap to allpos
                         vm.allPos.forEach(function (x) {
-                            x.filterShow = true;
                             x.isFav = x.positionId in favId;
                         });
                         vm.lastShutdownState = val._chatState || false;
@@ -339,21 +318,19 @@ function loadPositions() {
                         if (vm.messageHistory.length > 0) {
                             $('.messages').html(vm.messageHistory);
                         }
-                        vm.applyFilterToList();
                         console.log('load success')
                     }, function () {
                         console.log('something wrong when loading the state');
                     });
-                } catch (ex) {}
+                } catch (ex) {
+                }
             },
             populatePosition: function (k) {
                 var i = this.eIdx;
                 var pi = 0;
                 while (pi < k && i < this.allPos.length) {
-                    if (this.allPos[i]['filterShow'] || this.allPos[i]['isFav']) {
-                        this.positions.push(this.allPos[i]);
-                        pi++;
-                    }
+                    this.positions.push(this.allPos[i]);
+                    pi++;
                     i++;
                 }
                 myApp.sizeNavbars('.view-main');
@@ -369,15 +346,47 @@ function loadPositions() {
                 p1.isFav = p2;
             },
             onInfinite: function () {
-                setTimeout(function () {
-                    this.eIdx = this.populatePosition(20);
-                    this.$broadcast('$InfiniteLoading:loaded');
-                }.bind(this), 200);
+                $.ajax({
+                        type: 'post',
+                        url: serverUrls[serverName].delta,
+                        data: JSON.stringify({
+                            startIdx: this.eIdx,
+                            length: numLoadsPerTime,
+                            filter: this.filterTags
+                        }),
+                        contentType: 'application/json'
+                    })
+                    .done(function (payload) {
+                        newjson = payload.pos;
+                        newjson.forEach(function (x) {
+                            x['isFav'] = false;
+                        });
+                        console.log("finish updating from %s", serverUrls[serverName].delta);
+                        translate2LocalData(newjson, localeData.id);
+                        vm.allPos = vm.allPos.concat(newjson);
+                        vm.totalSize = payload.num;
+                        fetchSuccess = true;
+
+                        vm.eIdx = vm.populatePosition(numLoadsPerTime);
+                        vm.$broadcast('$InfiniteLoading:loaded');
+                        myApp.sizeNavbars('.view-main');
+                    })
+                    .fail(function () {
+                        console.error("fail to connect to server!");
+                        showToast("下载新职位失败！请检查网络连接", 5000, true);
+                    })
+                    .always(function () {
+                        vm.loadState();
+                        vm.waitingServer = false;
+                        myApp.pullToRefreshDone();
+                        myApp.sizeNavbars('.view-main');
+                    });
             },
             applyFilterToList: function () {
+                this.waitingServer = true;
                 this.positions = [];
+                this.allPos = [];
                 this.eIdx = 0;
-                vm.allPos.sort(compareTime);
                 this.$broadcast('$InfiniteLoading:reset');
             },
             transTag: function (val) {
@@ -583,7 +592,7 @@ function renderValue(x, type) {
     }
 }
 
-function compareTime(a,b) {
+function compareTime(a, b) {
     if (a.publishTime > b.publishTime)
         return -1;
     if (a.publishTime < b.publishTime)

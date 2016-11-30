@@ -192,13 +192,12 @@ var app = {
 var fetchTimeout = 8000;
 var conversationStarted = false;
 var lastChatTime = 0;
-var localPos;
 
 var serverUrls = {
     beijing: {
         pos: 'http://123.207.172.173:8080/allpos',
         news: 'http://123.207.172.173:8080/allnews',
-        delta: 'http://123.207.172.173:8080/delta',
+        delta: 'http://123.207.172.173:8080/getrangepos',
         register: 'http://52.198.40.32:8080/add',
         track: 'http://52.198.40.32:8080/msg'
     },
@@ -212,7 +211,7 @@ var serverUrls = {
     github: {
         pos: 'http://ojins.com/data/phd/database/uncompressed/allpos.json',
         news: 'http://ojins.com/data/phd/database/embassynews.json',
-        delta: 'http://ojins.com/data/phd/database/uncompressed/delta.json',
+        delta: 'http://123.207.172.173:8080/getrangepos', //'http://ojins.com/data/phd/database/uncompressed/delta.json',
         register: 'http://52.198.40.32:8080/add',
         track: 'http://52.198.40.32:8080/msg'
     }
@@ -232,4 +231,4 @@ var firstOpenApp = JSON.parse(window.localStorage.getItem('firstOpenApp') || 'tr
 var firstSelectUrl = JSON.parse(window.localStorage.getItem('firstSelectUrl') || 'true');
 var firstTransCN = JSON.parse(window.localStorage.getItem('firstTransCN') || 'true');
 var showAds = JSON.parse(window.localStorage.getItem('showAds') || 'true');
-
+var numLoadsPerTime = 20;
