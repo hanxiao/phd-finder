@@ -179,7 +179,7 @@ var app = {
     },
     // Update DOM on a Received Event
     receivedEvent: function (id) {
-        //navigator.splashscreen.hide();
+        navigator.splashscreen.hide();
         if (/(android)/i.test(navigator.userAgent)) {
             statusbarTransparent.enable();
         }

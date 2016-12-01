@@ -117,11 +117,13 @@ function loadPositions() {
             messageHistory: "",
             lastShutdownState: false,
             totalSize: 0,
-            appVersion: false
+            appVersion: false,
+            favId: [],
+            favPositionsSet: {}
         },
         ready: function () {
+            //this.loadState();
             this.updateNews();
-
             this.checkWechat();
 
             try {
@@ -167,12 +169,12 @@ function loadPositions() {
                 }
                 settingsLoaded['enablePush'] = true;
             },
-            'favPositions': function (val, oldVal) {
-                if (settingsLoaded['favPositions']) {
+            'favId': function (val, oldVal) {
+                if (settingsLoaded['favPositionsSet']) {
                     console.log('fav change!');
                     this.saveState();
                 }
-                settingsLoaded['favPositions'] = true;
+                settingsLoaded['favPositionsSet'] = true;
             },
             'chatState': function (val, oldVal) {
                 trackAction('chatStateChanged', oldVal.id);
@@ -261,7 +263,7 @@ function loadPositions() {
                     _pushTag: this.pushTag,
                     _searchEngine: this.searchEngine,
                     _enablePush: this.enablePush,
-                    _favId: this.favId,
+                    _favPositionsSet: this.favPositionsSet,
                     _msgHistory: this.messageHistory,
                     _chatState: this.chatState
                 };
@@ -276,20 +278,18 @@ function loadPositions() {
                         vm.pushTag = val._pushTag || [];
                         vm.searchEngine = val._searchEngine || 'bing';
                         vm.enablePush = val._enablePush || true;
-                        var favId = val._favId || {};
-                        // load those favid, remap to allpos
-                        vm.allPos.forEach(function (x) {
-                            x.isFav = x.positionId in favId;
-                        });
+                        vm.favPositionsSet = val._favPositionsSet || {};
                         vm.lastShutdownState = val._chatState || false;
                         vm.messageHistory = val._msgHistory || "";
                         vm.chatState = val._chatState || false;
                         vm.filterTags = val._filterTags || tmp_filter;
+                        vm.favId = Object.keys(vm.favPositionsSet);
 
                         if (vm.messageHistory.length > 0) {
                             $('.messages').html(vm.messageHistory);
                         }
-                        console.log('load success')
+                        console.log('load success');
+                        updateListData(vm.eIdx, true);
                     }, function () {
                         console.log('something wrong when loading the state');
                     });
@@ -315,9 +315,15 @@ function loadPositions() {
                     myApp.swipeoutClose(x)
                 });
                 p1.isFav = p2;
+                if (p2) {
+                    vm.favPositionsSet[p1.positionId] = p1;
+                } else {
+                    delete vm.favPositionsSet[p1.positionId];
+                }
+                vm.favId = Object.keys(vm.favPositionsSet);
             },
             onInfinite: function () {
-                updateListData(vm.eIdx, true);
+                this.loadState();
             },
             applyFilterToList: function () {
                 this.waitingServer = true;
@@ -374,7 +380,7 @@ function loadPositions() {
                 var myscene = circle ? Wechat.Scene.TIMELINE : Wechat.Scene.SESSION;
                 Wechat.share({
                     message: {
-                        title: "我在「找德到」发现的好职位-" + val.disTitle,
+                        title: "「找德到」职位-" + val.disTitle,
                         description: "更多" + val.disInstitute + "职位来自「找德到」! 德国硕博,博后,教授,实习,毕设,奖学金通通能找到!",
                         thumb: "www/img/log128.png",
                         mediaTagName: "de-phd",
@@ -398,19 +404,23 @@ function loadPositions() {
             }
         },
         computed: {
-            favId: function () {
-                var favId = {};
-                $.each(this.favPositions, function (idx, x) {
-                    favId[x.positionId] = 1;
-                });
-                return favId;
+            favPositions: function () {
+                var result = [];
+
+                for (var i = 0; i < this.favId.length; i++) {
+                    result.push(this.favPositionsSet[this.favId[i]]);
+                }
+
+                return result;
             },
             numFilters: function () {
                 var n = 0;
                 var tmp = Object.keys(this.filterTags);
-                for (var i = 0; i < tmp.length; i++) {
-                    if (this.filterTags[tmp[i]]) {
-                        n++;
+                if (tmp) {
+                    for (var i = 0; i < tmp.length; i++) {
+                        if (this.filterTags[tmp[i]]) {
+                            n++;
+                        }
                     }
                 }
                 return n;
@@ -473,11 +483,6 @@ function loadPositions() {
                 }
                 return result;
             },
-            favPositions: function () {
-                return this.allPos.filter(function (x) {
-                    return x.isFav;
-                });
-            },
             tagList: function () {
                 var translateTagsList = [];
                 for (var key in this.tagMap) {
@@ -493,7 +498,6 @@ function loadPositions() {
 }
 
 function updateListData(sIdx, append) {
-    //waitUntilTimeout();
     $.ajax({
         type: 'post',
         url: serverUrls[serverName].delta,
@@ -510,22 +514,34 @@ function updateListData(sIdx, append) {
         if (append) {
             vm.allPos = vm.allPos.concat(newjson);
         } else {
-            vm.allPos = newjson;
+            if (vm.allPos.length > 0) {
+                var lastUpdateTime = vm.allPos[0].publishTime;
+                newjson.forEach(function (x) {
+                    if (x.publishTime > lastUpdateTime) {
+                        vm.allPos.unshift(x);
+                    }
+                });
+            } else {
+                vm.allPos = newjson;
+            }
             showToast("职位列表已经更新!")
         }
         vm.totalSize = payload.num;
         fetchSuccess = true;
         vm.eIdx = vm.populatePosition(numLoadsPerTime);
         vm.$broadcast('$InfiniteLoading:loaded');
-        myApp.sizeNavbars('.view-main');
     }).fail(function () {
         console.error("fail to connect to server!");
         showToast("下载新职位失败！请检查网络连接", 5000, true);
     }).always(function () {
-        vm.loadState();
-        vm.waitingServer = false;
-        myApp.pullToRefreshDone();
-        myApp.sizeNavbars('.view-main');
+        setTimeout(function(){
+            vm.allPos.forEach(function (x) {
+                x.isFav = x.positionId in vm.favPositionsSet;
+            });
+            vm.waitingServer = false;
+            myApp.pullToRefreshDone();
+            myApp.sizeNavbars('.view-main');
+        }, 100);
     });
 }
 

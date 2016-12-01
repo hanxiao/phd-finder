@@ -750,10 +750,10 @@
                 <a v-else href="#" class="link" @click="shareTo(focusPosition)">
                     <i class="fa fa-share-square-o" aria-hidden="true"></i>&nbsp;分享
                 </a>
-                <a href="#" class="link" v-if='focusPosition.isFav' @click="focusPosition.isFav=false">
+                <a href="#" class="link" v-if='focusPosition.isFav' @click="closeAllSwipe(focusPosition, false)">
                     <i class="fa fa-trash-o"></i>&nbsp;移除收藏
                 </a>
-                <a v-else class="link" @click="focusPosition.isFav=true">
+                <a v-else class="link" @click="closeAllSwipe(focusPosition, true)">
                     <i class="fa fa-heart"></i>&nbsp;收藏
                 </a>
                 <a href="#" class="link close-popup"><i class="fa fa-times-circle-o" aria-hidden="true"></i>&nbsp;关闭</a>
