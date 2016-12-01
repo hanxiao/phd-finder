@@ -232,3 +232,4 @@ var firstSelectUrl = JSON.parse(window.localStorage.getItem('firstSelectUrl') ||
 var firstTransCN = JSON.parse(window.localStorage.getItem('firstTransCN') || 'true');
 var showAds = JSON.parse(window.localStorage.getItem('showAds') || 'true');
 var numLoadsPerTime = 20;
+var settingsLoaded = {};

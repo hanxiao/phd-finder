@@ -34,7 +34,7 @@ function setupEventListener() {
 
     ptrContent.on('refresh', function (e) {
         setTimeout(function () {
-            vm.updateData();
+            updateListData(0, false);
         }, 100);
     });
 
