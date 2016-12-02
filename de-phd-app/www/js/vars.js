@@ -40,9 +40,7 @@ var settingView = myApp.addView('#profile-view', {
     domCache: true
 });
 
-var curPositions;
-
-var localeData = {id: 'de'};
+var localeData = {allId: 'de', favId: 'de'};
 
 var translateTags = {
     "wimi": {
@@ -204,14 +202,14 @@ var serverUrls = {
     tokyo: {
         pos: 'http://52.198.40.32:8080/allpos',
         news: 'http://52.198.40.32:8080/allnews',
-        delta: 'http://52.198.40.32:8080/delta',
+        delta: 'http://52.198.40.32:8080/getrangepos',
         register: 'http://52.198.40.32:8080/add',
         track: 'http://52.198.40.32:8080/msg'
     },
     github: {
         pos: 'http://ojins.com/data/phd/database/uncompressed/allpos.json',
         news: 'http://ojins.com/data/phd/database/embassynews.json',
-        delta: 'http://123.207.172.173:8080/getrangepos', //'http://ojins.com/data/phd/database/uncompressed/delta.json',
+        delta: 'http://52.198.40.32:8080/getrangepos', //'http://ojins.com/data/phd/database/uncompressed/delta.json',
         register: 'http://52.198.40.32:8080/add',
         track: 'http://52.198.40.32:8080/msg'
     }

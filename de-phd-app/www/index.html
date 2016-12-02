@@ -87,14 +87,14 @@
                     <div class="center sliding">{{numFilters ? '过滤了':''}}{{totalSize}}个教职</div>
                     <div class="subnavbar">
                         <div class="buttons-row theme-white" id="langswitch-bar">
-                            <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
-                                 onclick="translate2LocalData(vm.allPos, 'de')">德文
+                            <div class="button tab-link" v-bind:class="{active: lang.allId=='de'}"
+                                 onclick="translate2LocalData(vm.allPos, 'de', 'all')">德文
                             </div>
-                            <div class="button tab-link" v-bind:class="{active: lang.id=='zh-cn'}"
-                                 onclick="translate2LocalData(vm.allPos, 'zh-cn')">中文
+                            <div class="button tab-link" v-bind:class="{active: lang.allId=='zh-cn'}"
+                                 onclick="translate2LocalData(vm.allPos, 'zh-cn', 'all')">中文
                             </div>
-                            <div class="button tab-link" v-bind:class="{active: lang.id=='en-us'}"
-                                 onclick="translate2LocalData(vm.allPos, 'en-us')">英文
+                            <div class="button tab-link" v-bind:class="{active: lang.allId=='en-us'}"
+                                 onclick="translate2LocalData(vm.allPos, 'en-us', 'all')">英文
                             </div>
                         </div>
                         <div v-if="numFilters" class="button filter-icon open-login-screen">
@@ -197,14 +197,14 @@
                 <div class="center sliding">收藏的职位</div>
                 <div class="subnavbar">
                     <div class="buttons-row theme-white" id="langswitch-bar2">
-                        <div class="button tab-link" v-bind:class="{active: lang.id=='de'}"
-                             onclick="translate2LocalData(curPositions, 'de')">德文
+                        <div class="button tab-link" v-bind:class="{active: lang.favId=='de'}"
+                             onclick="translate2LocalData(vm.favPositions, 'de', 'fav')">德文
                         </div>
-                        <div class="button tab-link" v-bind:class="{active: lang.id=='zh-cn'}"
-                             onclick="translate2LocalData(curPositions, 'zh-cn')">中文
+                        <div class="button tab-link" v-bind:class="{active: lang.favId=='zh-cn'}"
+                             onclick="translate2LocalData(vm.favPositions, 'zh-cn', 'fav')">中文
                         </div>
-                        <div class="button tab-link" v-bind:class="{active: lang.id=='en-us'}"
-                             onclick="translate2LocalData(curPositions, 'en-us')">英文
+                        <div class="button tab-link" v-bind:class="{active: lang.favId=='en-us'}"
+                             onclick="translate2LocalData(vm.favPositions, 'en-us', 'fav')">英文
                         </div>
                     </div>
                 </div>
