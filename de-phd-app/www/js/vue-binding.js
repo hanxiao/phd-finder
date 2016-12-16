@@ -22,7 +22,7 @@ function showApology() {
     }
 }
 
-function translate2LocalData(json, lang) {
+function translate2LocalData(json, lang, listType) {
     switch (lang) {
         case "zh-cn":
             $.each(json, function (_, x) {
@@ -67,7 +67,14 @@ function translate2LocalData(json, lang) {
             });
             break;
     }
-    localeData.id = lang;
+    switch (listType) {
+        case "all":
+            localeData.allId = lang;
+            break;
+        case "fav":
+            localeData.favId = lang;
+            break;
+    }
     return json;
 }
 
@@ -510,7 +517,7 @@ function updateListData(sIdx, append) {
     }).done(function (payload) {
         console.log("finish updating from %s", serverUrls[serverName].delta);
         newjson = payload.pos;
-        translate2LocalData(newjson, localeData.id);
+        translate2LocalData(newjson, localeData.allId, "all");
         if (append) {
             vm.allPos = vm.allPos.concat(newjson);
         } else {
