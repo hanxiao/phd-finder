@@ -298,6 +298,20 @@ function loadPositions() {
                         console.log('load success');
                         updateListData(vm.eIdx, true);
                     }, function () {
+                        vm.pushTag = [];
+                        vm.searchEngine = 'bing';
+                        vm.enablePush = true;
+                        vm.favPositionsSet = {};
+                        vm.lastShutdownState = false;
+                        vm.messageHistory = "";
+                        vm.chatState = false;
+                        vm.filterTags = tmp_filter;
+                        vm.favId = Object.keys(vm.favPositionsSet);
+
+                        if (vm.messageHistory.length > 0) {
+                            $('.messages').html(vm.messageHistory);
+                        }
+                        updateListData(vm.eIdx, true);
                         console.log('something wrong when loading the state');
                     });
                 } catch (ex) {
