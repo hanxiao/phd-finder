@@ -68,9 +68,3 @@ function showMyAds(type, force) {
     catch (ignored) {}
 }
 
-
-//if(( /(ipad|iphone|ipod|android|windows phone)/i.test(navigator.userAgent) )) {
-//    document.addEventListener('deviceready', showMyAds, false);
-//} else {
-//    showMyAds();
-//}

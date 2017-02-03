@@ -94,7 +94,6 @@ function loadPositions() {
     } catch (ignore) {
     }
 
-
     var tmp_filter = {};
     Object.keys(translateTags).forEach(function (x) {
         tmp_filter[x] = false;
@@ -142,6 +141,8 @@ function loadPositions() {
             }
             if (firstOpenApp) {
                 nextTutorial("bars-tutorial");
+            } else {
+                showMyAds('fullpage', true);
             }
         },
         watch: {
